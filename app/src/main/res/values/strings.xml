@@ -7,4 +7,8 @@
     <string name="hint_enter_your_password">Nhập mật khẩu</string>
     <string name="text_cancel">HỦY</string>
     <string name="hint_repeat_password">Nhập lại mật khẩu</string>
+    <string name="snackbar_data_must_not_empty">Dữ liệu không được bỏ trống</string>
+    <string name="text_password_illegal">Mật khẩu phải có độ dài lớn hơn 8, chứa kí tự hoa-thường, số và kí tự đặc biệt</string>
+    <string name="text_email_illegal">Email sai định dạng</string>
+    <string name="text_repeat_password_not_match">Hai mật khẩu không khớp nhau</string>
 </resources>
