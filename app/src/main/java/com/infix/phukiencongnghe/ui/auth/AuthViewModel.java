@@ -87,6 +87,44 @@ public class AuthViewModel extends ViewModel {
         });
     }
 
+    public void verifyMail(String mail) {
+        if(mail == null || mail.isEmpty()) return;
+        _isLoading.setValue(true);
+        authRepository.verifyEmail(mail).enqueue(new Callback<SuccessBasicDTO>() {
+            @Override
+            public void onResponse(Call<SuccessBasicDTO> call, Response<SuccessBasicDTO> response) {
+                if (response.isSuccessful()) {
+                    SuccessBasicDTO succ = response.body();
+                    if (succ != null && succ.isSuccess())
+                        _notifyMsg.setValue(
+                                "Xác thực thành công, vui lòng đăng nhập"
+                        );
+                } else {
+                    Gson gson = new Gson();
+                    ResponseBody responseBody = response.errorBody();
+                    if (responseBody == null) {
+                        _notifyMsg.setValue("Không thể hiểu lỗi");
+                        return;
+                    }
+                    ExceptionResponseDTO exc = null;
+                    try {
+                        exc = gson.fromJson(responseBody.string(), ExceptionResponseDTO.class);
+                        _notifyMsg.setValue(exc.getMessage());
+                    } catch (IOException e) {
+                        _notifyMsg.setValue(e.getMessage());
+                    }
+                }
+                _isLoading.setValue(false);
+            }
+
+            @Override
+            public void onFailure(Call<SuccessBasicDTO> call, Throwable throwable) {
+                _notifyMsg.setValue(throwable.getMessage());
+                _isLoading.setValue(false);
+            }
+        });
+    }
+
     public void resetStates() {
         _notifyMsg.setValue(null);
         _isLoading.setValue(null);

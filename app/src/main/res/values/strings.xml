@@ -11,4 +11,6 @@
     <string name="text_password_illegal">Mật khẩu phải có độ dài lớn hơn 8, chứa kí tự hoa-thường, số và kí tự đặc biệt</string>
     <string name="text_email_illegal">Email sai định dạng</string>
     <string name="text_repeat_password_not_match">Hai mật khẩu không khớp nhau</string>
+    <string name="text_verify_mail">Xác thực</string>
+    <string name="text_go_verify_mail">Xác nhận xác thực email</string>
 </resources>
