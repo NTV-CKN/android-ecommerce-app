@@ -6,4 +6,5 @@
     <string name="text_register">Đăng kí</string>
     <string name="hint_enter_your_password">Nhập mật khẩu</string>
     <string name="text_cancel">HỦY</string>
+    <string name="hint_repeat_password">Nhập lại mật khẩu</string>
 </resources>
