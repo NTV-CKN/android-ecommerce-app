@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="tech_primary">#076ACE</color>
+    <color name="tech_primary_variant">#0552A2</color>
+    <color name="tech_accent">#F59E0B</color>
+    <color name="tech_cta_action">#D97706</color>
+    <color name="tech_background">#F1F5F9</color>
+    <color name="tech_surface">#FFFFFF</color>
+
+    <color name="tech_text_main">#0F172A</color>
+    <color name="tech_text_muted">#475569</color>
+    <color name="tech_success">#10B981</color>
+    <color name="tech_error">#EF4444</color>
+
+<!--    dark-->
+    <color name="tech_primary_dark">#3B82F6</color>
+    <color name="tech_primary_variant_dark">#1D4ED8</color>
+
+    <color name="tech_accent_dark">#FBBF24</color>
+    <color name="tech_cta_action_dark">#F59E0B</color>
+
+    <color name="tech_background_dark">#0F172A</color>
+    <color name="tech_surface_dark">#1E293B</color>
+
+    <color name="tech_text_main_dark">#F8FAFC</color>
+    <color name="tech_text_muted_dark">#94A3B8</color>
+
+    <color name="tech_success_dark">#34D399</color>
+    <color name="tech_error_dark">#F87171</color>
 </resources>

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">PhuKienCongNghe</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_enter_your_mail">Nhập email của bạn</string>
+    <string name="text_register">Đăng kí</string>
+    <string name="hint_enter_your_password">Nhập mật khẩu</string>
+    <string name="text_cancel">HỦY</string>
 </resources>
