@@ -9,10 +9,10 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_email_register"
         android:layout_width="match_parent"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="32dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_label_register">
@@ -29,8 +29,8 @@
         android:id="@+id/tv_label_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_register"
         android:layout_marginTop="32dp"
+        android:text="@string/text_register"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,10 +38,10 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_password_register"
-        android:layout_marginTop="32dp"
-
         android:layout_width="0dp"
+
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="@+id/til_email_register"
         app:layout_constraintStart_toStartOf="@+id/til_email_register"
         app:layout_constraintTop_toBottomOf="@+id/til_email_register"
@@ -80,12 +80,11 @@
         android:layout_marginTop="48dp"
         android:layout_marginEnd="12dp"
         android:text="@string/text_register"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_password_register"
+        app:layout_constraintTop_toBottomOf="@+id/til_repeat_password_register"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="VisualLintButtonSize" />
 
@@ -95,4 +94,22 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_repeat_password_register"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:passwordToggleEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/til_password_register"
+        app:layout_constraintTop_toBottomOf="@+id/til_password_register">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_repeat_password_register"
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_repeat_password" />
+    </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
