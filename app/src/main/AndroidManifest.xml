@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,14 +13,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PhuKienCongNghe"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true" >
+
+        <activity
+            android:name=".ui.auth.reset_password.ResetPasswordActivity"
+            android:exported="true">
+            <intent-filter android:label="Cập nhật lại mật khẩu" >
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="myapp" />
+                <data android:host="auth" />
+                <data android:pathPrefix="/reset-password" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".ui.auth.register.VerificationActivity"
-            android:launchMode="singleTask"
-            android:exported="true">
-
-            <intent-filter android:label="Kích hoạt tài khoản">
+            android:exported="true"
+            android:launchMode="singleTask" >
+            <intent-filter android:label="Kích hoạt tài khoản" >
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -31,7 +47,7 @@
         </activity>
         <activity
             android:name=".ui.auth.AuthActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,8 +56,7 @@
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
-            android:exported="true">
-
+            android:exported="true" >
         </activity>
     </application>
 

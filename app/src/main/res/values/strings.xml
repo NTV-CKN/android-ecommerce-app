@@ -13,4 +13,7 @@
     <string name="text_repeat_password_not_match">Hai mật khẩu không khớp nhau</string>
     <string name="text_verify_mail">Xác thực</string>
     <string name="text_go_verify_mail">Xác nhận xác thực email</string>
+ <string name="text_data_null">Dữ liệu null</string>
+    <string name="text_change_password">Đổi mật khẩu</string>
+    <string name="text_recovery_password">Khôi phục mật khẩu</string>
 </resources>
