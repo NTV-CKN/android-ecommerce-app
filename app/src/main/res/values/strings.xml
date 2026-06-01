@@ -7,6 +7,11 @@
     <string name="hint_enter_your_password">Nhập mật khẩu</string>
     <string name="text_cancel">HỦY</string>
     <string name="hint_repeat_password">Nhập lại mật khẩu</string>
+    <string name="title_setting">Cài Đặt</string>
+    <string name="title_mode">Chế độ</string>
+    <string name="lable_change_darkmode">Chuyển nền tối</string>
+    <string name="title_langue">Ngôn Ngữ</string>
+    <string name="title_choice_langue">Chọn ngôn ngữ</string>
     <string name="snackbar_data_must_not_empty">Dữ liệu không được bỏ trống</string>
     <string name="text_password_illegal">Mật khẩu phải có độ dài lớn hơn 8, chứa kí tự hoa-thường, số và kí tự đặc biệt</string>
     <string name="text_email_illegal">Email sai định dạng</string>
