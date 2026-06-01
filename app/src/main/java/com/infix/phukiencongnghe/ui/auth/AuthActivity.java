@@ -9,8 +9,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.databinding.ActivityAuthBinding;
 
 public class AuthActivity extends AppCompatActivity {
+    private ActivityAuthBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

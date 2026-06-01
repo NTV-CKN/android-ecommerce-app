@@ -100,16 +100,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        app:passwordToggleEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/til_password_register"
         app:layout_constraintStart_toStartOf="@+id/til_password_register"
-        app:layout_constraintTop_toBottomOf="@+id/til_password_register">
+        app:layout_constraintTop_toBottomOf="@+id/til_password_register"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_repeat_password_register"
             android:layout_width="match_parent"
-            android:inputType="textPassword"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_repeat_password" />
+            android:hint="@string/hint_repeat_password"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
