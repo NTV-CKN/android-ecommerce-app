@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -16,6 +18,17 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        if (localPropertiesFile.exists() && localPropertiesFile.canRead()) {
+            properties.load(localPropertiesFile.inputStream())
+        }
+        val mapsApiKey = properties.getProperty("MAPS_API_KEY") ?: ""
+
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+
+        buildConfigField("String", "MAPS_KEY", "\"$mapsApiKey\"")
     }
 
     buildTypes {
@@ -38,6 +51,10 @@ android {
 }
 
 dependencies {
+    //google map platform
+    implementation(libs.play.services.maps)
+    implementation(libs.places)
+
     //retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
