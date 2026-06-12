@@ -13,4 +13,7 @@
     <string name="text_repeat_password_not_match">Hai mật khẩu không khớp nhau</string>
     <string name="text_verify_mail">Xác thực</string>
     <string name="text_go_verify_mail">Xác nhận xác thực email</string>
+    <string name="text_welcome_header_fragment">Chưa đăng nhập</string>
+    <string name="text_category">Danh mục</string>
+    <string name="text_home_listproduct">Nổi bật</string>
 </resources>
