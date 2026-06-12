@@ -88,6 +88,8 @@ public class AuthViewModel extends ViewModel {
         });
     }
 
+    //Dùng khi người dùng tạo tài khoản và cần xác thực mail đó có đúng của họ không
+    //Phương thức này giúp set lại trạng thái tài khoản của người dùng để active
     public void verifyMail(String mail) {
         if(mail == null || mail.isEmpty()) return;
         _isLoading.setValue(true);

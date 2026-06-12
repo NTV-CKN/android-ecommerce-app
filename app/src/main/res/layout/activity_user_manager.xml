@@ -20,7 +20,7 @@
             app:title="@string/txt_gui_manage_of_account" />
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragment_container"
+            android:id="@+id/fcv_user_manage"
             android:layout_width="match_parent"
             android:gravity="center_vertical"
             android:layout_height="0dp"

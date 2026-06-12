@@ -15,12 +15,14 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.navigation.NavigationView;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.databinding.ActivityUserManagerBinding;
+import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageFragment;
 
 import java.util.Objects;
 
 public class UserManagerActivity extends AppCompatActivity {
     private ActivityUserManagerBinding binding;
     private ActionBarDrawerToggle toggle;
+    private Integer userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class UserManagerActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityUserManagerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        userId = 1;
         setupMyToolbar();
     }
 
@@ -51,7 +54,10 @@ public class UserManagerActivity extends AppCompatActivity {
                 if (id == R.id.nav_home) {
 
                 } else if (id == R.id.nav_address_user) {
-
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fcv_user_manage, UserAddressManageFragment.newInstance(userId))
+                            .addToBackStack(null)
+                            .commit();
                 } else if (id == R.id.nav_logout) {
 
                 }

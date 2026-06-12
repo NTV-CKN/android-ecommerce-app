@@ -27,4 +27,9 @@
     <string name="txt_gui_manage_of_account">Quản lí tài khoản</string>
     <string name="open">Mở</string>
     <string name="close">Đóng</string>
+    <string name="txt_name_receiver_args">Người nhận: %s</string>
+    <string name="txt_province_city_args">Tỉnh/Thành phố: %s</string>
+    <string name="txt_phone_number_args">Số điện thoại: %s</string>
+    <string name="txt_address_detail_args">Địa chỉ chi tiết: %s</string>
+    <string name="txt_default">Mặc định</string>
 </resources>
