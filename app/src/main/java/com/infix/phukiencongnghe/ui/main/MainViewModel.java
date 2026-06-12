@@ -1,0 +1,117 @@
+package com.infix.phukiencongnghe.ui.main;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
+import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
+import com.infix.phukiencongnghe.data.repository.main.category.CategoryRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.main.category.ICategoryRepository;
+import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainViewModel extends ViewModel {
+    /*
+        REPOSITORY
+     */
+    private final ICategoryRepository categoryRepository;
+    private final IProductRepository featureProductRepository;
+    /*
+        CATEGORY
+    */
+    private final MutableLiveData<List<CategoryDTO>> _categoryLiveData = new MutableLiveData<>();
+    final LiveData<List<CategoryDTO>> categoryLiveData = _categoryLiveData;
+    /*
+        FEATURE PRODUCT
+    */
+    private final MutableLiveData<List<FeatureProductDTO>> _ftProdLiveData = new MutableLiveData<>();
+    final LiveData<List<FeatureProductDTO>> ftProdLiveData = _ftProdLiveData;
+
+    /*
+        NOTIFY
+    */
+    private final MutableLiveData<String> _notifyMsg = new MutableLiveData<>();
+    final LiveData<String> notifyMsg = _notifyMsg;
+    /*
+        LOADING
+    */
+    private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
+    final LiveData<Boolean> isLoading = _isLoading;
+    public MainViewModel(ICategoryRepository categoryRepository, IProductRepository featureProductRepository) {
+        this.featureProductRepository = featureProductRepository;
+        this.categoryRepository = categoryRepository;
+    }
+
+    public static class Factory implements ViewModelProvider.Factory {
+        private final ICategoryRepository categoryRepository;
+        private final IProductRepository productRepository;
+
+        public Factory(ICategoryRepository categoryRepository,
+                       IProductRepository productRepository) {
+            this.categoryRepository = categoryRepository;
+            this.productRepository = productRepository;
+        }
+
+        @NonNull
+        @Override
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            if (modelClass.isAssignableFrom(MainViewModel.class))
+                return (T) new MainViewModel(categoryRepository, productRepository);
+            throw new IllegalArgumentException("Model class illegal");
+        }
+    }
+
+    public void loadFeatureProduct(int page, int size) {
+        _isLoading.setValue(true);
+        featureProductRepository.getFeatureProduct(page, size).enqueue(new Callback<List<FeatureProductDTO>>() {
+            @Override
+            public void onResponse(Call<List<FeatureProductDTO>> call, Response<List<FeatureProductDTO>> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    _ftProdLiveData.setValue(response.body());
+                } else {
+                    _notifyMsg.setValue("Không thể tải danh sách");
+                }
+                _isLoading.setValue(false);
+            }
+
+            @Override
+            public void onFailure(Call<List<FeatureProductDTO>> call, Throwable throwable) {
+                _notifyMsg.setValue("Lỗi kết nối " + throwable.getMessage());
+                _isLoading.setValue(false);
+            }
+        });
+    }
+
+    public void loadParentCategories() {
+        _isLoading.setValue(true);
+        categoryRepository.getParentCategory().enqueue(new Callback<List<CategoryDTO>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<CategoryDTO>> call, @NonNull Response<List<CategoryDTO>> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    _categoryLiveData.setValue(response.body());
+                } else {
+                    _notifyMsg.setValue("Không thể tải danh sách");
+                }
+                _isLoading.setValue(false);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<CategoryDTO>> call, @NonNull Throwable throwable) {
+                _notifyMsg.setValue("Lỗi kết nối: " + throwable.getMessage());
+                _isLoading.setValue(false);
+            }
+        });
+    }
+    public void resetStates() {
+        _notifyMsg.setValue(null);
+        _isLoading.setValue(null);
+    }
+}
