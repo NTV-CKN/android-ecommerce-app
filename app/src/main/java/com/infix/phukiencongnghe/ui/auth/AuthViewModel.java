@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.gson.Gson;
 import com.infix.phukiencongnghe.common.TypeAccount;
+import com.infix.phukiencongnghe.data.dto.request.ResetPasswordDTO;
 import com.infix.phukiencongnghe.data.dto.request.UserRegisterDTO;
 import com.infix.phukiencongnghe.data.dto.response.ExceptionResponseDTO;
 import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
@@ -87,6 +88,8 @@ public class AuthViewModel extends ViewModel {
         });
     }
 
+    //Dùng khi người dùng tạo tài khoản và cần xác thực mail đó có đúng của họ không
+    //Phương thức này giúp set lại trạng thái tài khoản của người dùng để active
     public void verifyMail(String mail) {
         if(mail == null || mail.isEmpty()) return;
         _isLoading.setValue(true);
@@ -121,6 +124,49 @@ public class AuthViewModel extends ViewModel {
             public void onFailure(Call<SuccessBasicDTO> call, Throwable throwable) {
                 _notifyMsg.setValue(throwable.getMessage());
                 _isLoading.setValue(false);
+            }
+        });
+    }
+
+    public void resetPassword(String email, String password, String token ) {
+        ResetPasswordDTO resetPasswordDTO  = new ResetPasswordDTO(
+                email,
+                password,
+                token
+        );
+        _isLoading.setValue(true);
+
+        authRepository.resetPassword(resetPasswordDTO).enqueue(new Callback<SuccessBasicDTO>() {
+            @Override
+            public void onResponse(Call<SuccessBasicDTO> call, Response<SuccessBasicDTO> response) {
+                if (response.isSuccessful()) {
+                    SuccessBasicDTO succ = response.body();
+                    if (succ != null && succ.isSuccess())
+                        _notifyMsg.setValue(
+                                succ.getMessage()
+                        );
+                } else {
+                    Gson gson = new Gson();
+                    ResponseBody responseBody = response.errorBody();
+                    if (responseBody == null) {
+                        _notifyMsg.setValue("Không thể hiểu lỗi");
+                        return;
+                    }
+                    ExceptionResponseDTO exc = null;
+                    try {
+                        exc = gson.fromJson(responseBody.string(), ExceptionResponseDTO.class);
+                        _notifyMsg.setValue(exc.getMessage());
+                    } catch (IOException e) {
+                        _notifyMsg.setValue(e.getMessage());
+                    }
+                }
+                _isLoading.setValue(false);
+            }
+
+            @Override
+            public void onFailure(Call<SuccessBasicDTO> call, Throwable throwable) {
+                _isLoading.setValue(false);
+                _notifyMsg.setValue(throwable.getMessage());
             }
         });
     }

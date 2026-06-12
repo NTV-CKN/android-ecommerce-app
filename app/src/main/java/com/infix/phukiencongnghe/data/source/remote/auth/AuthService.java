@@ -1,5 +1,6 @@
 package com.infix.phukiencongnghe.data.source.remote.auth;
 
+import com.infix.phukiencongnghe.data.dto.request.ResetPasswordDTO;
 import com.infix.phukiencongnghe.data.dto.request.UserRegisterDTO;
 import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 
@@ -15,4 +16,10 @@ public interface AuthService {
 
     @GET("/api/v1/auth/verify-email")
     Call<SuccessBasicDTO> verifyEmail(@Query("email") String email);
+
+    @POST("/api/v1/auth/reset-password")
+    Call<SuccessBasicDTO> resetPassword(@Body ResetPasswordDTO resetPasswordDTO);
+
+    @GET("/api/v1/auth/send-email-reset-password")
+    Call<SuccessBasicDTO> sendMailResetPassword(@Query("email") String email);
 }

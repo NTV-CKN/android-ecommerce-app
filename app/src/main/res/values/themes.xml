@@ -19,4 +19,15 @@
         <item name="strokeWidth">1.5dp</item> <item name="android:textColor">@color/tech_primary_dark</item>
         <item name="cornerRadius">12dp</item>
     </style>
+
+    <style name="MyToolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/tech_primary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="titleTextColor">@android:color/white</item>
+
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
 </resources>

@@ -15,11 +15,40 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name=".ui.auth.register.VerificationActivity"
-            android:launchMode="singleTask"
+            android:name=".ui.user_manage.UserManagerActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <activity
+            android:name=".ui.auth.reset_password.ResetPasswordActivity"
+            android:exported="true">
+            <intent-filter android:label="Cập nhật lại mật khẩu">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="myapp" />
+                <data android:host="auth" />
+                <data android:pathPrefix="/reset-password" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.auth.register.VerificationActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter android:label="Kích hoạt tài khoản">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="myapp" />
@@ -42,6 +71,11 @@
             </intent-filter>
         </activity>
 
+
+        </activity>
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="true"></activity>
     </application>
 
 </manifest>
