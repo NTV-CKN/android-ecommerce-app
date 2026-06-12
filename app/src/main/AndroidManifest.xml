@@ -17,11 +17,6 @@
         <activity
             android:name=".ui.user_manage.UserManagerActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <meta-data
@@ -42,6 +37,7 @@
                 <data android:pathPrefix="/reset-password" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.auth.register.VerificationActivity"
             android:exported="true"
@@ -70,12 +66,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        </activity>
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:exported="true"></activity>
     </application>
 
 </manifest>
