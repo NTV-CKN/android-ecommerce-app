@@ -2,6 +2,7 @@ package com.infix.phukiencongnghe.data.source.remote;
 
 import com.infix.phukiencongnghe.EvnUtils;
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
+import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManageService;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -11,6 +12,10 @@ public class RetrofitHelper {
 
     public static AuthService getAuthService() {
         return generateRetrofit().create(AuthService.class);
+    }
+
+    public static UserAddressManageService getUserAddressManageService() {
+        return generateRetrofit().create(UserAddressManageService.class);
     }
 
     private static Retrofit generateRetrofit() {
