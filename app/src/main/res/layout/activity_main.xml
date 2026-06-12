@@ -2,94 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/tech_background"
     android:fitsSystemWindows="true"> <!-- Thẻ cha chịu trách nhiệm né thanh 3 nút hệ thống -->
-
-    <!-- CẤU TRÚC 1: CoordinatorLayout chứa toàn bộ nội dung cuộn và header -->
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/main"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"> <!-- Đáy luôn dừng lại ở ĐỈNH của navbar -->
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            app:elevation="0dp">
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragment_header_container"
-                android:name="com.infix.phukiencongnghe.ui.header.HeaderFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardBanner"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_marginBottom="20dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardBackgroundColor="@color/tech_surface"
-                    app:cardElevation="3dp">
-
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/viewPagerBanner"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_category"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/tech_text_main"
-                    android:layout_marginBottom="10dp"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycleView_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="25dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_home_listproduct"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/tech_text_main"
-                    android:layout_marginBottom="10dp"/>
-
-                <!-- Đã sửa thuộc tính lỗi margin chuẩn chỉnh -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycleView_product"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"/>
-
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!-- CẤU TRÚC 2: BottomNavigationView được ghim chặt vào đáy của vùng an toàn -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -104,6 +21,34 @@
         app:labelVisibilityMode="labeled"
         app:paddingBottomSystemWindowInsets="false"
         app:paddingTopSystemWindowInsets="false"
-        app:layout_constraintBottom_toBottomOf="parent"/> <!-- Ghim sát đáy màn hình an toàn -->
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv_header_home"
+        android:name="com.infix.phukiencongnghe.ui.header.HeaderFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView2"
+        android:name="com.infix.phukiencongnghe.ui.main.home.HomeFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

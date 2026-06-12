@@ -1,4 +1,4 @@
-package com.infix.phukiencongnghe.ui.main;
+package com.infix.phukiencongnghe.ui.main.home;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
-import com.infix.phukiencongnghe.data.repository.main.category.CategoryRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.main.category.ICategoryRepository;
 import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
 
@@ -18,7 +17,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainViewModel extends ViewModel {
+public class HomeViewModel extends ViewModel {
     /*
         REPOSITORY
      */
@@ -28,24 +27,25 @@ public class MainViewModel extends ViewModel {
         CATEGORY
     */
     private final MutableLiveData<List<CategoryDTO>> _categoryLiveData = new MutableLiveData<>();
-    final LiveData<List<CategoryDTO>> categoryLiveData = _categoryLiveData;
+    public final LiveData<List<CategoryDTO>> categoryLiveData = _categoryLiveData;
     /*
         FEATURE PRODUCT
     */
     private final MutableLiveData<List<FeatureProductDTO>> _ftProdLiveData = new MutableLiveData<>();
-    final LiveData<List<FeatureProductDTO>> ftProdLiveData = _ftProdLiveData;
+    public final LiveData<List<FeatureProductDTO>> ftProdLiveData = _ftProdLiveData;
 
     /*
         NOTIFY
     */
     private final MutableLiveData<String> _notifyMsg = new MutableLiveData<>();
-    final LiveData<String> notifyMsg = _notifyMsg;
+    public final LiveData<String> notifyMsg = _notifyMsg;
     /*
         LOADING
     */
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
-    final LiveData<Boolean> isLoading = _isLoading;
-    public MainViewModel(ICategoryRepository categoryRepository, IProductRepository featureProductRepository) {
+    public final LiveData<Boolean> isLoading = _isLoading;
+
+    public HomeViewModel(ICategoryRepository categoryRepository, IProductRepository featureProductRepository) {
         this.featureProductRepository = featureProductRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -63,8 +63,8 @@ public class MainViewModel extends ViewModel {
         @NonNull
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(MainViewModel.class))
-                return (T) new MainViewModel(categoryRepository, productRepository);
+            if (modelClass.isAssignableFrom(HomeViewModel.class))
+                return (T) new HomeViewModel(categoryRepository, productRepository);
             throw new IllegalArgumentException("Model class illegal");
         }
     }
@@ -74,7 +74,7 @@ public class MainViewModel extends ViewModel {
         featureProductRepository.getFeatureProduct(page, size).enqueue(new Callback<List<FeatureProductDTO>>() {
             @Override
             public void onResponse(Call<List<FeatureProductDTO>> call, Response<List<FeatureProductDTO>> response) {
-                if(response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null) {
                     _ftProdLiveData.setValue(response.body());
                 } else {
                     _notifyMsg.setValue("Không thể tải danh sách");
@@ -95,7 +95,7 @@ public class MainViewModel extends ViewModel {
         categoryRepository.getParentCategory().enqueue(new Callback<List<CategoryDTO>>() {
             @Override
             public void onResponse(@NonNull Call<List<CategoryDTO>> call, @NonNull Response<List<CategoryDTO>> response) {
-                if(response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null) {
                     _categoryLiveData.setValue(response.body());
                 } else {
                     _notifyMsg.setValue("Không thể tải danh sách");
@@ -110,6 +110,7 @@ public class MainViewModel extends ViewModel {
             }
         });
     }
+
     public void resetStates() {
         _notifyMsg.setValue(null);
         _isLoading.setValue(null);
