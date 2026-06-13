@@ -17,7 +17,7 @@ public class FeatureProductRepositoryImpl implements IProductRepository{
     }
 
     @Override
-    public Call<List<FeatureProductDTO>> getFeatureProduct(int page, int size) {
-        return featureProductService.getFeatureProduct(page, size);
+    public Call<List<FeatureProductDTO>> getFeatureProduct(int limit) {
+        return featureProductService.getFeatureProduct(limit);
     }
 }

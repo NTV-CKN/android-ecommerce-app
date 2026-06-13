@@ -69,9 +69,9 @@ public class HomeViewModel extends ViewModel {
         }
     }
 
-    public void loadFeatureProduct(int page, int size) {
+    public void loadFeatureProduct(int limit) {
         _isLoading.setValue(true);
-        featureProductRepository.getFeatureProduct(page, size).enqueue(new Callback<List<FeatureProductDTO>>() {
+        featureProductRepository.getFeatureProduct(limit).enqueue(new Callback<List<FeatureProductDTO>>() {
             @Override
             public void onResponse(Call<List<FeatureProductDTO>> call, Response<List<FeatureProductDTO>> response) {
                 if (response.isSuccessful() && response.body() != null) {

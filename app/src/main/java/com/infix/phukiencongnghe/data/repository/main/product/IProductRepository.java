@@ -7,5 +7,5 @@ import java.util.List;
 import retrofit2.Call;
 
 public interface IProductRepository {
-    Call<List<FeatureProductDTO>> getFeatureProduct(int page, int size);
+    Call<List<FeatureProductDTO>> getFeatureProduct(int limit);
 }

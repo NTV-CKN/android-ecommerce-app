@@ -1,6 +1,5 @@
 package com.infix.phukiencongnghe.data.source.remote;
 
-import com.infix.phukiencongnghe.EvnUtils;
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
 import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
@@ -30,7 +29,7 @@ public class RetrofitHelper {
 
     private static Retrofit generateRetrofit() {
         return new Retrofit.Builder()
-                .baseUrl(EvnUtils.BASE_URL)
+                .baseUrl("http://172.20.10.4:8080")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
