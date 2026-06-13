@@ -10,6 +10,5 @@ import retrofit2.http.Query;
 
 public interface FeatureProductService {
     @GET("/api/v1/product/feature")
-    Call<List<FeatureProductDTO>> getFeatureProduct(@Query("page") int page,
-                                                    @Query("size") int size);
+    Call<List<FeatureProductDTO>> getFeatureProduct(@Query("limit") int limit);
 }
