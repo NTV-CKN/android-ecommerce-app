@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.user_manage.address.AddOrUpdateUserAddressFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_receiver_name_uoa_user_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_label_add_or_update_user_address">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_receiver_name_uoa_user_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/txt_enter_receiver_name" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_label_add_or_update_user_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_phone_number_uoa_user_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/til_receiver_name_uoa_user_address"
+        app:layout_constraintStart_toStartOf="@+id/til_receiver_name_uoa_user_address"
+        app:layout_constraintTop_toBottomOf="@+id/til_receiver_name_uoa_user_address">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_phone_number_uoa_user_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/txt_enter_your_phone_number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/spinner_province_city_uoa_user_address"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/til_phone_number_uoa_user_address"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/txt_select_province_city"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintStart_toStartOf="@+id/til_phone_number_uoa_user_address"
+        app:layout_constraintTop_toBottomOf="@+id/til_phone_number_uoa_user_address" />
+
+    <EditText
+        android:id="@+id/edt_nav_delivery_address_uoa_user_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:ems="10"
+        android:focusable="false"
+        android:hint="@string/txt_select_detail_address"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="@+id/spinner_province_city_uoa_user_address"
+        app:layout_constraintStart_toStartOf="@+id/spinner_province_city_uoa_user_address"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_province_city_uoa_user_address" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_address_default_uoa_user_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/txt_put_default_address"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintEnd_toEndOf="@+id/edt_nav_delivery_address_uoa_user_address"
+        app:layout_constraintStart_toStartOf="@+id/edt_nav_delivery_address_uoa_user_address"
+        app:layout_constraintTop_toBottomOf="@+id/edt_nav_delivery_address_uoa_user_address" />
+
+    <Button
+        android:id="@+id/btn_cancel_uoa_user_address"
+        style="@style/ButtonNegative"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:text="@string/text_cancel"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_confirm_uoa_user_address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toTopOf="@+id/btn_confirm_uoa_user_address"
+        tools:ignore="TextContrastCheck,VisualLintButtonSize" />
+
+    <Button
+        android:id="@+id/btn_confirm_uoa_user_address"
+        style="@style/ButtonPositive"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="12dp"
+        android:text="@string/txt_confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/switch_address_default_uoa_user_address"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="VisualLintButtonSize" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+</androidx.constraintlayout.widget.ConstraintLayout>
