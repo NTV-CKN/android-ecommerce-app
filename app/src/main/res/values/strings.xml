@@ -35,4 +35,10 @@
     <string name="txt_phone_number_args">Số điện thoại: %s</string>
     <string name="txt_address_detail_args">Địa chỉ chi tiết: %s</string>
     <string name="txt_default">Mặc định</string>
+    <string name="txt_put_default_address">Đặt địa chỉ mặc định</string>
+    <string name="txt_select_detail_address">Chọn địa chỉ chi tiết (Số nhà, tên đường...)</string>
+    <string name="txt_select_province_city">Chọn tỉnh/thành phố:</string>
+    <string name="txt_enter_your_phone_number">Nhập số điện thoại</string>
+    <string name="txt_enter_receiver_name">Nhập tên người nhận</string>
+    <string name="txt_confirm">Xác nhận</string>
 </resources>

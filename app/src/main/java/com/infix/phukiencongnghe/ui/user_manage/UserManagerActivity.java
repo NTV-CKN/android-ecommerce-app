@@ -22,6 +22,7 @@ import java.util.Objects;
 public class UserManagerActivity extends AppCompatActivity {
     private ActivityUserManagerBinding binding;
     private ActionBarDrawerToggle toggle;
+    //Ai gọi đến UserManagerActivity sẽ truyền userId vào
     private Integer userId;
 
     @Override
@@ -30,7 +31,7 @@ public class UserManagerActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityUserManagerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        userId = 1;
+        userId = 1;//để tạm
         setupMyToolbar();
     }
 
