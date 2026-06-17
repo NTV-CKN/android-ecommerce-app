@@ -57,7 +57,6 @@ public class UserManagerActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_address_user) {
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fcv_user_manage, UserAddressManageFragment.newInstance(userId))
-                            .addToBackStack(null)
                             .commit();
                 } else if (id == R.id.nav_logout) {
 

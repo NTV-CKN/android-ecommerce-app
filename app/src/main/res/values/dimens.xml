@@ -2,4 +2,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_margin_bottom">90dp</dimen>
     <dimen name="fab_margin_end">50dp</dimen>
+    <dimen name="height_btn_back">60dp</dimen>
+    <dimen name="width_btn_back">60dp</dimen>
    </resources>

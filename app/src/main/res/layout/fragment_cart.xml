@@ -119,8 +119,7 @@
             android:textColor="@android:color/white"
             android:backgroundTint="@color/tech_cta_action"
             android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:cornerRadius="8dp"/>
+            android:paddingEnd="24dp" />
 
     </LinearLayout>
 
