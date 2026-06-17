@@ -9,6 +9,8 @@
     <color name="tech_background">#F1F5F9</color>
     <color name="tech_surface">#FFFFFF</color>
 
+    <color name="btn_cart_payment">#C11A4D</color>
+
     <color name="tech_text_main">#0F172A</color>
     <color name="tech_text_muted">#475569</color>
     <color name="tech_success">#10B981</color>
