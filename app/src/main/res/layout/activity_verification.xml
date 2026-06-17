@@ -31,8 +31,8 @@
 
     <ImageButton
         android:id="@+id/btn_back_verify_mail"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/width_btn_back"
+        android:layout_height="@dimen/height_btn_back"
         android:background="?attr/selectableItemBackground"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/textView"

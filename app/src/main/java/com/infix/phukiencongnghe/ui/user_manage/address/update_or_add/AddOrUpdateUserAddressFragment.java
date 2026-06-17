@@ -1,4 +1,4 @@
-package com.infix.phukiencongnghe.ui.user_manage.address;
+package com.infix.phukiencongnghe.ui.user_manage.address.update_or_add;
 
 import android.os.Bundle;
 
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.databinding.FragmentAddOrUpdateUserAddressBinding;
+import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.address_picker.AddressDeliveryPickerFragment;
 
 public class AddOrUpdateUserAddressFragment extends Fragment {
     private FragmentAddOrUpdateUserAddressBinding binding;
@@ -63,6 +64,26 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setEvents();
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    private void setEvents() {
+        //editText enter detail address click
+        binding.edtNavDeliveryAddressUoaUserAddress.setOnClickListener(v -> {
+            goToAddressDeliveryPickerFragment(10.957412, 106.84269);
+        });
+    }
+
+    private void goToAddressDeliveryPickerFragment(double lat, double lng) {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fcv_user_manage, AddressDeliveryPickerFragment.newInstance(lat, lng))
+                .commit();
     }
 }

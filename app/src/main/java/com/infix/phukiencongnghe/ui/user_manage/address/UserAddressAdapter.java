@@ -17,10 +17,10 @@ import java.util.List;
 
 public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.ViewHolder> {
     private final List<UserAddressDTO> userAddressDTOS = new ArrayList<>();
-    private final OnOptionClick onOptionClick;
+    private final OnItemClick onItemClick;
 
-    public UserAddressAdapter(OnOptionClick onOptionClick) {
-        this.onOptionClick = onOptionClick;
+    public UserAddressAdapter(OnItemClick onItemClick) {
+        this.onItemClick = onItemClick;
     }
 
     @NonNull
@@ -60,8 +60,8 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
         }
 
         private void setEventClick() {
-            binding.btnItemAddressOptions.setOnClickListener(v -> {
-                onOptionClick.onClick(userAddressDTOS.get(getBindingAdapterPosition()));
+            binding.getRoot().setOnClickListener(v -> {
+                onItemClick.onItemClick(userAddressDTOS.get(getBindingAdapterPosition()));
             });
         }
 
@@ -78,7 +78,7 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
     }
 
 
-    interface OnOptionClick {
-        void onClick(UserAddressDTO userAddressDTO);
+    interface OnItemClick {
+        void onItemClick(UserAddressDTO userAddressDTO);
     }
 }

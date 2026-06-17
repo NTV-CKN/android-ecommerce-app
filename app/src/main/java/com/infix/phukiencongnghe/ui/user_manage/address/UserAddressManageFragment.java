@@ -12,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.UserAddressManageRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.databinding.FragmentUserAddressManageBinding;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
+import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.AddOrUpdateUserAddressFragment;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 public class UserAddressManageFragment extends Fragment {
@@ -27,7 +29,7 @@ public class UserAddressManageFragment extends Fragment {
 
     private static final String ARG_USER_ID = "UserAddressManageFragment.ARG_USER_ID";
 
-    private Integer userId;
+    private Integer userId = 1;
 
     public static UserAddressManageFragment newInstance(Integer userId) {
         UserAddressManageFragment fragment = new UserAddressManageFragment();
@@ -62,6 +64,7 @@ public class UserAddressManageFragment extends Fragment {
         loadingDialog = new LoadingDialog();
         initRecyclerView();
         initUserAddressManageViewModel();
+        setEvents();
     }
 
     @Override
@@ -74,7 +77,7 @@ public class UserAddressManageFragment extends Fragment {
 
     private void initRecyclerView() {
         userAddressAdapter = new UserAddressAdapter((userAddressDTO) -> {
-            //Show Bottom sheet
+
         });
 
         binding.rvUserAddressManage.setAdapter(userAddressAdapter);
@@ -116,5 +119,24 @@ public class UserAddressManageFragment extends Fragment {
             else
                 loadingDialog.dismiss();
         });
+    }
+
+    private void setEvents() {
+        //fab
+        binding.fabAddAddressUserManage.setOnClickListener(v -> {
+            goToAddOrUpdateUserAddressFragment(false);
+        });
+    }
+
+    private void goToAddOrUpdateUserAddressFragment(boolean isUpdate) {
+        AddOrUpdateUserAddressFragment addOrUpdateUserAddressFragment = null;
+        if(!isUpdate)
+            addOrUpdateUserAddressFragment =
+                    AddOrUpdateUserAddressFragment.newInstanceForAdd(1);
+
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fcv_user_manage, addOrUpdateUserAddressFragment)
+                .commit();
     }
 }

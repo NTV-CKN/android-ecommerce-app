@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.user_manage.address.AddOrUpdateUserAddressFragment">
+    tools:context=".ui.user_manage.address.update_or_add.AddOrUpdateUserAddressFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_receiver_name_uoa_user_address"
