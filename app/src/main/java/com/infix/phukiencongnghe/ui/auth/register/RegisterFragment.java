@@ -21,6 +21,7 @@ import com.infix.phukiencongnghe.databinding.FragmentRegisterBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.AppUtils;
+import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 
@@ -141,7 +142,7 @@ public class RegisterFragment extends Fragment {
             binding.tilEmailRegister.setError(null);
 
         if (!dataReady) return;
-
+        KeyboardUtils.hideKeyboardFromView(binding.getRoot());
         authViewModel.registerUser(email, password);
     }
 }

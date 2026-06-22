@@ -18,6 +18,7 @@ import com.infix.phukiencongnghe.databinding.ActivityResetPasswordBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.AppUtils;
+import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 public class ResetPasswordActivity extends AppCompatActivity {
@@ -130,6 +131,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         }
         String email = uri.getQueryParameter("email");
         String token = uri.getQueryParameter("token");
+        KeyboardUtils.hideKeyboardFromView(binding.getRoot());
         authViewModel.resetPassword(email, password, token);
     }
 }

@@ -55,7 +55,7 @@ public class VerificationActivity extends AppCompatActivity {
         binding.btnVerifyMail.setOnClickListener(v -> {
             Uri uri = getIntent().getData();
             if (uri != null)
-                authViewModel.verifyMail(uri.getQueryParameter("email"));
+                authViewModel.verifyMail(uri.getQueryParameter("token"));
         });
     }
 
