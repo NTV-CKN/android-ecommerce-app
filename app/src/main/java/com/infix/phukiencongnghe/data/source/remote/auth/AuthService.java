@@ -14,8 +14,8 @@ public interface AuthService {
     @POST("/api/v1/auth/register")
     Call<SuccessBasicDTO> register(@Body UserRegisterDTO user);
 
-    @GET("/api/v1/auth/verify-email")
-    Call<SuccessBasicDTO> verifyEmail(@Query("email") String email);
+    @GET("/api/v1/auth/verify-mail")
+    Call<SuccessBasicDTO> verifyEmail(@Query("token") String token);
 
     @POST("/api/v1/auth/reset-password")
     Call<SuccessBasicDTO> resetPassword(@Body ResetPasswordDTO resetPasswordDTO);

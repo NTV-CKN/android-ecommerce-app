@@ -90,10 +90,10 @@ public class AuthViewModel extends ViewModel {
 
     //Dùng khi người dùng tạo tài khoản và cần xác thực mail đó có đúng của họ không
     //Phương thức này giúp set lại trạng thái tài khoản của người dùng để active
-    public void verifyMail(String mail) {
-        if(mail == null || mail.isEmpty()) return;
+    public void verifyMail(String token) {
+        if(token == null || token.isEmpty()) return;
         _isLoading.setValue(true);
-        authRepository.verifyEmail(mail).enqueue(new Callback<SuccessBasicDTO>() {
+        authRepository.verifyEmail(token).enqueue(new Callback<SuccessBasicDTO>() {
             @Override
             public void onResponse(Call<SuccessBasicDTO> call, Response<SuccessBasicDTO> response) {
                 if (response.isSuccessful()) {
