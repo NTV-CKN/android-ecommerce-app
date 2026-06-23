@@ -11,10 +11,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
 import com.infix.phukiencongnghe.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    //AuthActivity sẽ gửi đối tượng User sang MainActivity khi login thành công
+    public static final String KEY_USER_HEADER = "com.infix.phukiencongnghe.ui.main.MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

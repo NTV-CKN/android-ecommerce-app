@@ -5,17 +5,17 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 import com.infix.phukiencongnghe.data.source.local.entity.CartEntity;
-import com.infix.phukiencongnghe.data.source.local.repo.CartLocaloRepositoryImpl;
-import com.infix.phukiencongnghe.data.source.local.repo.ICartLocalRepository;
+import com.infix.phukiencongnghe.data.source.local.source.cart.CartLocalDataSourceImpl;
+import com.infix.phukiencongnghe.data.source.local.source.cart.ICartLocalDataSource;
 
 import java.util.List;
 
 public class CartRepositoryImpl implements ICartRepository {
 
-    private final ICartLocalRepository localRepository;
+    private final ICartLocalDataSource localRepository;
 
     public CartRepositoryImpl(Context context) {
-        this.localRepository = new CartLocaloRepositoryImpl(context);
+        this.localRepository = new CartLocalDataSourceImpl(context);
     }
 
     @Override
