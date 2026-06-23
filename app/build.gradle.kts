@@ -2,6 +2,8 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -52,6 +54,19 @@ android {
 }
 
 dependencies {
+    //glide
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
+
+    //firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
+
+    //room
+    implementation (libs.room.runtime)
+    annotationProcessor (libs.room.compiler)
+
     //google map platform
     implementation(libs.play.services.maps)
     implementation(libs.places)
@@ -71,9 +86,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
-    implementation ("androidx.room:room-runtime:2.5.0")
-    annotationProcessor ("androidx.room:room-compiler:2.5.0")
-
 }

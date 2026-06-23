@@ -2,6 +2,7 @@ package com.infix.phukiencongnghe.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -64,6 +65,8 @@ public class AuthActivity extends AppCompatActivity {
         authViewModel.jwtFromLoginDTO.observe(this, jwtFromLoginDTO -> {
             if(jwtFromLoginDTO == null) return;
 
+            Log.d("SVU", jwtFromLoginDTO.toString());
+
             UserEntity user = new UserEntity();
             String fullName = jwtFromLoginDTO.getFullName() == null?"No name":jwtFromLoginDTO.getFullName();
             user.setFullName(fullName);
@@ -97,5 +100,6 @@ public class AuthActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(MainActivity.KEY_USER_HEADER, user);
         startActivity(intent);
+        finish();
     }
 }

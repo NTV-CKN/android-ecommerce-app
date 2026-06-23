@@ -1,5 +1,7 @@
 package com.infix.phukiencongnghe.ui.auth;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.gson.Gson;
+import com.infix.phukiencongnghe.common.OnLoginGoogleListener;
 import com.infix.phukiencongnghe.common.TypeAccount;
 import com.infix.phukiencongnghe.data.dto.request.ResetPasswordDTO;
 import com.infix.phukiencongnghe.data.dto.request.UserLoginDTO;
@@ -185,44 +188,52 @@ public class AuthViewModel extends ViewModel {
     }
 
     /**
-     * Chức năng đăng nhập dành cho tài khoản đăng nhập bằng google
-     * @param fullName
-     * @param avatar
-     * @param email
+     * Chức năng này xử lí token id của người dùng khi nhấn nút và chọn 1 trong các tài khoản,
+     * sau khi có token id thì tiến hành gọi logic chứng thực
+     * @param idToken
+     * @param onLoginGoogleListener
      */
-    public void loginGoogle(String fullName, String avatar, String email) {
-        _isLoading.setValue(true);
+    public void loginWithGoogle(String idToken, OnLoginGoogleListener onLoginGoogleListener) {
+        authRepository.loginGoogle(idToken, onLoginGoogleListener);
+    }
 
-        UserLoginGoogleDTO userLoginGoogleDTO =
-                new UserLoginGoogleDTO(fullName, avatar, email);
+    /**
+     * Chức năng đăng nhập dành cho tài khoản đăng nhập bằng google
+     * @param userLoginGoogleDTO
+     */
+    public void loginGoogle(UserLoginGoogleDTO userLoginGoogleDTO) {
+        _isLoading.postValue(true);
+
         authRepository.loginGoogle(userLoginGoogleDTO).enqueue(new Callback<JwtFromLoginDTO>() {
             @Override
             public void onResponse(Call<JwtFromLoginDTO> call, Response<JwtFromLoginDTO> response) {
                 if (response.isSuccessful()) {
                     JwtFromLoginDTO jwtFromLoginDTO = response.body();
-                    if (jwtFromLoginDTO != null && jwtFromLoginDTO.checkAccessAndRefreshValid())
-                        _jwtFromLoginDTO.setValue(jwtFromLoginDTO);
+                    if (jwtFromLoginDTO != null && jwtFromLoginDTO.checkAccessAndRefreshValid()) {
+                        _jwtFromLoginDTO.postValue(jwtFromLoginDTO);
+                    }
                 } else {
                     Gson gson = new Gson();
                     ResponseBody responseBody = response.errorBody();
                     if (responseBody == null) {
-                        _notifyMsg.setValue("Không thể hiểu lỗi");
+                        _notifyMsg.postValue("Không thể hiểu lỗi");
                         return;
                     }
+
                     ExceptionResponseDTO exc = null;
                     try {
                         exc = gson.fromJson(responseBody.string(), ExceptionResponseDTO.class);
-                        _notifyMsg.setValue(exc.getMessage());
+                        _notifyMsg.postValue(exc.getMessage());
                     } catch (IOException e) {
-                        _notifyMsg.setValue(e.getMessage());
+                        _notifyMsg.postValue(e.getMessage());
                     }
                 }
-                _isLoading.setValue(false);
+                _isLoading.postValue(false);
             }
             @Override
             public void onFailure(Call<JwtFromLoginDTO> call, Throwable throwable) {
-                _notifyMsg.setValue(throwable.getMessage());
-                _isLoading.setValue(false);
+                _notifyMsg.postValue(throwable.getMessage());
+                _isLoading.postValue(false);
             }
         });
     }

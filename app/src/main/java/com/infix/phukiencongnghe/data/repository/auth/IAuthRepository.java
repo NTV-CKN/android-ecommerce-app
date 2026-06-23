@@ -3,6 +3,7 @@ package com.infix.phukiencongnghe.data.repository.auth;
 import android.os.Handler;
 
 import com.infix.phukiencongnghe.common.OnCallbackListener;
+import com.infix.phukiencongnghe.common.OnLoginGoogleListener;
 import com.infix.phukiencongnghe.data.dto.request.ResetPasswordDTO;
 import com.infix.phukiencongnghe.data.dto.request.UserLoginDTO;
 import com.infix.phukiencongnghe.data.dto.request.UserLoginGoogleDTO;
@@ -21,5 +22,6 @@ public interface IAuthRepository {
     Call<JwtFromLoginDTO> loginLocal(UserLoginDTO userLoginDTO);
     Call<JwtFromLoginDTO> loginGoogle(UserLoginGoogleDTO userLoginGoogleDTO);
 
+    void loginGoogle(String idToken, OnLoginGoogleListener onLoginGoogleListener);
     void insertUserEntity(UserEntity user, OnCallbackListener onCallbackListener);
 }
