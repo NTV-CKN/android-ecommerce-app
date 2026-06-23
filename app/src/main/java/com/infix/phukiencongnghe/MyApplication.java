@@ -10,7 +10,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ApiClient.setContext(getApplicationContext());
+        ApiClient.initAccessRefreshToken(getApplicationContext());
         if (!Places.isInitialized()) {
             Places.initialize(
                     getApplicationContext(),

@@ -20,6 +20,7 @@ import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.databinding.ActivityAuthBinding;
 import com.infix.phukiencongnghe.ui.main.MainActivity;
 import com.infix.phukiencongnghe.ui.share_viewmodel.UserEntityViewModel;
+import com.infix.phukiencongnghe.utils.ApiClient;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 
@@ -28,9 +29,9 @@ public class AuthActivity extends AppCompatActivity {
     private AuthViewModel authViewModel;
     private UserEntityViewModel userEntityViewModel;
 
-    private static final String USER_AUTH_FILE = "com.infix.phukiencongnghe.ui.auth.USER_AUTH_FILE";
-    private static final String KEY_ACCESS_TOKEN = "com.infix.phukiencongnghe.ui.auth.KEY_ACCESS_TOKEN";
-    private static final String KEY_REFRESH_TOKEN = "com.infix.phukiencongnghe.ui.auth.KEY_REFRESH_TOKEN";
+    public static final String USER_AUTH_FILE = "com.infix.phukiencongnghe.ui.auth.USER_AUTH_FILE";
+    public static final String KEY_ACCESS_TOKEN = "com.infix.phukiencongnghe.ui.auth.KEY_ACCESS_TOKEN";
+    public static final String KEY_REFRESH_TOKEN = "com.infix.phukiencongnghe.ui.auth.KEY_REFRESH_TOKEN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,13 @@ public class AuthActivity extends AppCompatActivity {
                     jwtFromLoginDTO.getRefreshToken(),
                     this
             );
+
+            //Khi đăng nhập thành công tiến hành thiết lập lại giá trị của access/refresh Token trong ApiClient
+            ApiClient.setAccessTokenAndRefreshToken(
+                    jwtFromLoginDTO.getAccessToken(),
+                    jwtFromLoginDTO.getRefreshToken()
+            );
+
             userEntityViewModel.insertUser(user, onCallbackListener);
         });
     }

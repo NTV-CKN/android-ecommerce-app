@@ -6,6 +6,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.infix.phukiencongnghe.data.dto.response.JwtFromLoginDTO;
+import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 
 import java.io.IOException;
 
@@ -95,6 +96,12 @@ public class ApiClient {
         return retrofit;
     }
 
+    //Khi đăng nhập thành công tiến hành thiết lập lại giá trị của access/refresh Token trong ApiClient
+    public static void setAccessTokenAndRefreshToken(String accessToken, String refreshToken) {
+        ApiClient.accessToken = accessToken;
+        ApiClient.refreshToken = refreshToken;
+    }
+
     //Hàm này có nhiệm vụ thiết lập hàm kích hoạt onLogout() mỗi khi chuyển qua 1 activity mới.
     //Các activity sẽ tự đi kiểm soát logic logout tương ứng
     public static void setOnLogoutListener(OnLogoutListener onLogoutListener) {
@@ -102,8 +109,20 @@ public class ApiClient {
         alreadyLogout = false;
     }
 
-    public static void setContext(Context context) {
+    //Phương thức này sẽ lưu lại context của application, lấy dữ liệu access/refresh trong file shared
+    public static void initAccessRefreshToken(Context context) {
         ApiClient.context = context;
+        //Trả về mảng có size = 2
+        //index0: access token
+        //index1: refresh token
+        String[] strs = SharePrefUtils.getAccessRefreshTokenFromPrefFile(
+                AuthActivity.USER_AUTH_FILE,
+                AuthActivity.KEY_ACCESS_TOKEN,
+                AuthActivity.KEY_REFRESH_TOKEN,
+                context
+        );
+        ApiClient.accessToken = strs[0];
+        ApiClient.refreshToken = strs[1];
     }
 
     //Phương thức này sẽ tạo ra 1 request để xin access token từ refresh token,
