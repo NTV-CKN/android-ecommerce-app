@@ -9,8 +9,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.gson.Gson;
 import com.infix.phukiencongnghe.common.TypeAccount;
 import com.infix.phukiencongnghe.data.dto.request.ResetPasswordDTO;
+import com.infix.phukiencongnghe.data.dto.request.UserLoginDTO;
+import com.infix.phukiencongnghe.data.dto.request.UserLoginGoogleDTO;
 import com.infix.phukiencongnghe.data.dto.request.UserRegisterDTO;
 import com.infix.phukiencongnghe.data.dto.response.ExceptionResponseDTO;
+import com.infix.phukiencongnghe.data.dto.response.JwtFromLoginDTO;
 import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 import com.infix.phukiencongnghe.data.repository.auth.IAuthRepository;
 
@@ -22,7 +25,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AuthViewModel extends ViewModel {
-    private IAuthRepository authRepository;
+    private final IAuthRepository authRepository;
+
+    //Nếu JwtFromLoginDTO khác null thì AuthActivity lắng nghe và thực hiện logic trước khi chuyển sang MainActivity
+    //Chỉ có login đăng nhập như local/google mới đi set giá trị cho thằng này
+    private final MutableLiveData<JwtFromLoginDTO> _jwtFromLoginDTO = new MutableLiveData<>();
+    public LiveData<JwtFromLoginDTO> jwtFromLoginDTO = _jwtFromLoginDTO;
 
     private final MutableLiveData<String> _notifyMsg = new MutableLiveData<>();
     public LiveData<String> notifyMsg = _notifyMsg;
@@ -50,6 +58,11 @@ public class AuthViewModel extends ViewModel {
         }
     }
 
+    /**
+     * Chức năng đăng kí người dùng
+     * @param email
+     * @param password
+     */
     public void registerUser(String email, String password) {
         UserRegisterDTO user = new UserRegisterDTO(email, password, TypeAccount.LOCAL.type);
         _isLoading.setValue(true);
@@ -88,8 +101,10 @@ public class AuthViewModel extends ViewModel {
         });
     }
 
-    //Dùng khi người dùng tạo tài khoản và cần xác thực mail đó có đúng của họ không
-    //Phương thức này giúp set lại trạng thái tài khoản của người dùng để active
+    /**
+     * Chức năng xác thực mail khi đã đăng kí tài khoản trước đó, set lại trạng thái tài khoản của người dùng để active
+     * @param token
+     */
     public void verifyMail(String token) {
         if(token == null || token.isEmpty()) return;
         _isLoading.setValue(true);
@@ -122,6 +137,90 @@ public class AuthViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<SuccessBasicDTO> call, Throwable throwable) {
+                _notifyMsg.setValue(throwable.getMessage());
+                _isLoading.setValue(false);
+            }
+        });
+    }
+
+    /**
+     * Chức năng đăng nhập dành cho tài khoản được tạo trực tiếp từ hệ thống
+     * @param email
+     * @param password
+     */
+    public void loginLocal(String email, String password) {
+        _isLoading.setValue(true);
+
+        UserLoginDTO userLoginDTO = new UserLoginDTO(email, password);
+        authRepository.loginLocal(userLoginDTO).enqueue(new Callback<JwtFromLoginDTO>() {
+            @Override
+            public void onResponse(Call<JwtFromLoginDTO> call, Response<JwtFromLoginDTO> response) {
+                if (response.isSuccessful()) {
+                    JwtFromLoginDTO jwtFromLoginDTO = response.body();
+                    if (jwtFromLoginDTO != null && jwtFromLoginDTO.checkAccessAndRefreshValid())
+                        _jwtFromLoginDTO.setValue(jwtFromLoginDTO);
+                } else {
+                    Gson gson = new Gson();
+                    ResponseBody responseBody = response.errorBody();
+                    if (responseBody == null) {
+                        _notifyMsg.setValue("Không thể hiểu lỗi");
+                        return;
+                    }
+                    ExceptionResponseDTO exc = null;
+                    try {
+                        exc = gson.fromJson(responseBody.string(), ExceptionResponseDTO.class);
+                        _notifyMsg.setValue(exc.getMessage());
+                    } catch (IOException e) {
+                        _notifyMsg.setValue(e.getMessage());
+                    }
+                }
+                _isLoading.setValue(false);
+            }
+            @Override
+            public void onFailure(Call<JwtFromLoginDTO> call, Throwable throwable) {
+                _notifyMsg.setValue(throwable.getMessage());
+                _isLoading.setValue(false);
+            }
+        });
+    }
+
+    /**
+     * Chức năng đăng nhập dành cho tài khoản đăng nhập bằng google
+     * @param fullName
+     * @param avatar
+     * @param email
+     */
+    public void loginGoogle(String fullName, String avatar, String email) {
+        _isLoading.setValue(true);
+
+        UserLoginGoogleDTO userLoginGoogleDTO =
+                new UserLoginGoogleDTO(fullName, avatar, email);
+        authRepository.loginGoogle(userLoginGoogleDTO).enqueue(new Callback<JwtFromLoginDTO>() {
+            @Override
+            public void onResponse(Call<JwtFromLoginDTO> call, Response<JwtFromLoginDTO> response) {
+                if (response.isSuccessful()) {
+                    JwtFromLoginDTO jwtFromLoginDTO = response.body();
+                    if (jwtFromLoginDTO != null && jwtFromLoginDTO.checkAccessAndRefreshValid())
+                        _jwtFromLoginDTO.setValue(jwtFromLoginDTO);
+                } else {
+                    Gson gson = new Gson();
+                    ResponseBody responseBody = response.errorBody();
+                    if (responseBody == null) {
+                        _notifyMsg.setValue("Không thể hiểu lỗi");
+                        return;
+                    }
+                    ExceptionResponseDTO exc = null;
+                    try {
+                        exc = gson.fromJson(responseBody.string(), ExceptionResponseDTO.class);
+                        _notifyMsg.setValue(exc.getMessage());
+                    } catch (IOException e) {
+                        _notifyMsg.setValue(e.getMessage());
+                    }
+                }
+                _isLoading.setValue(false);
+            }
+            @Override
+            public void onFailure(Call<JwtFromLoginDTO> call, Throwable throwable) {
                 _notifyMsg.setValue(throwable.getMessage());
                 _isLoading.setValue(false);
             }
@@ -174,5 +273,6 @@ public class AuthViewModel extends ViewModel {
     public void resetStates() {
         _notifyMsg.setValue(null);
         _isLoading.setValue(null);
+        _jwtFromLoginDTO.setValue(null);
     }
 }

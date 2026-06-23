@@ -19,6 +19,7 @@ import com.infix.phukiencongnghe.databinding.ActivityAuthBinding;
 import com.infix.phukiencongnghe.databinding.ActivityVerificationBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
+import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 public class VerificationActivity extends AppCompatActivity {
@@ -68,9 +69,8 @@ public class VerificationActivity extends AppCompatActivity {
     }
 
     private void initAuthViewModel() {
-        AuthViewModel.Factory factory = new AuthViewModel.Factory(
-                new AuthRepositoryImpl(RetrofitHelper.getAuthService())
-        );
+        AuthViewModel.Factory factory = new AuthViewModel.Factory(InjectUtils.createAuthRepository(this));
+
         authViewModel = new ViewModelProvider(this, factory).get(AuthViewModel.class);
 
         //observe notify msg

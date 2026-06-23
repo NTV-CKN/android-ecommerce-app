@@ -1,4 +1,4 @@
-package com.infix.phukiencongnghe.data.source.local.repo;
+package com.infix.phukiencongnghe.data.source.local.source.cart;
 
 import androidx.lifecycle.LiveData;
 
@@ -6,7 +6,7 @@ import com.infix.phukiencongnghe.data.source.local.entity.CartEntity;
 
 import java.util.List;
 
-public interface ICartLocalRepository {
+public interface ICartLocalDataSource {
     LiveData<List<CartEntity>> getAll();
     void addItem(CartEntity item);
     void updateItem(CartEntity item);

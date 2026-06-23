@@ -1,17 +1,26 @@
 package com.infix.phukiencongnghe.data.repository.auth;
 
+import com.infix.phukiencongnghe.common.OnCallbackListener;
 import com.infix.phukiencongnghe.data.dto.request.ResetPasswordDTO;
+import com.infix.phukiencongnghe.data.dto.request.UserLoginDTO;
+import com.infix.phukiencongnghe.data.dto.request.UserLoginGoogleDTO;
 import com.infix.phukiencongnghe.data.dto.request.UserRegisterDTO;
+import com.infix.phukiencongnghe.data.dto.response.JwtFromLoginDTO;
 import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
+import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
+import com.infix.phukiencongnghe.data.source.local.source.user.IUserLocalDataSource;
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
+import com.infix.phukiencongnghe.utils.AppExecutors;
 
 import retrofit2.Call;
 
 public class AuthRepositoryImpl implements IAuthRepository {
-    private AuthService authService;
+    private final AuthService authService;
+    private final IUserLocalDataSource userLocalDataSource;
 
-    public AuthRepositoryImpl(AuthService authService) {
+    public AuthRepositoryImpl(AuthService authService, IUserLocalDataSource userLocalDataSource) {
         this.authService = authService;
+        this.userLocalDataSource = userLocalDataSource;
     }
 
     @Override
@@ -32,5 +41,23 @@ public class AuthRepositoryImpl implements IAuthRepository {
     @Override
     public Call<SuccessBasicDTO> sendMailResetPassword(String email) {
         return authService.sendMailResetPassword(email);
+    }
+
+    @Override
+    public Call<JwtFromLoginDTO> loginLocal(UserLoginDTO userLoginDTO) {
+        return authService.loginLocal(userLoginDTO);
+    }
+
+    @Override
+    public Call<JwtFromLoginDTO> loginGoogle(UserLoginGoogleDTO userLoginGoogleDTO) {
+        return authService.loginGoogle(userLoginGoogleDTO);
+    }
+
+    @Override
+    public void insertUserEntity(UserEntity user, OnCallbackListener onCallbackListener) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            userLocalDataSource.insert(user);
+            AppExecutors.getInstance().mainThread().execute(onCallbackListener::onRevoke);
+        });
     }
 }
