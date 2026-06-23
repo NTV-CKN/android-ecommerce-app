@@ -47,4 +47,10 @@
     <string name="title_sum_item_cart">Tổng cộng</string>
     <string name="btn_payment">Thanh toán</string>
     <string name="txt_select_address_delivery">Chọn địa chỉ giao hàng</string>
+    <string name="product_details_variants">Chọn phân loại:</string>
+    <string name="product_details_add_product">Thêm vào giỏ</string>
+    <string name="product_details_btn_paynow">Mua ngay</string>
+    <string name="product_details_decription_product">Mô tả sản phẩm</string>
+    <string name="product_details_product_related">Sản phẩm liên quan</string>
+    <string name="product_variant_quantity">Số lượng</string>
 </resources>

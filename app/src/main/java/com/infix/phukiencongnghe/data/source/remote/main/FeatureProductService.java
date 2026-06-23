@@ -1,14 +1,20 @@
 package com.infix.phukiencongnghe.data.source.remote.main;
 
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
+import com.infix.phukiencongnghe.data.dto.response.ProductDetailsDTO;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface FeatureProductService {
     @GET("/api/v1/product/feature")
     Call<List<FeatureProductDTO>> getFeatureProduct(@Query("limit") int limit);
+
+    @GET("/api/v1/product/{id}")
+    Call<ProductDetailsDTO> getProductDetails(@Path("id") int productId);
 }

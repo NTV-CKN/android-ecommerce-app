@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="6dp"
+    android:background="#F5F5F5"
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/img_user_avatar"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:contentDescription="Avatar"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_comment_username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="Nguyễn Văn A"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/tv_comment_date"
+        app:layout_constraintStart_toEndOf="@+id/img_user_avatar"
+        app:layout_constraintTop_toTopOf="@+id/img_user_avatar" />
+
+    <TextView
+        android:id="@+id/tv_comment_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="23/06/2026"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_comment_username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_comment_username" />
+
+    <TextView
+        android:id="@+id/tv_comment_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:lineSpacingMultiplier="1.1"
+        android:text="Sản phẩm dùng rất tốt, bơm nhanh và êm. Shop giao hàng siêu tốc, đóng gói cẩn thận. Sẽ tiếp tục ủng hộ phụ kiện của bên mình!"
+        android:textColor="#444444"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_comment_username"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_username" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
