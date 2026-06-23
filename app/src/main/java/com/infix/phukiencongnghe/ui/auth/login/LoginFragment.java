@@ -1,20 +1,31 @@
 package com.infix.phukiencongnghe.ui.auth.login;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
-import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
+import com.infix.phukiencongnghe.common.OnLoginGoogleListener;
+import com.infix.phukiencongnghe.data.dto.request.UserLoginGoogleDTO;
 import com.infix.phukiencongnghe.databinding.FragmentLoginBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
 import com.infix.phukiencongnghe.ui.auth.register.RegisterFragment;
@@ -28,6 +39,8 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private AuthViewModel authViewModel;
     private LoadingDialog loadingDialog;
+    private ActivityResultLauncher<Intent> googleSignInLauncher;
+    private GoogleSignInClient googleSignInClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,6 +56,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initGoogleSignInLauncher();
         loadingDialog = new LoadingDialog();
         initAuthViewModel();
         setEvent();
@@ -87,6 +101,25 @@ public class LoginFragment extends Fragment {
         binding.tvForgotPasswordLogin.setOnClickListener(v-> handleForgotPassword());
         //create new account
         binding.tvRegisterLinkLogin.setOnClickListener(v -> goToRegisterFragment());
+        //login by google
+        binding.btnLoginGoogleLogin.setOnClickListener(v -> handleGoogleLogin());
+    }
+
+    private void handleGoogleLogin() {
+        //tiến hành tạo Intent chuyên dụng để mở bottom sheet cho người dùng chọn 1 trong các tài khoản đã
+        //có (Trước đó phải sign out) để tiến hành lấy token id đi xác thực
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        //tạo google đăng nhập client
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+
+        googleSignInClient.signOut().addOnCompleteListener(requireActivity(), task -> {
+            Intent signInIntent = googleSignInClient.getSignInIntent();
+            googleSignInLauncher.launch(signInIntent);
+        });
     }
 
     private void handleLogin() {
@@ -131,5 +164,44 @@ public class LoginFragment extends Fragment {
 
     private void handleForgotPassword() {
 
+    }
+
+    //Khởi tạo Activity launcher để tiến hành gọi bottom sheet chọn tài khoản và lấy token id tạo chứng thực
+    private void initGoogleSignInLauncher() {
+        googleSignInLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+                        try {
+                            GoogleSignInAccount account = task.getResult(ApiException.class);
+                            if (account != null) {
+                                String idToken = account.getIdToken();
+                                Log.d("GoogleAuth", "ID Token thu được thành công: " + idToken);
+
+                                authViewModel.loginWithGoogle(idToken, new OnLoginGoogleListener() {
+                                    @Override
+                                    //nếu chứng thực thành công thì gọi API server để lưu hoặc đi đăng nhập
+                                    public void onRevoke(UserLoginGoogleDTO userLoginGoogleDTO) {
+                                        authViewModel.loginGoogle(userLoginGoogleDTO);
+                                    }
+
+                                    @Override
+                                    public void onLoginFailure(String s) {
+                                        SnackbarUtils.showBaseSnackbar(
+                                                binding.getRoot(),
+                                                s,
+                                                Snackbar.LENGTH_SHORT
+                                        );
+                                    }
+                                });
+                            }
+                        } catch (ApiException e) {
+                            Log.e("GoogleAuth", "Google Sign In thất bại mã lỗi: " + e.getStatusCode());
+                            SnackbarUtils.showBaseSnackbar(binding.getRoot(), "Đăng nhập Google thất bại.", Snackbar.LENGTH_SHORT);
+                        }
+                    }
+                }
+        );
     }
 }

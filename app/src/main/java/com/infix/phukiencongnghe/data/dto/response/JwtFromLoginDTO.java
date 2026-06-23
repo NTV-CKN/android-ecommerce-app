@@ -45,4 +45,15 @@ public class JwtFromLoginDTO {
     public Integer getUserId() {
         return userId;
     }
+
+    @Override
+    public String toString() {
+        return "JwtFromLoginDTO{" +
+                "accessToken='" + accessToken + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", userId=" + userId +
+                '}';
+    }
 }
