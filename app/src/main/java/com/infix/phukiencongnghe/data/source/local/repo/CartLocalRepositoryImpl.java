@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class CartLocaloRepositoryImpl implements ICartLocalRepository{
+public class CartLocalRepositoryImpl implements ICartLocalRepository{
     private final CartDAO cartDAO;
     private final ExecutorService executors;
 
-    public CartLocaloRepositoryImpl(Context context) {
+    public CartLocalRepositoryImpl(Context context) {
         this.cartDAO = AppDatabase.getInstance(context).cartDAO();
         this.executors = Executors.newSingleThreadExecutor();
     }

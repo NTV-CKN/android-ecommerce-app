@@ -9,9 +9,13 @@
         android:icon="@drawable/ic_category"
         android:title="Danh mục" />
     <item
-        android:id="@+id/nav_favorites"
-        android:icon="@drawable/ic_favorite"
-        android:title="Yêu thích" />
+        android:id="@+id/nav_voucher"
+        android:icon="@drawable/ic_voucher"
+        android:title="Voucher" />
+    <item
+        android:id="@+id/nav_info"
+        android:icon="@drawable/ic_info"
+        android:title="Thông tin" />
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_settings"
