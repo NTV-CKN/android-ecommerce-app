@@ -51,4 +51,7 @@
     <string name="txt_create_new_account">Tạo tài khoản mới</string>
     <string name="txt_forgot_password">Quên mật khẩu?</string>
     <string name="txt_nav_to_login">Đã có tài khoản</string>
+    <string name="txt_forgot_password_label">Quên mật khẩu</string>
+    <string name="txt_return_login">Quay về đăng nhập</string>
+    <string name="txt_enter_email_to_reset_password">Nhập email cần khôi phục mật khẩu</string>
 </resources>

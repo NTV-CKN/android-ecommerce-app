@@ -15,8 +15,12 @@ import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
 import com.infix.phukiencongnghe.data.source.local.entity.RecentSearchProductEntity;
 import com.infix.phukiencongnghe.data.source.local.entity.SearchKeywordEntity;
 
-@Database(entities = {CartEntity.class, SearchKeywordEntity.class,
-        RecentSearchProductEntity.class}, version = 3, exportSchema = false)
+@Database(entities = {
+        CartEntity.class,
+        SearchKeywordEntity.class,
+        RecentSearchProductEntity.class,
+        UserEntity.class
+}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;

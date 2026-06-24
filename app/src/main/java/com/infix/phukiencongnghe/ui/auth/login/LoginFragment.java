@@ -29,6 +29,7 @@ import com.infix.phukiencongnghe.data.dto.request.UserLoginGoogleDTO;
 import com.infix.phukiencongnghe.databinding.FragmentLoginBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
 import com.infix.phukiencongnghe.ui.auth.register.RegisterFragment;
+import com.infix.phukiencongnghe.ui.auth.reset_password.ForgotPasswordFragment;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.AppUtils;
 import com.infix.phukiencongnghe.utils.InjectUtils;
@@ -163,7 +164,10 @@ public class LoginFragment extends Fragment {
     }
 
     private void handleForgotPassword() {
-
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fcv_auth, new ForgotPasswordFragment())
+                .commit();
     }
 
     //Khởi tạo Activity launcher để tiến hành gọi bottom sheet chọn tài khoản và lấy token id tạo chứng thực
