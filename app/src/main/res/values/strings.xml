@@ -42,11 +42,12 @@
     <string name="txt_enter_receiver_name">Nhập tên người nhận</string>
     <string name="txt_confirm">Xác nhận</string>
     <string name="title_cart">Giỏ Hàng</string>
-    <string name="button_del_cart">Xóa</string>
+    <string name="button_del_cart">Xóa tất cả</string>
     <string name="btn_selectAll">Chọn tất cả</string>
     <string name="title_sum_item_cart">Tổng cộng</string>
     <string name="btn_payment">Thanh toán</string>
     <string name="txt_select_address_delivery">Chọn địa chỉ giao hàng</string>
+    <string name="delete_cart_item">Xóa</string>
     <string name="text_login">Đăng nhập</string>
     <string name="txt_create_new_account">Tạo tài khoản mới</string>
     <string name="txt_forgot_password">Quên mật khẩu?</string>
