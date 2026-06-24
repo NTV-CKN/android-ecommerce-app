@@ -70,6 +70,9 @@
         <activity
             android:name=".ui.cart.CartActivity"
             android:exported="false"/>
+            android:name=".ui.search.SearchProductActivity"
+            android:exported="true"/>
+
     </application>
 
 </manifest>

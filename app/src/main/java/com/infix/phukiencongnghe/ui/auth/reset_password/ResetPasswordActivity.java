@@ -18,6 +18,7 @@ import com.infix.phukiencongnghe.databinding.ActivityResetPasswordBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.AppUtils;
+import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
@@ -56,9 +57,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     private void initAuthViewModel() {
-        AuthViewModel.Factory factory = new AuthViewModel.Factory(
-                new AuthRepositoryImpl(RetrofitHelper.getAuthService())
-        );
+        AuthViewModel.Factory factory = new AuthViewModel.Factory(InjectUtils.createAuthRepository(this));
+
         authViewModel = new ViewModelProvider(this, factory).get(AuthViewModel.class);
 
         //observe notify msg
