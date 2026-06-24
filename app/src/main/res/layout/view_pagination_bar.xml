@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageButton
+        android:id="@+id/btn_prev_page"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_skip_previous_24px"
+        app:tint="@color/tech_primary_dark" />
+
+    <LinearLayout
+        android:id="@+id/lnr_page_numbers_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="8dp" />
+
+    <ImageButton
+        android:src="@drawable/ic_skip_next_24px"
+        android:background="?attr/selectableItemBackground"
+        android:id="@+id/btn_next_page"
+        android:layout_width="40dp"
+        app:tint="@color/tech_primary_dark"
+        android:layout_height="40dp" />
+</LinearLayout>
