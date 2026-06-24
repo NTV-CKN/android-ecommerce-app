@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.infix.phukiencongnghe" />
+                  <option name="mobileSdkAppId" value="1:735024728087:android:d565e601926c91a566f452" />
+                  <option name="projectId" value="pkcn-app-2836e" />
+                  <option name="projectNumber" value="735024728087" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

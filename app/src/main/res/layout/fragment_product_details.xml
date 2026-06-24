@@ -13,16 +13,14 @@
         android:layout_height="wrap_content"
         android:paddingBottom="32dp">
 
-        <ImageView
+        <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/mainImage"
             android:layout_width="0dp"
             android:layout_height="300dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="Ảnh sản phẩm"
+            android:background="#F5F5F5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/ic_launcher_background" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/nameProduct"
@@ -106,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
-            android:text="Số lượng"
+            android:text="@string/product_variant_quantity"
             android:textColor="@android:color/black"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -200,7 +198,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="6dp"
-                android:text="THÊM VÀO GIỎ"
+                android:text="@string/product_details_add_product"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline_bottom"
                 app:layout_constraintStart_toStartOf="parent"
@@ -211,7 +209,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="6dp"
-                android:text="MUA NGAY"
+                android:text="@string/product_details_btn_paynow"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/guideline_bottom"
@@ -234,7 +232,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Mô tả sản phẩm"
+            android:text="@string/product_details_decription_product"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -271,7 +269,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Sản phẩm liên quan"
+            android:text="@string/product_details_product_related"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -308,7 +306,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Bình luận &amp; Đánh giá"
+            android:text="@string/comment_rating"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -333,7 +331,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:hint="Viết bình luận của bạn..."
+                android:hint="@string/product_details_comment_bro"
                 android:importantForAutofill="no"
                 android:inputType="textLongMessage"
                 android:maxLines="4"

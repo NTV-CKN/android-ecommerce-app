@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
+import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
 import com.infix.phukiencongnghe.data.repository.main.product.FeatureProductRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
@@ -21,6 +22,9 @@ import com.infix.phukiencongnghe.databinding.FragmentProductDetailsBinding;
 import com.infix.phukiencongnghe.databinding.FragmentUserAddressManageBinding;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Retrofit;
 
@@ -126,13 +130,53 @@ public class ProductDetailsFragment extends Fragment {
             }
             binding.tvProductWarranty.setText("Bảo hành: " + details.getWarrantyPeriod());
             binding.tvProductDescription.setText(details.getDescription());
-            if(details.getMainImage() !=null && !details.getMainImage().isEmpty()){
-                Glide.with(this).load(details.getMainImage())
-                        .placeholder(android.R.drawable.ic_menu_gallery)
-                        .error(android.R.drawable.ic_delete)
-                        .into(binding.mainImage);
+            List<String> allImage = new ArrayList<>();
+            if(details.getImages() != null){
+                allImage.addAll(details.getImages());
             }
+            if(details.getProductVariants() != null){
+                for(ProductVariantDTO v : details.getProductVariants()){
+                    if(v.getImageUrl() !=null && !v.getImageUrl().isEmpty() && !allImage.contains(v.getImageUrl())){
+                        allImage.add(v.getImageUrl());
+                    }
+                }
+            }
+            ProductVariantAdapter variantAdapter = new ProductVariantAdapter(details.getProductVariants(), variant -> {
+                if(variant.getPrice() != null){
+                    binding.tvProductPrice.setText(String.format("%,.0f", variant.getPrice()) + "VNĐ");
+                }
+                if(variant.getImageUrl() != null && !variant.getImageUrl().isEmpty()){
+                    int taget = allImage.indexOf(variant.getImageUrl());
+                    if(taget!=-1){
+                        binding.mainImage.setCurrentItem(taget,true);
+                    }
+                }
+            });
+            binding.rvProductVariants.setAdapter(variantAdapter);
+            ProductImageSliderAdapter sliderAdapter = new ProductImageSliderAdapter();
+            binding.mainImage.setAdapter(sliderAdapter);
+            if(details.getImages()!=null && !details.getImages().isEmpty()){
+                sliderAdapter.setImages(allImage);
+            }else{
+                sliderAdapter.setImages(new ArrayList<>());
+            }
+            ProductReviewAdapter reviewAdapter = new ProductReviewAdapter(details.getReviews());
+            binding.rvProductComments.setAdapter(reviewAdapter);
+            binding.rvProductComments.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
 
+            RelatedProductAdapter relatedAdapter = new RelatedProductAdapter(details.getRelateProducts());
+            binding.rvRelatedProducts.setAdapter(relatedAdapter);
+            binding.rvRelatedProducts.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(
+                    getContext(), androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false));
+            relatedAdapter.setOnItemClickListener(product -> {
+                this.productId = product.getId();
+                this.selectQuantity = 1;
+                updateQuantityUI();
+                if (binding.mainScrollView !=null){
+                    binding.mainScrollView.smoothScrollTo(0,0);
+                }
+                productDetailsViewModel.getProductById(this.productId);
+            });
         });
         productDetailsViewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
             if (msg == null) return;

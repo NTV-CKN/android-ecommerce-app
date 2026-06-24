@@ -53,4 +53,6 @@
     <string name="product_details_decription_product">Mô tả sản phẩm</string>
     <string name="product_details_product_related">Sản phẩm liên quan</string>
     <string name="product_variant_quantity">Số lượng</string>
+    <string name="comment_rating"><![CDATA[Bình luận & Đánh giá]]></string>
+    <string name="product_details_comment_bro">Viết bình luận của bạn...</string>
 </resources>
