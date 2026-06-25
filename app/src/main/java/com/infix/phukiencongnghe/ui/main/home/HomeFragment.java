@@ -26,8 +26,12 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView recycleViewCategory;
     private RecyclerView recyclerViewProduct;
+    private RecyclerView recyclerViewMouse;
+    private RecyclerView recyclerViewKeyboard;
     private HomeViewModel homeViewModel;
     private FeatureProductAdapter featureProductAdapter;
+    private FeatureProductAdapter mouseAdapter;
+    private FeatureProductAdapter keyboardAdapter;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -51,24 +55,31 @@ public class HomeFragment extends Fragment {
         // 1. Ánh xạ các View từ layout fragment_home
         recycleViewCategory = view.findViewById(R.id.recycleView_category);
         recyclerViewProduct = view.findViewById(R.id.recycleView_product);
+        recyclerViewMouse = view.findViewById(R.id.recycleView_mouse);
+        recyclerViewKeyboard = view.findViewById(R.id.recycleView_keyboard);
 
         // 2. Setup RecyclerView Category (Nằm ngang)
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         recycleViewCategory.setLayoutManager(layoutManager);
 
         // 3. Setup RecyclerView Product (Grid 2 cột)
-        GridLayoutManager productManager = new GridLayoutManager(requireContext(), 2) {
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-        };
-        recyclerViewProduct.setLayoutManager(productManager);
+        recyclerViewProduct.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         recyclerViewProduct.setNestedScrollingEnabled(false);
+
+        recyclerViewMouse.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        recyclerViewMouse.setNestedScrollingEnabled(false);
+
+        recyclerViewKeyboard.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        recyclerViewKeyboard.setNestedScrollingEnabled(false);
 
         // 4. Khởi tạo Adapter cho Product
         featureProductAdapter = new FeatureProductAdapter(new ArrayList<>());
+        mouseAdapter = new FeatureProductAdapter(new ArrayList<>());
+        keyboardAdapter = new FeatureProductAdapter(new ArrayList<>());
+
         recyclerViewProduct.setAdapter(featureProductAdapter);
+        recyclerViewMouse.setAdapter(mouseAdapter);
+        recyclerViewKeyboard.setAdapter(keyboardAdapter);
 
         // 5. Cấu hình ViewModel (Gắn với 'this' tức là Vòng đời của chính Fragment này)
         HomeViewModel.Factory factory = new HomeViewModel.Factory(
@@ -82,7 +93,9 @@ public class HomeFragment extends Fragment {
 
         // 7. Kích hoạt gọi API lấy dữ liệu lần đầu
         homeViewModel.loadParentCategories();
-        homeViewModel.loadFeatureProduct(24);
+        homeViewModel.loadFeatureProduct(8);
+        homeViewModel.loadMouseProduct(8);
+        homeViewModel.loadKeyboardProduct(8);
     }
 
     private void observeViewModel() {
@@ -98,6 +111,14 @@ public class HomeFragment extends Fragment {
             if (featureProductList != null) {
                 featureProductAdapter.setData(featureProductList);
             }
+        });
+
+        homeViewModel.mouseLiveData.observe(getViewLifecycleOwner(), mouseList -> {
+            if (mouseList != null) mouseAdapter.setData(mouseList);
+        });
+
+        homeViewModel.keyboardLiveData.observe(getViewLifecycleOwner(), keyboardList -> {
+            if (keyboardList != null) keyboardAdapter.setData(keyboardList);
         });
 
         homeViewModel.notifyMsg.observe(getViewLifecycleOwner(), errorMsg -> {

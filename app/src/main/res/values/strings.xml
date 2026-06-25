@@ -19,8 +19,8 @@
     <string name="text_verify_mail">Xác thực</string>
     <string name="text_go_verify_mail">Xác nhận xác thực email</string>
     <string name="text_welcome_header_fragment">Chưa đăng nhập</string>
-    <string name="text_category">Danh mục</string>
-    <string name="text_home_listproduct">Nổi bật</string>
+    <string name="text_category">DANH MỤC</string>
+    <string name="text_home_listproduct">NỔI BẬT</string>
     <string name="text_data_null">Dữ liệu null</string>
     <string name="text_change_password">Đổi mật khẩu</string>
     <string name="text_recovery_password">Khôi phục mật khẩu</string>
@@ -55,4 +55,7 @@
     <string name="txt_forgot_password_label">Quên mật khẩu</string>
     <string name="txt_return_login">Quay về đăng nhập</string>
     <string name="txt_enter_email_to_reset_password">Nhập email cần khôi phục mật khẩu</string>
+    <string name="text_home_mouse">CHUỘT MÁY TÍNH</string>
+    <string name="text_home_keyboard">BÀN PHÍM</string>
+    <string name="default_web_client_id">idk</string>
 </resources>

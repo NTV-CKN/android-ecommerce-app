@@ -7,7 +7,7 @@ import java.util.List;
 import retrofit2.Call;
 
 public interface IProductRepository {
-    Call<List<FeatureProductDTO>> getFeatureProduct(int limit);
+    Call<List<FeatureProductDTO>> getFeatureProduct(Integer categoryId ,int limit);
 
     Call<List<FeatureProductDTO>> searchProduct(String keyword);
 }
