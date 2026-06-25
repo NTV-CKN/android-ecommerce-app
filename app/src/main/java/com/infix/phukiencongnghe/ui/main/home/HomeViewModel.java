@@ -34,6 +34,12 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<List<FeatureProductDTO>> _ftProdLiveData = new MutableLiveData<>();
     public final LiveData<List<FeatureProductDTO>> ftProdLiveData = _ftProdLiveData;
 
+    private final MutableLiveData<List<FeatureProductDTO>> _mouseLiveData = new MutableLiveData<>();
+    public final LiveData<List<FeatureProductDTO>> mouseLiveData = _mouseLiveData;
+
+    private final MutableLiveData<List<FeatureProductDTO>> _keyboardLiveData = new MutableLiveData<>();
+    public final LiveData<List<FeatureProductDTO>> keyboardLiveData = _keyboardLiveData;
+
     /*
         NOTIFY
     */
@@ -69,13 +75,13 @@ public class HomeViewModel extends ViewModel {
         }
     }
 
-    public void loadFeatureProduct(int limit) {
+    public void loadFeatureProduct(Integer categoryId, int limit, MutableLiveData<List<FeatureProductDTO>> targetLiveData) {
         _isLoading.setValue(true);
-        featureProductRepository.getFeatureProduct(limit).enqueue(new Callback<List<FeatureProductDTO>>() {
+        featureProductRepository.getFeatureProduct(categoryId, limit).enqueue(new Callback<List<FeatureProductDTO>>() {
             @Override
             public void onResponse(Call<List<FeatureProductDTO>> call, Response<List<FeatureProductDTO>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    _ftProdLiveData.setValue(response.body());
+                    targetLiveData.setValue(response.body());
                 } else {
                     _notifyMsg.setValue("Không thể tải danh sách");
                 }
@@ -109,6 +115,18 @@ public class HomeViewModel extends ViewModel {
                 _isLoading.setValue(false);
             }
         });
+    }
+
+    public void loadFeatureProduct(int limit) {
+        loadFeatureProduct(null, limit, _ftProdLiveData);
+    }
+
+    public void loadMouseProduct(int limit) {
+        loadFeatureProduct(15, limit, _mouseLiveData);
+    }
+
+    public void loadKeyboardProduct(int limit) {
+        loadFeatureProduct(16, limit, _keyboardLiveData);
     }
 
     public void resetStates() {
