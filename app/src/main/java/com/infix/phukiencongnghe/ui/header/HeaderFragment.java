@@ -33,8 +33,26 @@ public class HeaderFragment extends Fragment {
         imgView_cart_header_fragment = view.findViewById(R.id.btnCart);
 
         imgView_cart_header_fragment.setOnClickListener(view1 -> {
-            Intent intent = new Intent(requireActivity(), CartActivity.class);
-            startActivity(intent);
+            String[] tokens = com.infix.phukiencongnghe.utils.SharePrefUtils.getAccessRefreshTokenFromPrefFile(
+                    com.infix.phukiencongnghe.ui.auth.AuthActivity.USER_AUTH_FILE,
+                    com.infix.phukiencongnghe.ui.auth.AuthActivity.KEY_ACCESS_TOKEN,
+                    com.infix.phukiencongnghe.ui.auth.AuthActivity.KEY_REFRESH_TOKEN,
+                    requireContext()
+            );
+
+            if (tokens[0] == null || tokens[0].isEmpty() && tokens[1] == null || tokens[1].isEmpty()) {
+                com.infix.phukiencongnghe.utils.SnackbarUtils.showBaseSnackbar(
+                        view,
+                        "Vui lòng đăng nhập để xem giỏ hàng!",
+                        com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+                );
+
+                Intent intent = new Intent(requireActivity(), com.infix.phukiencongnghe.ui.auth.AuthActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(requireActivity(), CartActivity.class);
+                startActivity(intent);
+            }
         });
 
         return view;

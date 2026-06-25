@@ -1,17 +1,20 @@
 package com.infix.phukiencongnghe.data.source.remote;
 
-import com.infix.phukiencongnghe.utils.EvnUtils;
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
+import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
 import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManageService;
 import com.infix.phukiencongnghe.utils.ApiClient;
 
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitHelper {
     private RetrofitHelper(){}
+
+    public static CartService getCartService() {
+        return generateRetrofit().create(CartService.class);
+    }
 
     public static FeatureProductService getFeatureProductService() {
         return generateRetrofit().create(FeatureProductService.class);

@@ -2,15 +2,21 @@ package com.infix.phukiencongnghe.data.repository.cart;
 
 import androidx.lifecycle.LiveData;
 
+import com.infix.phukiencongnghe.data.dto.response.CartDTO;
 import com.infix.phukiencongnghe.data.source.local.entity.CartEntity;
+import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 
 import java.util.List;
 
+import retrofit2.Call;
+
 public interface ICartRepository {
-    LiveData<List<CartEntity>> getCartItems();
-    void addItem(CartEntity item);
-    void updateItem(CartEntity item);
-    void deleteItem(CartEntity item);
-    void deleteItems(List<Integer> ids);
-    void clearAll();
+
+    public Call<CartDTO> getCart();
+
+    public Call<CartDTO> updateQuantity(Integer itemId, Integer qty);
+
+    public Call<CartDTO> deleteItem(Integer itemId);
+
+    public Call<CartDTO> clearCart();
 }

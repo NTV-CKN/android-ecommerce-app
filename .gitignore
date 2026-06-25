@@ -14,7 +14,7 @@
 .cxx
 local.properties
 
-/google-service.json
+/google-services.json
 src/main/java/com/infix/phukiencongnghe/EvnUtils.java
 app/google-services.json
 .idea/
