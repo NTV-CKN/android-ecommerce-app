@@ -1,5 +1,6 @@
 package com.infix.phukiencongnghe.ui.header;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.ui.cart.CartActivity;
 
 public class HeaderFragment extends Fragment {
 
@@ -30,7 +32,10 @@ public class HeaderFragment extends Fragment {
         imgView_search_header_fragment = view.findViewById(R.id.btnSearch);
         imgView_cart_header_fragment = view.findViewById(R.id.btnCart);
 
-
+        imgView_cart_header_fragment.setOnClickListener(view1 -> {
+            Intent intent = new Intent(requireActivity(), CartActivity.class);
+            startActivity(intent);
+        });
 
         return view;
     }

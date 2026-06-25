@@ -17,4 +17,6 @@ public interface FeatureProductService {
 
     @GET("/api/v1/product/{id}")
     Call<ProductDetailsDTO> getProductDetails(@Path("id") int productId);
+    @GET("/api/v1/product/search")
+    Call<List<FeatureProductDTO>> searchProduct(@Query("keyword") String keyword);
 }

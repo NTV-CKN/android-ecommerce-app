@@ -10,4 +10,6 @@ import retrofit2.Call;
 public interface IProductRepository {
     Call<List<FeatureProductDTO>> getFeatureProduct(int limit);
     Call<ProductDetailsDTO> getProductDetails(int id);
+
+    Call<List<FeatureProductDTO>> searchProduct(String keyword);
 }

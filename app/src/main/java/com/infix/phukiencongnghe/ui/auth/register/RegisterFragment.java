@@ -19,8 +19,10 @@ import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.databinding.FragmentRegisterBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
+import com.infix.phukiencongnghe.ui.auth.login.LoginFragment;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.AppUtils;
+import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
@@ -58,9 +60,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void initAuthViewModel() {
-        AuthViewModel.Factory factory = new AuthViewModel.Factory(
-                new AuthRepositoryImpl(RetrofitHelper.getAuthService())
-        );
+        AuthViewModel.Factory factory = new AuthViewModel.Factory(InjectUtils.createAuthRepository(requireContext()));
         authViewModel = new ViewModelProvider(requireActivity(), factory).get(AuthViewModel.class);
 
         //observe notify msg
@@ -87,10 +87,12 @@ public class RegisterFragment extends Fragment {
         //register
         binding.btnRegisterRegister.setOnClickListener(v -> handleRegister());
 
-        //cancel
-        binding.btnCancelRegister.setOnClickListener(v -> {
+        //nav to login
+        binding.btnNavLoginRegister.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
-                    .popBackStack();
+                    .beginTransaction()
+                    .replace(R.id.fcv_auth, new LoginFragment())
+                    .commit();
         });
     }
 

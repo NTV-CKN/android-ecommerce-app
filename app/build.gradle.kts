@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+
 }
 
 android {
@@ -53,6 +54,19 @@ android {
 }
 
 dependencies {
+    //glide
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
+
+    //firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
+
+    //room
+    implementation (libs.room.runtime)
+    annotationProcessor (libs.room.compiler)
+
     //google map platform
     implementation(libs.play.services.maps)
     implementation(libs.places)
