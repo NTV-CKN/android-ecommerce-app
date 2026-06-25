@@ -1,6 +1,5 @@
 package com.infix.phukiencongnghe.data.source.remote;
 
-import com.infix.phukiencongnghe.utils.EvnUtils;
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
 import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
@@ -8,7 +7,6 @@ import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManag
 import com.infix.phukiencongnghe.utils.ApiClient;
 
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitHelper {
     private RetrofitHelper(){}
