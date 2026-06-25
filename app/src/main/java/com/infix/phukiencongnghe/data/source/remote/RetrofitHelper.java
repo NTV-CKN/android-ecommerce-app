@@ -1,6 +1,7 @@
 package com.infix.phukiencongnghe.data.source.remote;
 
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
+import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
 import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManageService;
@@ -10,6 +11,10 @@ import retrofit2.Retrofit;
 
 public class RetrofitHelper {
     private RetrofitHelper(){}
+
+    public static CartService getCartService() {
+        return generateRetrofit().create(CartService.class);
+    }
 
     public static FeatureProductService getFeatureProductService() {
         return generateRetrofit().create(FeatureProductService.class);

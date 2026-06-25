@@ -4,47 +4,36 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import com.infix.phukiencongnghe.data.dto.response.CartDTO;
 import com.infix.phukiencongnghe.data.source.local.entity.CartEntity;
 import com.infix.phukiencongnghe.data.source.local.source.cart.CartLocalDataSourceImpl;
 import com.infix.phukiencongnghe.data.source.local.source.cart.ICartLocalDataSource;
+import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 
 import java.util.List;
 
+import retrofit2.Call;
+
 public class CartRepositoryImpl implements ICartRepository {
-
-    private final ICartLocalDataSource localRepository;
-
-    public CartRepositoryImpl(Context context) {
-        this.localRepository = new CartLocalDataSourceImpl(context);
+    private final CartService cartService;
+    public CartRepositoryImpl(CartService cartService) {
+        this.cartService = cartService;
     }
 
-    @Override
-    public void addItem(CartEntity item) {
-        localRepository.addItem(item);
+    public Call<CartDTO> getCart() {
+        return cartService.getCart();
     }
 
-    @Override
-    public LiveData<List<CartEntity>> getCartItems() {
-        return localRepository.getAll();
+    public Call<CartDTO> updateQuantity(Integer itemId, Integer qty) {
+        return cartService.updateQuantity(itemId, qty);
     }
 
-    @Override
-    public void updateItem(CartEntity item) {
-        localRepository.updateItem(item);
+    public Call<CartDTO> deleteItem(Integer itemId) {
+        return cartService.deleteItem(itemId);
     }
 
-    @Override
-    public void deleteItem(CartEntity item) {
-        localRepository.deleteItem(item);
+    public Call<CartDTO> clearCart() {
+        return cartService.clearCart();
     }
 
-    @Override
-    public void deleteItems(List<Integer> ids) {
-        localRepository.deleteById(ids);
-    }
-
-    @Override
-    public void clearAll() {
-        localRepository.clearAll();
-    }
 }
