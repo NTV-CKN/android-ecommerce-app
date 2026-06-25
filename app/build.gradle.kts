@@ -86,4 +86,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+    implementation ("androidx.room:room-runtime:2.5.0")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation(platform("com.google.firebase:firebase-bom:34.15.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    annotationProcessor ("androidx.room:room-compiler:2.5.0")
+
 }
