@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment {
 
         // 7. Kích hoạt gọi API lấy dữ liệu lần đầu
         homeViewModel.loadParentCategories();
-        homeViewModel.loadFeatureProduct(24);
+        homeViewModel.loadFeatureProduct(8);
     }
 
     private void observeViewModel() {

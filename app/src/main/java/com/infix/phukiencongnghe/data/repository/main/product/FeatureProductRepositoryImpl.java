@@ -29,6 +29,8 @@ public class FeatureProductRepositoryImpl implements IProductRepository{
     @Override
     public Call<ProductDetailsDTO> getProductDetails(int id) {
         return featureProductService.getProductDetails(id);
+    }
+
     public Call<List<FeatureProductDTO>> searchProduct(String keyword) {
         return featureProductService.searchProduct(keyword);
     }

@@ -1,32 +1,30 @@
-package com.infix.phukiencongnghe.ui.adapter.feature_product;
+package com.infix.phukiencongnghe.ui.main.product_detail;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
 import com.infix.phukiencongnghe.data.repository.main.product.FeatureProductRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.databinding.FragmentProductDetailsBinding;
-import com.infix.phukiencongnghe.databinding.FragmentUserAddressManageBinding;
+import com.infix.phukiencongnghe.ui.adapter.feature_product.ProductImageSliderAdapter;
+import com.infix.phukiencongnghe.ui.adapter.feature_product.ProductReviewAdapter;
+import com.infix.phukiencongnghe.ui.adapter.feature_product.ProductVariantAdapter;
+import com.infix.phukiencongnghe.ui.adapter.feature_product.RelatedProductAdapter;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Retrofit;
 
 public class ProductDetailsFragment extends Fragment {
     private FragmentProductDetailsBinding binding;

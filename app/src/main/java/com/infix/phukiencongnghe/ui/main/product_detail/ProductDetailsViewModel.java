@@ -1,6 +1,4 @@
-package com.infix.phukiencongnghe.ui.adapter.feature_product;
-
-import android.view.View;
+package com.infix.phukiencongnghe.ui.main.product_detail;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -10,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.response.ProductDetailsDTO;
 import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
-import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageViewModel;
 
 import retrofit2.Call;
 import retrofit2.Callback;
