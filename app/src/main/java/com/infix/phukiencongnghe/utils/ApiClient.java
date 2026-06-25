@@ -70,6 +70,12 @@ public class ApiClient {
                                 String newAccessToken = executeRefreshApi();
                                 if (newAccessToken != null) {
                                     accessToken = newAccessToken;
+                                    SharePrefUtils.saveStringToPrefFile(
+                                            AuthActivity.USER_AUTH_FILE,
+                                            AuthActivity.KEY_ACCESS_TOKEN,
+                                            accessToken,
+                                            context
+                                    );
                                     return response.request().newBuilder()
                                             .header("Authorization", "Bearer " + accessToken)
                                             .build();
