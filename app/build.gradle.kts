@@ -58,6 +58,9 @@ dependencies {
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
 
+    //ViewPager2
+    implementation(libs.viewpager2)
+
     //firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)

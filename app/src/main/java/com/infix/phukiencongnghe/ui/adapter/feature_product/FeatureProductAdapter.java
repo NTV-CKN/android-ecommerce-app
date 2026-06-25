@@ -60,7 +60,10 @@ public class FeatureProductAdapter extends RecyclerView.Adapter<FeatureProductAd
             holder.tvAvgStar.setText("0.0");
         }
 
-        Glide.with(holder.imgView.getContext()).load(productDTO.getMainImage()).placeholder(R.drawable.ic_launcher_background).into(holder.imgView);
+        Glide.with(holder.imgView.getContext())
+                .load(productDTO.getMainImage())
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(holder.imgView);
     }
 
     private String formatPrice(BigDecimal price) {
