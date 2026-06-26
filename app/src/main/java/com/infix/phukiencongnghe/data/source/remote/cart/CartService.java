@@ -1,14 +1,14 @@
 package com.infix.phukiencongnghe.data.source.remote.cart;
 
-import androidx.room.Delete;
-
+import com.infix.phukiencongnghe.data.dto.request.CartLocalDTO;
+import com.infix.phukiencongnghe.data.dto.response.BadgeCartDTO;
 import com.infix.phukiencongnghe.data.dto.response.CartDTO;
 
-import java.util.List;
-
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -27,5 +27,7 @@ public interface CartService {
     @DELETE("/api/v1/cart/items")
     Call<CartDTO> clearCart();
 
+    @POST("api/v1/cart/add")
+    Call<BadgeCartDTO> addCart(@Body CartLocalDTO request);
 
 }
