@@ -1,5 +1,8 @@
 package com.infix.phukiencongnghe.utils;
 
+import android.content.Context;
+import android.content.Intent;
+
 public class AppUtils {
 
     private static final String PASSWORD_REGEX =
@@ -20,5 +23,12 @@ public class AppUtils {
         }
 
         return email.matches(EMAIL_REGEX);
+    }
+
+    public static void startNewTaskWithClearStack(Context context, Class<?> targetActivityClass) {
+        Intent intent = new Intent(context, targetActivityClass);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        context.startActivity(intent);
     }
 }
