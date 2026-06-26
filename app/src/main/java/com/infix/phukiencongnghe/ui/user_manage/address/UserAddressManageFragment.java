@@ -110,10 +110,8 @@ public class UserAddressManageFragment extends Fragment {
     }
 
     private void goToAddOrUpdateUserAddressFragment(boolean isUpdate) {
-        AddOrUpdateUserAddressFragment addOrUpdateUserAddressFragment = null;
-        if(!isUpdate)
-            addOrUpdateUserAddressFragment =
-                    AddOrUpdateUserAddressFragment.newInstanceForAdd(1);
+        AddOrUpdateUserAddressFragment addOrUpdateUserAddressFragment
+                = AddOrUpdateUserAddressFragment.newInstance(isUpdate);
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()

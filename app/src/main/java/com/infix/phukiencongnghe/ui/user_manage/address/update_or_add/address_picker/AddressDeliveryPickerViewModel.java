@@ -7,13 +7,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.LocationRestriction;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.infix.phukiencongnghe.data.model.user_manage.address.AddressSuggestion;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -48,13 +51,10 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
         FindAutocompletePredictionsRequest request = requestBuilder.build();
         placesClient.findAutocompletePredictions(request)
                 .addOnSuccessListener(response -> {
-                    Log.d("GG_DEBUG", "Số lượng gợi ý nhận được: " + response.getAutocompletePredictions().size());
-                    List<AddressSuggestion> list =
-                            new ArrayList<>();
+                    Log.d("AddressDeliveryPickerViewModel", "Số lượng gợi ý nhận được: " + response.getAutocompletePredictions().size());
+                    List<AddressSuggestion> list = new ArrayList<>();
 
-                    for (AutocompletePrediction prediction :
-                            response.getAutocompletePredictions()) {
-
+                    for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
                         list.add(
                                 new AddressSuggestion(
                                         prediction.getPlaceId(),
@@ -81,49 +81,29 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
         _addressSuggestions.setValue(addressSuggestions);
     }
 
-//    public void getPlaceDetail(String placeId, PlacesClient placesClient) {
-//        if (placesClient == null || placeId == null || placeId.trim().isEmpty()) {
-//            return;
-//        }
-//
-//        // 1. Định nghĩa các trường thông tin muốn Google trả về (Cần gì xin nấy để tiết kiệm tiền)
-//        List<Place.Field> fields = Arrays.asList(
-//                Place.Field.ID,
-//                Place.Field.NAME,
-//                Place.Field.ADDRESS,
-//                Place.Field.LAT_LNG
-//        );
-//
-//        // 2. Tạo yêu cầu lấy chi tiết địa điểm dựa vào placeId và danh sách fields ở trên
-//        FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, fields);
-//
-//        // 3. Thực hiện gọi API bất đồng bộ lên máy chủ Google
-//        placesClient.fetchPlace(request)
-//                .addOnSuccessListener(response -> {
-//                    Place place = response.getPlace();
-//                    LatLng latLng = place.getLatLng();
-//
-//                    if (latLng != null) {
-//                        double latitude = latLng.latitude;
-//                        double longitude = latLng.longitude;
-//                        String fullAddress = place.getAddress();
-//
-//                        // In thông tin ra Logcat để kiểm tra (Debug)
-//                        Log.d("PLACE_DETAIL", "Name: " + place.getName());
-//                        Log.d("PLACE_DETAIL", "Address: " + fullAddress);
-//                        Log.d("PLACE_DETAIL", "Latitude: " + latitude);
-//                        Log.d("PLACE_DETAIL", "Longitude: " + longitude);
-//
-//                        // 🌟 NƠI THỰC HIỆN LOGIC TIẾP THEO:
-//                        // Bạn sẽ truyền fullAddress, latitude, longitude này vào Model Address
-//                        // để lưu xuống SQLite/Room Database hoặc gửi lên Server Backend của bạn.
-//                    }
-//                })
-//                .addOnFailureListener(e -> {
-//                    Log.e("PLACE_DETAIL", "Lỗi lấy chi tiết địa điểm: " + e.getMessage());
-//                    e.printStackTrace();
-//                });
-//    }
+    //Hàm này sẽ nhận vào placeId khi người dùng chọn vào 1 trong các item được fetch từ AddressSuggest
+    //Hàm sẽ fetch ra địa điểm và trả về LatLng để zoom google map
+    public void getPlaceDetail(String placeId, PlacesClient placesClient, Consumer<LatLng> callback) {
+        if (placesClient == null || placeId == null || placeId.trim().isEmpty()) return;
+
+        List<com.google.android.libraries.places.api.model.Place.Field> fields = Arrays.asList(
+                com.google.android.libraries.places.api.model.Place.Field.ID,
+                com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
+                com.google.android.libraries.places.api.model.Place.Field.LAT_LNG
+        );
+
+        FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, fields);
+        placesClient.fetchPlace(request)
+                .addOnSuccessListener(response -> {
+                    com.google.android.libraries.places.api.model.Place place = response.getPlace();
+                    if (place.getLatLng() != null) {
+                        callback.accept(place.getLatLng());
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("AddressDeliveryPickerViewModel", "Lỗi lấy chi tiết địa điểm: " + e.getMessage());
+                });
+    }
 
     public void resetStates() {
         _addressSuggestions.setValue(null);
