@@ -5,7 +5,9 @@ public class CartLocalDTO {
     private Integer productVariantId;
     private Integer quantity;
 
-    public CartLocalDTO(Integer selectedVariantId, int selectQuantity) {
+    public CartLocalDTO(Integer selectedVariantId, Integer selectQuantity) {
+        this.productVariantId = selectedVariantId;
+        this.quantity = selectQuantity;
     }
 
     public Integer getProductVariantId() {
