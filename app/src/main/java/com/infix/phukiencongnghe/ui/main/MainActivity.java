@@ -13,11 +13,13 @@ import androidx.core.view.WindowInsetsCompat;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
 import com.infix.phukiencongnghe.databinding.ActivityMainBinding;
+import com.infix.phukiencongnghe.ui.main.home.HomeFragment;
+import com.infix.phukiencongnghe.ui.product_category.ProductCategoryFragment;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     //AuthActivity sẽ gửi đối tượng User sang MainActivity khi login thành công
-    public static final String KEY_USER_HEADER = "com.infix.phukiencongnghe.ui.main.MainActivity";
+    public static final String KEY_USER_HEADER = "com.infix.phukiencongnghe.ui.main.MainActivity.KEY_USER_HEADER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,5 +34,33 @@ public class MainActivity extends AppCompatActivity {
             findViewById(R.id.bottom_navigation).setPadding(0, 0, 0, systemBars.bottom);
             return insets;
         });
+
+        setEventBottomNav();
+    }
+
+    private void setEventBottomNav() {
+        binding.bottomNavigation.setOnItemSelectedListener(menuItem -> {
+            int id = menuItem.getItemId();
+            if (id == R.id.nav_categories)
+                handleNavCategoryProduct();
+            else if (id == R.id.nav_home)
+                handleNavHome();
+
+            return true;
+        });
+    }
+
+    private void handleNavHome() {
+      getSupportFragmentManager().beginTransaction()
+              .replace(R.id.fcv_main_content, new HomeFragment())
+              .addToBackStack(null)
+              .commit();
+    }
+
+    private void handleNavCategoryProduct() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fcv_main_content, new ProductCategoryFragment())
+                .addToBackStack(null)
+                .commit();
     }
 }
