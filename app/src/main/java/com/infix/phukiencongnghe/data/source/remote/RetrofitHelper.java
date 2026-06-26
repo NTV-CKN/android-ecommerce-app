@@ -5,12 +5,17 @@ import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
 import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManageService;
+import com.infix.phukiencongnghe.data.source.remote.user_manage.UserProfileService;
 import com.infix.phukiencongnghe.utils.ApiClient;
 
 import retrofit2.Retrofit;
 
 public class RetrofitHelper {
     private RetrofitHelper(){}
+
+    public static UserProfileService getProfileService() {
+        return generateRetrofit().create(UserProfileService.class);
+    }
 
     public static CartService getCartService() {
         return generateRetrofit().create(CartService.class);
