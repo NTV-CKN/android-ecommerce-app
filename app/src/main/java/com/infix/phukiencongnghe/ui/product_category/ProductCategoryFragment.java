@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -33,6 +34,7 @@ import android.os.Looper;
 
 public class ProductCategoryFragment extends Fragment {
     private RecyclerView rvCategory;
+    private NestedScrollView nestedScrollView;
     private RecyclerView rvProduct;
     private AppCompatEditText edtSearch;
     private ProductCategoryViewModel viewModel;
@@ -94,6 +96,7 @@ public class ProductCategoryFragment extends Fragment {
         btnPrice1 = view.findViewById(R.id.btnPrice1);
         btnPrice2 = view.findViewById(R.id.btnPrice2);
         btnPrice3 = view.findViewById(R.id.btnPrice3);
+        nestedScrollView = view.findViewById(R.id.main_layout);
         paginationBar = view.findViewById(R.id.paginationBar);
         btnSort = view.findViewById(R.id.btnSort);
     }
@@ -264,7 +267,7 @@ public class ProductCategoryFragment extends Fragment {
                             .getPaginationManager()
                             .setCurrentPage(page);
 
-                    rvProduct.scrollToPosition(0);
+                    nestedScrollView.smoothScrollTo(0, 0);
                 }
         );
     }
@@ -345,7 +348,7 @@ public class ProductCategoryFragment extends Fragment {
                             viewModel.setKeyword(
                                     s.toString().trim()
                             );
-                            rvProduct.scrollToPosition(0);
+                            nestedScrollView.smoothScrollTo(0,0);
                         };
 
                         handler.postDelayed(
@@ -418,7 +421,7 @@ public class ProductCategoryFragment extends Fragment {
                         break;
                 }
 
-                rvProduct.scrollToPosition(0);
+                nestedScrollView.smoothScrollTo(0,0);
 
                 return true;
             });
