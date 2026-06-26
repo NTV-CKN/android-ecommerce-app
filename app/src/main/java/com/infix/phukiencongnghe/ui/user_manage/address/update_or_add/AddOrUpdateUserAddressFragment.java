@@ -11,16 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.databinding.FragmentAddOrUpdateUserAddressBinding;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.address_picker.AddressDeliveryPickerFragment;
+import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.address_picker.AddressDeliveryPickerViewModel;
 
 public class AddOrUpdateUserAddressFragment extends Fragment {
     private FragmentAddOrUpdateUserAddressBinding binding;
+    private AddressDeliveryPickerViewModel addressDeliveryPickerViewModel;
 
     private static final String ARG_IS_UPDATE = "AddOrUpdateUserAddressFragment.ARG_IS_UPDATE";
-    private static final String ARG_USER_ID = "AddOrUpdateUserAddressFragment.ARG_USER_ID";
+    private static final String ARG_USER_ADDRESS_DTO = "AddOrUpdateUserAddressFragment.ARG_USER_ADDRESS_DTO";
 
     private Boolean isUpdate;
+    private UserAddressDTO userAddressDTO;
 
 //    public static AddOrUpdateUserAddressFragment newInstanceForUpdate(String param1, String param2) {
 //        AddOrUpdateUserAddressFragment fragment = new AddOrUpdateUserAddressFragment();
@@ -39,11 +43,21 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
         return fragment;
     }
 
+    public static AddOrUpdateUserAddressFragment newInstance(UserAddressDTO userAddressDTO) {
+        AddOrUpdateUserAddressFragment fragment = new AddOrUpdateUserAddressFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_IS_UPDATE, false);
+        args.putSerializable(ARG_USER_ADDRESS_DTO, userAddressDTO);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             isUpdate = getArguments().getBoolean(ARG_IS_UPDATE);
+            userAddressDTO = (UserAddressDTO) getArguments().getSerializable(ARG_USER_ADDRESS_DTO);
         }
     }
 
@@ -62,6 +76,7 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setEvents();
+        initAddressDeliveryPickerVM();
     }
 
     @Override
@@ -70,17 +85,22 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
         binding = null;
     }
 
+    private void initAddressDeliveryPickerVM() {
+
+    }
+
     private void setEvents() {
         //editText enter detail address click
         binding.edtNavDeliveryAddressUoaUserAddress.setOnClickListener(v -> {
-            goToAddressDeliveryPickerFragment(10.957412, 106.84269);
+            goToAddressDeliveryPickerFragment();
         });
     }
 
-    private void goToAddressDeliveryPickerFragment(double lat, double lng) {
+    private void goToAddressDeliveryPickerFragment() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fcv_user_manage, AddressDeliveryPickerFragment.newInstance(lat, lng))
+                .replace(R.id.fcv_user_manage, new AddressDeliveryPickerFragment())
+                .addToBackStack(null)
                 .commit();
     }
 }

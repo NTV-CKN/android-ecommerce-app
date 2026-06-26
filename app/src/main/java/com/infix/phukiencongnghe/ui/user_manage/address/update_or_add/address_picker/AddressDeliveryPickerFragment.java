@@ -37,7 +37,7 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
     private FragmentAddressDeliveryPickerBinding binding;
     private AddressDeliveryPickerAdapter addressDeliveryPickerAdapter;
     private AddressDeliveryPickerViewModel addressDeliveryPickerViewModel;
-    private  PlacesClient placesClient;
+    private PlacesClient placesClient;
     private GoogleMap googleMap;
 
     private LocationRestriction currentRegionRestriction = null;
@@ -49,30 +49,30 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
     //args from newInstance
     private double provinceCityLat;
     private double provinceCityLng;
-    private static final String ARG_LAT = "AddressDeliveryPickerFragment.ARG_LAT";
-    private static final String ARG_LNG = "AddressDeliveryPickerFragment.ARG_LNG";
+//    private static final String ARG_LAT = "AddressDeliveryPickerFragment.ARG_LAT";
+//    private static final String ARG_LNG = "AddressDeliveryPickerFragment.ARG_LNG";
 
     public AddressDeliveryPickerFragment() {
 
     }
 
-    public static AddressDeliveryPickerFragment newInstance(double provinceCityLat, double provinceCityLng) {
-        AddressDeliveryPickerFragment fragment = new AddressDeliveryPickerFragment();
-        Bundle args = new Bundle();
-        args.putDouble(ARG_LAT, provinceCityLat);
-        args.putDouble(ARG_LNG, provinceCityLng);
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    public static AddressDeliveryPickerFragment newInstance(double provinceCityLat, double provinceCityLng) {
+//        AddressDeliveryPickerFragment fragment = new AddressDeliveryPickerFragment();
+//        Bundle args = new Bundle();
+//        args.putDouble(ARG_LAT, provinceCityLat);
+//        args.putDouble(ARG_LNG, provinceCityLng);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            provinceCityLng = getArguments().getDouble(ARG_LNG);
-            provinceCityLat = getArguments().getDouble(ARG_LAT);
-            Log.d("SVU", provinceCityLat + " " + provinceCityLng);
-        }
+//        if (getArguments() != null) {
+//            provinceCityLng = getArguments().getDouble(ARG_LNG);
+//            provinceCityLat = getArguments().getDouble(ARG_LAT);
+//            Log.d("SVU", provinceCityLat + " " + provinceCityLng);
+//        }
     }
 
     @Override
@@ -89,16 +89,30 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        AddressDeliveryPickerViewModel.LatLngCurrent latLngCurrent = addressDeliveryPickerViewModel.latLng.getValue();
+        if(latLngCurrent == null || latLngCurrent.getCurLat() == null || latLngCurrent.getCurLng() == null) {
+            requireActivity().getSupportFragmentManager().popBackStack();
+            return;
+        }
+
         initEditTextEnterAddressKey();
         initPlacesMap();
         initViewModel();
         initRecyclerView();
-        setSearchRegionRestriction(provinceCityLat, provinceCityLng);
+        setSearchRegionRestriction(latLngCurrent.getCurLat(), latLngCurrent.getCurLng());
 
         //sdk map
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_fragment);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
+        }
+
+        if (addressDeliveryPickerViewModel.isUpdate()) {
+            binding.rvAddressSuggest.setVisibility(View.GONE);
+            binding.mapFragment.setVisibility(View.VISIBLE);
+            binding.imgCenterMarker.setVisibility(View.VISIBLE);
+            binding.btnConfirmAddressDeliveryPicker.setEnabled(true);
+            moveCameraToLocation(new LatLng(latLngCurrent.getCurLat(), latLngCurrent.getCurLng()), "");
         }
     }
 
@@ -119,7 +133,7 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
         addressDeliveryPickerViewModel = new ViewModelProvider(this).get(AddressDeliveryPickerViewModel.class);
         //observer list AddressSuggestion
         addressDeliveryPickerViewModel.addressSuggestions.observe(getViewLifecycleOwner(), lst -> {
-            if(lst == null) return;
+            if (lst == null) return;
             addressDeliveryPickerAdapter.updateList(lst);
         });
     }
@@ -148,7 +162,7 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
                 binding.imgCenterMarker.setVisibility(View.GONE);
                 binding.btnConfirmAddressDeliveryPicker.setEnabled(false);
 
-                if(key.isEmpty()) {
+                if (key.isEmpty()) {
                     addressDeliveryPickerViewModel.updateAddressSuggestState(new ArrayList<>());
                     return;
                 }
@@ -171,7 +185,8 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
         });
     }
 
@@ -185,11 +200,11 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
 
     private void handleAddressSuggestionSelect(AddressSuggestion addressSuggestion) {
         Log.d("AddressDeliveryPickerFragment", "Address Suggest Click");
-        if(addressSuggestion == null) return;
-        addressDeliveryPickerViewModel.getPlaceDetail(addressSuggestion.getPlaceId(),placesClient, latLng -> {
+        if (addressSuggestion == null) return;
+        addressDeliveryPickerViewModel.getPlaceDetail(addressSuggestion.getPlaceId(), placesClient, latLng -> {
             Log.d("AddressDeliveryPickerFragment", "Address Suggest Click 2");
 
-            if(googleMap != null) {
+            if (googleMap != null) {
                 binding.rvAddressSuggest.setVisibility(View.GONE);
                 binding.mapFragment.setVisibility(View.VISIBLE);
                 binding.btnConfirmAddressDeliveryPicker.setEnabled(true);
