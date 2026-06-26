@@ -13,7 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.cart.CartActivity;
+import com.infix.phukiencongnghe.ui.user_manage.UserManagerActivity;
+import com.infix.phukiencongnghe.utils.SharePrefUtils;
 
 public class HeaderFragment extends Fragment {
 
@@ -56,5 +59,33 @@ public class HeaderFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setEvents();
+    }
+
+    private void setEvents() {
+        //imgAvatar
+        imgView_user_header_fragment.setOnClickListener(v -> handleImageAvatarClick());
+    }
+
+    private void handleImageAvatarClick() {
+        boolean isLogin = SharePrefUtils.isLogin(
+                AuthActivity.USER_AUTH_FILE,
+                AuthActivity.KEY_ACCESS_TOKEN,
+                AuthActivity.KEY_REFRESH_TOKEN,
+                requireContext()
+        );
+
+        Intent intent;
+        if(isLogin) {
+            intent = new Intent(requireContext(), UserManagerActivity.class);
+        }else {
+            intent = new Intent(requireContext(), AuthActivity.class);
+        }
+        startActivity(intent);
     }
 }

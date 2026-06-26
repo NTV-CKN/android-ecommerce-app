@@ -38,4 +38,10 @@ public class SharePrefUtils {
 
         return strs;
     }
+
+    //Hàm này kiểm tra liệu access/refresh token đã có trong shared pref chưa, nếu có thì tức người dùng đã login
+    public static boolean isLogin(String nameFile, String accessKey, String refreshKey, Context context) {
+        String[] strs =  getAccessRefreshTokenFromPrefFile(nameFile, accessKey, refreshKey, context);
+        return (strs[0] != null && !strs[0].isEmpty()) && (strs[1] != null && !strs[1].isEmpty());
+    }
 }

@@ -1,4 +1,4 @@
-package com.infix.phukiencongnghe.ui.user_manage.address;
+package com.infix.phukiencongnghe.ui.adapter.address_manage.user;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -78,7 +78,7 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
     }
 
 
-    interface OnItemClick {
+   public interface OnItemClick {
         void onItemClick(UserAddressDTO userAddressDTO);
     }
 }
