@@ -2,6 +2,7 @@ package com.infix.phukiencongnghe.data.repository.main.product;
 
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductDetailsDTO;
+import com.infix.phukiencongnghe.data.dto.response.ProductPageDTO;
 
 import java.util.List;
 
@@ -12,4 +13,15 @@ public interface IProductRepository {
     Call<ProductDetailsDTO> getProductDetails(int id);
 
     Call<List<FeatureProductDTO>> searchProduct(String keyword);
+
+    Call<ProductPageDTO> getProductByCategory(
+            Integer categoryId,
+            Integer page,
+            Integer pageSize,
+            Double minPrice,
+            Double maxPrice,
+            String sortBy,
+            String keyword,
+            String direction
+    );
 }

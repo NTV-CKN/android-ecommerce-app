@@ -1,6 +1,7 @@
 package com.infix.phukiencongnghe.data.repository.main.product;
 
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
+import com.infix.phukiencongnghe.data.dto.response.ProductPageDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductDetailsDTO;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
@@ -33,5 +34,27 @@ public class FeatureProductRepositoryImpl implements IProductRepository{
 
     public Call<List<FeatureProductDTO>> searchProduct(String keyword) {
         return featureProductService.searchProduct(keyword);
+    }
+    @Override
+    public Call<ProductPageDTO> getProductByCategory(
+            Integer categoryId,
+            Integer page,
+            Integer pageSize,
+            Double minPrice,
+            Double maxPrice,
+            String sortBy,
+            String keyword,
+            String direction
+    ){
+        return featureProductService.getProductByCategory(
+                categoryId,
+                page,
+                pageSize,
+                minPrice,
+                maxPrice,
+                sortBy,
+                keyword,
+                direction
+        );
     }
 }

@@ -17,10 +17,13 @@ import java.util.List;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
     private List<CategoryDTO> categoryList;
+    private OnCategoryClickListener listener;
 
-    public CategoryAdapter(List<CategoryDTO> categoryList) {
-        this.categoryList = categoryList;
-    }
+    private int selectedPosition = 0;
+
+//    public CategoryAdapter(List<CategoryDTO> categoryList) {
+//        this.categoryList = categoryList;
+//    }
 
     @NonNull
     @Override
@@ -35,12 +38,47 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryAdapter.CategoryViewHolder holder, int position) {
+    public void onBindViewHolder(
+            @NonNull CategoryViewHolder holder,
+            int position
+    ) {
         CategoryDTO item = categoryList.get(position);
-        holder.tvCategoryName.setText(item.getName());
-
-        int iconRes = getIconByCategoryName(item.getName());
-        holder.imgCategoryIcon.setImageResource(iconRes);
+        holder.tvCategoryName.setText(
+                item.getName()
+        );
+        int iconRes =
+                getIconByCategoryName(
+                        item.getName()
+                );
+        holder.imgCategoryIcon.setImageResource(
+                iconRes
+        );
+        // XML selector xử lý màu
+        boolean isSelected =
+                position == selectedPosition;
+//        holder.imgCategoryIcon.setSelected(
+//                isSelected
+//        );
+        holder.tvCategoryName.setSelected(
+                isSelected
+        );
+        holder.itemView.setOnClickListener(v -> {
+            int oldPosition =
+                    selectedPosition;
+            selectedPosition =
+                    holder.getAdapterPosition();
+            notifyItemChanged(
+                    oldPosition
+            );
+            notifyItemChanged(
+                    selectedPosition
+            );
+            if(listener != null){
+                listener.onCategoryClick(
+                        item
+                );
+            }
+        });
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
@@ -76,6 +114,18 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                 return R.drawable.ic_category_bcdth;
         }
         return android.R.drawable.ic_menu_compass;
+    }
+
+    public interface OnCategoryClickListener {
+        void onCategoryClick(CategoryDTO category);
+
+    }
+    public CategoryAdapter(
+            List<CategoryDTO> categoryList,
+            OnCategoryClickListener listener
+    ){
+        this.categoryList = categoryList;
+        this.listener = listener;
     }
 
 }

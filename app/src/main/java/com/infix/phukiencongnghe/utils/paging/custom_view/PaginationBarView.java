@@ -33,8 +33,19 @@ public class PaginationBarView extends LinearLayout {
         btnNext = findViewById(R.id.btn_next_page);
         pageNumbers = findViewById(R.id.lnr_page_numbers_container);
 
-        btnPrev.setOnClickListener(v -> { if (currentPage > 1) listener.onPageChanged(currentPage - 1); });
-        btnNext.setOnClickListener(v -> { if (currentPage < totalPages) listener.onPageChanged(currentPage + 1); });
+//        btnPrev.setOnClickListener(v -> { if (currentPage > 1) listener.onPageChanged(currentPage - 1); });
+//        btnNext.setOnClickListener(v -> { if (currentPage < totalPages) listener.onPageChanged(currentPage + 1); });
+        btnPrev.setOnClickListener(v -> {
+            if (listener != null && currentPage > 1) {
+                listener.onPageChanged(currentPage - 1);
+            }
+        });
+
+        btnNext.setOnClickListener(v -> {
+            if (listener != null && currentPage < totalPages) {
+                listener.onPageChanged(currentPage + 1);
+            }
+        });
     }
 
     public void setOnPageChangeListener(OnPageChangeListener listener) {
@@ -53,16 +64,46 @@ public class PaginationBarView extends LinearLayout {
         pageNumbers.removeAllViews();
         //tạo ra các số page xoay quanh currentpage
         //Nếu current page - 2 vẫn lớn hơn 1 thì hiển thị 2 nút trang trước đó
-        //Nếu current page + 2 mà vẫn nhỏ hơn tổng trang thì hiển thị 2 nút cho 2 trang kế 
-        for (int i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
-            Button btnNum = new Button(getContext());
-            btnNum.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
+        //Nếu current page + 2 mà vẫn nhỏ hơn tổng trang thì hiển thị 2 nút cho 2 trang kế
+
+//        for (int i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+        int startPage;
+        int endPage;
+        if (currentPage <= 2) {
+            startPage = 1;
+            endPage = Math.min(3, totalPages);
+        }
+        else if (currentPage >= totalPages - 1) {
+            endPage = totalPages;
+            startPage = Math.max(1, totalPages - 2);
+        }
+        else {
+            startPage = currentPage - 1;
+            endPage = currentPage + 1;
+        }
+        for (int i = startPage; i <= endPage; i++) {
+            Button btnNum =
+                    (Button) LayoutInflater
+                            .from(getContext())
+                            .inflate(
+                                    R.layout.item_page_button,
+                                    pageNumbers,
+                                    false
+                            );
             btnNum.setText(String.valueOf(i));
 
             if (i == currentPage) {
                 btnNum.setSelected(true);
+                // đổi màu chữ khi active
+                btnNum.setTextColor(
+                        getResources().getColor(android.R.color.white)
+                );
             }
-
+            else{
+                btnNum.setTextColor(
+                        getResources().getColor(android.R.color.black)
+                );
+            }
             final int pageSelected = i;
             btnNum.setOnClickListener(v -> { if (listener != null) listener.onPageChanged(pageSelected); });
             pageNumbers.addView(btnNum);

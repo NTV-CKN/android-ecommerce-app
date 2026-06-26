@@ -74,6 +74,10 @@
             android:name=".ui.search.SearchProductActivity"
             android:exported="true"/>
 
+        <activity
+            android:name=".ui.product_category.ProductCategoryActivity"
+            android:exported="true"/>
+
     </application>
 
 </manifest>

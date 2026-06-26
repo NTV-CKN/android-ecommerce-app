@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,12 +20,16 @@ import java.util.List;
 public class FeatureProductAdapter extends RecyclerView.Adapter<FeatureProductAdapter.FeatureProductViewHolder> {
 
     private List<FeatureProductDTO> featureProductDTOList;
-
+    private OnItemClickListener listener;
     public interface OnItemClickListener {
         void onItemClick(FeatureProductDTO product);
     }
 
-    public FeatureProductAdapter(List<FeatureProductDTO> featureProductDTOList) {this.featureProductDTOList = featureProductDTOList;
+//    public FeatureProductAdapter(List<FeatureProductDTO> featureProductDTOList) {this.featureProductDTOList = featureProductDTOList;
+//    }
+
+    public FeatureProductAdapter(List<FeatureProductDTO> featureProductDTOList) {
+        this.featureProductDTOList = featureProductDTOList;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -34,6 +37,10 @@ public class FeatureProductAdapter extends RecyclerView.Adapter<FeatureProductAd
         this.featureProductDTOList = newList;
         notifyDataSetChanged();
     }
+//    public void setData(List<FeatureProductDTO> newList) {
+//        this.featureProductDTOList = newList;
+//        notifyDataSetChanged();
+//    }
 
     @NonNull
     @Override
@@ -64,6 +71,20 @@ public class FeatureProductAdapter extends RecyclerView.Adapter<FeatureProductAd
                 .load(productDTO.getMainImage())
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imgView);
+
+        holder.itemView.setOnClickListener(v -> {
+            int adapterPosition =
+                    holder.getAdapterPosition();
+            if(listener != null
+                    && adapterPosition != RecyclerView.NO_POSITION){
+
+                listener.onItemClick(
+                        featureProductDTOList.get(
+                                adapterPosition
+                        )
+                );
+            }
+        });
     }
 
     private String formatPrice(BigDecimal price) {
@@ -85,6 +106,9 @@ public class FeatureProductAdapter extends RecyclerView.Adapter<FeatureProductAd
             tvPrice = itemView.findViewById(R.id.tvProductPrice);
             tvAvgStar = itemView.findViewById(R.id.tvProductStar);
         }
+    }
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
     }
 
 }
