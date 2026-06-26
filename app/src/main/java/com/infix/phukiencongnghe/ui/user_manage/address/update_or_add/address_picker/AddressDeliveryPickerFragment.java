@@ -143,6 +143,11 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
                     searchHandler.removeCallbacks(searchRunnable);
                 }
 
+                binding.rvAddressSuggest.setVisibility(View.VISIBLE);
+                binding.mapFragment.setVisibility(View.INVISIBLE);
+                binding.imgCenterMarker.setVisibility(View.GONE);
+                binding.btnConfirmAddressDeliveryPicker.setEnabled(false);
+
                 if(key.isEmpty()) {
                     addressDeliveryPickerViewModel.updateAddressSuggestState(new ArrayList<>());
                     return;
@@ -187,17 +192,37 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
             if(googleMap != null) {
                 binding.rvAddressSuggest.setVisibility(View.GONE);
                 binding.mapFragment.setVisibility(View.VISIBLE);
+                binding.btnConfirmAddressDeliveryPicker.setEnabled(true);
 
-                //clear  vị trí cũ
-                googleMap.clear();
-                googleMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title(addressSuggestion.getTitle()));
-
-                Log.d("AddressDeliveryPickerFragment", "Zoom Place");
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.5f));
+                moveCameraToLocation(latLng, addressSuggestion.getTitle());
             }
         });
+    }
+
+    private void moveCameraToLocation(LatLng latLng, String title) {
+        if (googleMap == null) return;
+
+        googleMap.clear();
+        binding.imgCenterMarker.setVisibility(View.VISIBLE);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.5f));
+
+        googleMap.setOnCameraIdleListener(() -> {
+            LatLng centerLatLng = googleMap.getCameraPosition().target;
+
+            double newLat = centerLatLng.latitude;
+            double newLng = centerLatLng.longitude;
+
+            Log.d("AddressDeliveryPickerFragment", "New lat: : " + newLat + " , new lng: " + newLng);
+
+            binding.btnConfirmAddressDeliveryPicker.setOnClickListener(v -> {
+                handleConfirmAddressSelection(newLat, newLng);
+            });
+        });
+    }
+
+    private void handleConfirmAddressSelection(double lat, double lng) {
+        Log.d("AddressDeliveryPickerFragment", "chốt tọa độ: " + lat + " - " + lng);
+        addressDeliveryPickerViewModel.setLatLng(new AddressDeliveryPickerViewModel.LatLngCurrent(lat, lng));
     }
 
     @Override
