@@ -9,18 +9,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.infix.phukiencongnghe.data.dto.request.CartLocalDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
+import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.cart.ICartRepository;
 import com.infix.phukiencongnghe.data.repository.main.product.FeatureProductRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
+import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
+import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
 import com.infix.phukiencongnghe.databinding.FragmentProductDetailsBinding;
 import com.infix.phukiencongnghe.ui.adapter.feature_product.ProductImageSliderAdapter;
 import com.infix.phukiencongnghe.ui.adapter.feature_product.ProductReviewAdapter;
 import com.infix.phukiencongnghe.ui.adapter.feature_product.ProductVariantAdapter;
 import com.infix.phukiencongnghe.ui.adapter.feature_product.RelatedProductAdapter;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
+import com.infix.phukiencongnghe.ui.share_viewmodel.MainViewModel;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.util.ArrayList;
@@ -34,7 +41,8 @@ public class ProductDetailsFragment extends Fragment {
     private static final String ARG_PRODUCT_ID = "ProductDetailFragment.ARG_PRODUCT_ID";
     private Integer productId = 7;
     private int selectQuantity = 1;
-
+    private ICartRepository cartRepository;
+    private Integer selectedVariantId = null;
     public static ProductDetailsFragment newInstance(Integer productId) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
         Bundle args = new Bundle();
@@ -63,6 +71,7 @@ public class ProductDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loadingDialog = new LoadingDialog();
+        cartRepository = new CartRepositoryImpl(RetrofitHelper.getCartService());
         initProductDetailViewModel();
         setEvents();
     }
@@ -88,6 +97,15 @@ public class ProductDetailsFragment extends Fragment {
                 validateAndSetQuantity();
             }
         });
+        binding.btnAddToCart.setOnClickListener(v -> {
+            Integer currentVariantId = this.selectedVariantId;
+            if(currentVariantId == null){
+                SnackbarUtils.showBaseSnackbar(binding.getRoot(),"Vui lòng chọn một thể loại sản phẩm", Snackbar.LENGTH_SHORT);
+                return;
+            }
+            CartLocalDTO request = new CartLocalDTO(this.selectedVariantId, this.selectQuantity);
+            productDetailsViewModel.addtoCart(request);
+        });
     }
 
     private void updateQuantityUI() {
@@ -110,13 +128,19 @@ public class ProductDetailsFragment extends Fragment {
     }
 
     private void initProductDetailViewModel() {
-        com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService productService =
+        //product service
+        FeatureProductService productService =
                 RetrofitHelper.getFeatureProductService();
         IProductRepository repository = new FeatureProductRepositoryImpl(productService);
-        ProductDetailsViewModel.Factory factory = new ProductDetailsViewModel.Factory(repository);
+        // cart service
+        CartService cartService =
+                RetrofitHelper.getCartService();
+        ICartRepository cartRepo = new CartRepositoryImpl(cartService);
+        // Factory
+        ProductDetailsViewModel.Factory factory = new ProductDetailsViewModel.Factory(repository, cartRepo);
 
         productDetailsViewModel = new ViewModelProvider(this,factory).get(ProductDetailsViewModel.class);
-
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         productDetailsViewModel.productDetails.observe(getViewLifecycleOwner(), details ->{
             if(details == null) return;
             binding.nameProduct.setText(details.getName() + " " + details.getSubtitle());
@@ -140,6 +164,7 @@ public class ProductDetailsFragment extends Fragment {
                 }
             }
             ProductVariantAdapter variantAdapter = new ProductVariantAdapter(details.getProductVariants(), variant -> {
+                this.selectedVariantId = variant.getId();
                 if(variant.getPrice() != null){
                     binding.tvProductPrice.setText(String.format("%,.0f", variant.getPrice()) + "VNĐ");
                 }
@@ -158,23 +183,30 @@ public class ProductDetailsFragment extends Fragment {
             }else{
                 sliderAdapter.setImages(new ArrayList<>());
             }
+
             ProductReviewAdapter reviewAdapter = new ProductReviewAdapter(details.getReviews());
             binding.rvProductComments.setAdapter(reviewAdapter);
-            binding.rvProductComments.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
-
+            binding.rvProductComments.setLayoutManager(new LinearLayoutManager(getContext()));
             RelatedProductAdapter relatedAdapter = new RelatedProductAdapter(details.getRelateProducts());
             binding.rvRelatedProducts.setAdapter(relatedAdapter);
-            binding.rvRelatedProducts.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(
-                    getContext(), androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false));
+            binding.rvRelatedProducts.setLayoutManager(new LinearLayoutManager(
+                    getContext(), LinearLayoutManager.HORIZONTAL, false));
             relatedAdapter.setOnItemClickListener(product -> {
                 this.productId = product.getId();
                 this.selectQuantity = 1;
+                this.selectedVariantId =null;
                 updateQuantityUI();
                 if (binding.mainScrollView !=null){
                     binding.mainScrollView.smoothScrollTo(0,0);
                 }
                 productDetailsViewModel.getProductById(this.productId);
             });
+        });
+        productDetailsViewModel.cartBadgeCount.observe(getViewLifecycleOwner(),totalCount ->{
+            if(totalCount ==null){
+                return;
+            }
+            mainViewModel.setCartBadgetCount(totalCount);
         });
         productDetailsViewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
             if (msg == null) return;

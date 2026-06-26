@@ -4,6 +4,8 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import com.infix.phukiencongnghe.data.dto.request.CartLocalDTO;
+import com.infix.phukiencongnghe.data.dto.response.BadgeCartDTO;
 import com.infix.phukiencongnghe.data.dto.response.CartDTO;
 import com.infix.phukiencongnghe.data.source.local.entity.CartEntity;
 import com.infix.phukiencongnghe.data.source.local.source.cart.CartLocalDataSourceImpl;
@@ -35,5 +37,11 @@ public class CartRepositoryImpl implements ICartRepository {
     public Call<CartDTO> clearCart() {
         return cartService.clearCart();
     }
+
+    @Override
+    public Call<BadgeCartDTO> addCart(CartLocalDTO request) {
+        return cartService.addCart(request);
+    }
+
 
 }
