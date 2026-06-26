@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.gson.Gson;
 import com.infix.phukiencongnghe.data.dto.response.ExceptionResponseDTO;
-import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
 
@@ -52,8 +51,8 @@ public class UserAddressManageViewModel extends ViewModel {
         }
     }
 
-    public void getUserAddressByUserId(Integer userId) {
-        Call<List<UserAddressDTO>> usCall = userAddressManageRepository.getUserAddressByUserId(userId);
+    public void getUserAddresses() {
+        Call<List<UserAddressDTO>> usCall = userAddressManageRepository.getUserAddresses();
         _isLoading.setValue(true);
         usCall.enqueue(new Callback<List<UserAddressDTO>>() {
             @Override
@@ -72,6 +71,7 @@ public class UserAddressManageViewModel extends ViewModel {
                     ExceptionResponseDTO exc = null;
                     try {
                         exc = gson.fromJson(responseBody.string(), ExceptionResponseDTO.class);
+                        if(exc == null) return;
                         _notifyMsg.setValue(exc.getMessage());
                     } catch (IOException e) {
                         _notifyMsg.setValue(e.getMessage());

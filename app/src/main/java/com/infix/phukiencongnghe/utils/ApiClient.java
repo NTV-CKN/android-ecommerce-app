@@ -3,9 +3,14 @@ package com.infix.phukiencongnghe.utils;
 import static com.infix.phukiencongnghe.EvnUtils.BASE_URL;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.infix.phukiencongnghe.data.dto.request.RefreshTokenDTO;
 import com.infix.phukiencongnghe.data.dto.response.JwtFromLoginDTO;
+import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
+import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 
 import java.io.IOException;
@@ -17,6 +22,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.Route;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -26,72 +32,77 @@ public class ApiClient {
     private static OkHttpClient okHttpClient = null;
     private static Retrofit retrofit = null;
     private static Context context;
+    private static final Object tokenLock = new Object();
 
     private static String accessToken = "";
     private static String refreshToken = "";
 
     //Khởi tạo OkHttpClient tự lấy refresh token
-    public static synchronized OkHttpClient getOkHttpClient() {
+    public static OkHttpClient getOkHttpClient() {
         if (okHttpClient == null) {
-            okHttpClient = new OkHttpClient.Builder()
-                    .addInterceptor(chain -> {//Chặn request để đính header
-                        Request originalRequest = chain.request();
+            synchronized (ApiClient.class) {
+                if (okHttpClient == null) {
+                    okHttpClient = new OkHttpClient.Builder()
+                            .addInterceptor(chain -> {
+                                Request originalRequest = chain.request();
+                                if (accessToken != null && !accessToken.isEmpty()) {
 
-                        if (accessToken != null && !accessToken.isEmpty()) {
-                            Request authenticatedRequest = originalRequest.newBuilder()
-                                    .header("Authorization", "Bearer " + accessToken)
-                                    .build();
-                            return chain.proceed(authenticatedRequest);
-                        }
-                        return chain.proceed(originalRequest);
-                    })
-                    //Nếu server trả 401 thì gọi hàm này
-                    .authenticator(new Authenticator() {
-                        @Override
-                        public Request authenticate(Route route, Response response) throws IOException {
-                            //Trường hợp refresh token hết hạn thì xử lí đăng xuất
-                            if (responseCount(response) >= 2) {
-                                handleLogout();
-                                return null;//hủy request
-                            }
+                                    Request authenticatedRequest = originalRequest.newBuilder().header(
+                                                            "Authorization",
+                                                            "Bearer " + accessToken
+                                                    )
+                                                    .build();
+                                    Log.d("ApiClient", authenticatedRequest.header("Authorization"));
 
-                            //đồng bộ luồng để tránh tranh chấp gọi mạng
-                            synchronized (this) {
-                                String tokenInRequest = response.request().header("Authorization");
+                                    Response response = chain.proceed(authenticatedRequest);
+                                    Log.d("ApiClient", "CODE = " + response.code());
 
-                                //nếu request trước đã xin access mới thì tận dụng lại token đó
-                                if (tokenInRequest != null && !tokenInRequest.equals("Bearer " + accessToken)) {
-                                    return response.request().newBuilder()
-                                            .header("Authorization", "Bearer " + accessToken)
-                                            .build();
+                                    return response;
                                 }
-
-                                //kích hoạt access token mơi
-                                String newAccessToken = executeRefreshApi();
-                                if (newAccessToken != null) {
-                                    accessToken = newAccessToken;
-                                    SharePrefUtils.saveStringToPrefFile(
-                                            AuthActivity.USER_AUTH_FILE,
-                                            AuthActivity.KEY_ACCESS_TOKEN,
-                                            accessToken,
-                                            context
-                                    );
-                                    return response.request().newBuilder()
-                                            .header("Authorization", "Bearer " + accessToken)
-                                            .build();
-                                } else {
+                                return chain.proceed(originalRequest);
+                            })
+                            .authenticator((route, response) -> {
+                                Log.d("ApiClient", "Need Auth: " + response.code());
+                                if (responseCount(response) >= 2) {
                                     handleLogout();
                                     return null;
                                 }
-                            }
-                        }
-                    })
-                    .build();
+
+                                synchronized (tokenLock) {
+                                    String tokenInRequest = response.request().header("Authorization");
+
+                                    if (tokenInRequest != null && !tokenInRequest.equals("Bearer " + accessToken)) {
+                                        return response.request().newBuilder()
+                                                .header("Authorization", "Bearer " + accessToken)
+                                                .build();
+                                    }
+
+                                    String newAccessToken = executeRefreshApi();
+                                    if (newAccessToken != null) {
+                                        accessToken = newAccessToken;
+                                        SharePrefUtils.saveStringToPrefFile(
+                                                AuthActivity.USER_AUTH_FILE,
+                                                AuthActivity.KEY_ACCESS_TOKEN,
+                                                accessToken,
+                                                context
+                                        );
+                                        return response.request().newBuilder()
+                                                .header("Authorization", "Bearer " + accessToken)
+                                                .build();
+                                    } else {
+                                        handleLogout();
+                                        return null;
+                                    }
+                                }
+                            })
+                            .build();
+                }
+            }
         }
         return okHttpClient;
     }
 
-    public static synchronized Retrofit getRetrofitClient() {
+    public static  Retrofit getRetrofitClient() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -134,18 +145,24 @@ public class ApiClient {
     //Phương thức này sẽ tạo ra 1 request để xin access token từ refresh token,
     //trong trường hợp refresh token bị hết hạn hoặc lỗi thì sẽ bị vòng lặp nếu dùng Ok cũ
     private static String executeRefreshApi() {
-        OkHttpClient cleanClient = new OkHttpClient();
-        RequestBody body = new FormBody.Builder()
-                .add("refreshToken", refreshToken)
-                .build();
-        Request request = new Request.Builder()
-                .url(BASE_URL + "/api/v1/auth/refresh-token")
-                .post(body)
-                .build();
+        try {
+            OkHttpClient cleanHttpClient = new OkHttpClient.Builder().build();
 
-        try (Response response = cleanClient.newCall(request).execute()) { // .execute() để chạy đồng bộ (Synchronous)
+            Retrofit cleanRetrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(cleanHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            AuthService cleanAuthService = cleanRetrofit.create(AuthService.class);
+
+            RefreshTokenDTO bodyDto = new RefreshTokenDTO(refreshToken);
+            Call<JwtFromLoginDTO> call = cleanAuthService.refreshToken(bodyDto);
+            Log.d("SVU", "Call refresh");
+            retrofit2.Response<JwtFromLoginDTO> response = call.execute();
             if (response.isSuccessful() && response.body() != null) {
-                JwtFromLoginDTO jwtFromLoginDTO = new Gson().fromJson(response.body().string(), JwtFromLoginDTO.class);
+                JwtFromLoginDTO jwtFromLoginDTO = response.body();
+                Log.d("SVU", "Call refresh access: " + jwtFromLoginDTO.getAccessToken());
 
                 return jwtFromLoginDTO.getAccessToken();
             }
@@ -164,9 +181,20 @@ public class ApiClient {
         return result;
     }
 
+    //Hàm này xử lí gọi lại listener OnLogoutListener để các activity chuyển đến AuthActivity
+    //Gọi và set lại access/refresh token
     private static void handleLogout() {
         accessToken = "";
         refreshToken = "";
+        SharePrefUtils.saveAccessTokenAndRefreshTokenToPrefFile(
+                AuthActivity.USER_AUTH_FILE,
+                AuthActivity.KEY_ACCESS_TOKEN,
+                AuthActivity.KEY_REFRESH_TOKEN,
+                accessToken,
+                refreshToken,
+                context
+        );
+
         onLogoutListener.onLogout();
         alreadyLogout = true;
     }

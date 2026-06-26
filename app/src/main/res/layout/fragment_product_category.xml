@@ -1,153 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/main_layout"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#F5F5F5">
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/edtSearch"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_margin="10dp"
-        android:paddingStart="16dp"
-        android:hint="Tìm sản phẩm..."
-        android:textSize="14sp"
-        android:background="@drawable/bg_search"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawablePadding="10dp"
-        android:singleLine="true"/>
-
-    <!-- CATEGORY -->
-
-
-    <!-- FILTER SECTION -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCategory"
-        android:layout_width="match_parent"
-        android:layout_height="125dp"
-        android:background="#FFFFFF"
-        android:clipToPadding="false"
-        android:elevation="2dp"
-        android:overScrollMode="never"
-        android:paddingTop="10dp"
-        android:paddingBottom="0dp" />
-
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#FFFFFF"
-        android:padding="10dp"
-        android:layout_marginTop="2dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edtSearch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_margin="10dp"
+            android:paddingStart="16dp"
+            android:hint="Tìm sản phẩm..."
+            android:textSize="14sp"
+            android:background="@drawable/bg_search"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawablePadding="10dp"
+            android:singleLine="true"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lọc theo giá"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="#222222"
-            android:layout_marginBottom="10dp"/>
+        <!-- CATEGORY -->
 
-        <HorizontalScrollView
+
+        <!-- FILTER SECTION -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCategory"
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:background="#FFFFFF"
+            android:clipToPadding="false"
+            android:elevation="2dp"
+            android:overScrollMode="never"
+            android:paddingTop="10dp"
+            android:paddingBottom="0dp" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:overScrollMode="never">
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="10dp"
+            android:layout_marginTop="2dp">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:text="Lọc theo giá"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="#222222"
+                android:layout_marginBottom="10dp"/>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnAllPrice"
-                    android:layout_width="90dp"
-                    android:layout_height="38dp"
-                    android:text="Tất cả"
-                    android:textAllCaps="false"
-                    android:textColor="#333333"
-                    android:textSize="13sp"
-                    android:background="@drawable/filter_button"
-                    android:backgroundTint="@null"
-                    android:stateListAnimator="@null"
-                    android:layout_marginEnd="8dp"/>
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:overScrollMode="never">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnPrice1"
-                    android:layout_width="90dp"
-                    android:layout_height="38dp"
-                    android:text="&lt;100K"
-                    android:textAllCaps="false"
-                    android:textColor="#333333"
-                    android:textSize="13sp"
-                    android:background="@drawable/filter_button"
-                    android:backgroundTint="@null"
-                    android:stateListAnimator="@null"
-                    android:layout_marginEnd="8dp"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnPrice2"
-                    android:layout_width="120dp"
-                    android:layout_height="38dp"
-                    android:text="100K-500K"
-                    android:textAllCaps="false"
-                    android:textColor="#333333"
-                    android:textSize="13sp"
-                    android:background="@drawable/filter_button"
-                    android:backgroundTint="@null"
-                    android:stateListAnimator="@null"
-                    android:layout_marginEnd="8dp"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnAllPrice"
+                        android:layout_width="90dp"
+                        android:layout_height="38dp"
+                        android:text="Tất cả"
+                        android:textAllCaps="false"
+                        android:textColor="#333333"
+                        android:textSize="13sp"
+                        android:background="@drawable/filter_button"
+                        android:backgroundTint="@null"
+                        android:stateListAnimator="@null"
+                        android:layout_marginEnd="8dp"/>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnPrice3"
-                    android:layout_width="90dp"
-                    android:layout_height="38dp"
-                    android:text="&gt;500K"
-                    android:textAllCaps="false"
-                    android:textColor="#333333"
-                    android:textSize="13sp"
-                    android:background="@drawable/filter_button"
-                    android:backgroundTint="@null"
-                    android:stateListAnimator="@null"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnPrice1"
+                        android:layout_width="90dp"
+                        android:layout_height="38dp"
+                        android:text="&lt;100K"
+                        android:textAllCaps="false"
+                        android:textColor="#333333"
+                        android:textSize="13sp"
+                        android:background="@drawable/filter_button"
+                        android:backgroundTint="@null"
+                        android:stateListAnimator="@null"
+                        android:layout_marginEnd="8dp"/>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnSort"
-                    android:layout_width="120dp"
-                    android:layout_height="38dp"
-                    android:text="Sắp xếp ▼"
-                    android:textAllCaps="false"
-                    android:textColor="#333333"
-                    android:textSize="13sp"
-                    android:background="@drawable/filter_button"
-                    android:backgroundTint="@null"
-                    android:stateListAnimator="@null"
-                    android:layout_marginStart="8dp"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnPrice2"
+                        android:layout_width="120dp"
+                        android:layout_height="38dp"
+                        android:text="100K-500K"
+                        android:textAllCaps="false"
+                        android:textColor="#333333"
+                        android:textSize="13sp"
+                        android:background="@drawable/filter_button"
+                        android:backgroundTint="@null"
+                        android:stateListAnimator="@null"
+                        android:layout_marginEnd="8dp"/>
 
-            </LinearLayout>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnPrice3"
+                        android:layout_width="90dp"
+                        android:layout_height="38dp"
+                        android:text="&gt;500K"
+                        android:textAllCaps="false"
+                        android:textColor="#333333"
+                        android:textSize="13sp"
+                        android:background="@drawable/filter_button"
+                        android:backgroundTint="@null"
+                        android:stateListAnimator="@null"/>
 
-        </HorizontalScrollView>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnSort"
+                        android:layout_width="120dp"
+                        android:layout_height="38dp"
+                        android:text="Sắp xếp ▼"
+                        android:textAllCaps="false"
+                        android:textColor="#333333"
+                        android:textSize="13sp"
+                        android:background="@drawable/filter_button"
+                        android:backgroundTint="@null"
+                        android:stateListAnimator="@null"
+                        android:layout_marginStart="8dp"/>
 
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+
+        <!-- PRODUCT -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProduct"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="6dp"
+            android:clipToPadding="false"/>
+
+
+        <!-- PAGINATION -->
+        <com.infix.phukiencongnghe.utils.paging.custom_view.PaginationBarView
+            android:id="@+id/paginationBar"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:background="#FFFFFF"/>
     </LinearLayout>
 
-
-    <!-- PRODUCT -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvProduct"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="6dp"
-        android:clipToPadding="false"/>
-
-
-    <!-- PAGINATION -->
-    <com.infix.phukiencongnghe.utils.paging.custom_view.PaginationBarView
-        android:id="@+id/paginationBar"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:background="#FFFFFF"/>
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>
