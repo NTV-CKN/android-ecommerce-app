@@ -15,7 +15,7 @@ public class UserAddressManageRepositoryImpl  implements IUserAddressManageRepos
     }
 
     @Override
-    public Call<List<UserAddressDTO>> getUserAddressByUserId(Integer userId) {
-        return userAddressManageService.getUserAddressByUserId(userId);
+    public Call<List<UserAddressDTO>> getUserAddresses() {
+        return userAddressManageService.getUserAddresses();
     }
 }

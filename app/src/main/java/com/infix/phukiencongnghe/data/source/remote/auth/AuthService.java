@@ -1,5 +1,6 @@
 package com.infix.phukiencongnghe.data.source.remote.auth;
 
+import com.infix.phukiencongnghe.data.dto.request.RefreshTokenDTO;
 import com.infix.phukiencongnghe.data.dto.request.ResetPasswordDTO;
 import com.infix.phukiencongnghe.data.dto.request.UserLoginDTO;
 import com.infix.phukiencongnghe.data.dto.request.UserLoginGoogleDTO;
@@ -19,6 +20,9 @@ public interface AuthService {
 
     @GET("/api/v1/auth/verify-mail")
     Call<SuccessBasicDTO> verifyEmail(@Query("token") String token);
+
+    @POST("/api/v1/auth/refresh-token")
+    Call<JwtFromLoginDTO> refreshToken(@Body RefreshTokenDTO refreshTokenDTO);
 
     @POST("/api/v1/auth/reset-password")
     Call<SuccessBasicDTO> resetPassword(@Body ResetPasswordDTO resetPasswordDTO);

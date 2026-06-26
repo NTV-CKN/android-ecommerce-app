@@ -7,5 +7,5 @@ import java.util.List;
 import retrofit2.Call;
 
 public interface IUserAddressManageRepository {
-    Call<List<UserAddressDTO>> getUserAddressByUserId(Integer userId);
+    Call<List<UserAddressDTO>> getUserAddresses();
 }
