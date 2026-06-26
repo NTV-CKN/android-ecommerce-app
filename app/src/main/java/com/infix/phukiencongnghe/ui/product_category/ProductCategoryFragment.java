@@ -127,7 +127,7 @@ public class ProductCategoryFragment extends Fragment {
                     .beginTransaction()
 
                     .replace(
-                            R.id.container,
+                            R.id.fcv_main_content,
                             com.infix.phukiencongnghe
                                     .ui.main.product_detail
                                     .ProductDetailsFragment
