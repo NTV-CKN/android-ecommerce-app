@@ -21,7 +21,6 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
     private static final String ARG_USER_ID = "AddOrUpdateUserAddressFragment.ARG_USER_ID";
 
     private Boolean isUpdate;
-    private Integer userId;
 
 //    public static AddOrUpdateUserAddressFragment newInstanceForUpdate(String param1, String param2) {
 //        AddOrUpdateUserAddressFragment fragment = new AddOrUpdateUserAddressFragment();
@@ -32,11 +31,10 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
 //        return fragment;
 //    }
 
-    public static AddOrUpdateUserAddressFragment newInstanceForAdd(Integer userId) {
+    public static AddOrUpdateUserAddressFragment newInstance(boolean isUpdate) {
         AddOrUpdateUserAddressFragment fragment = new AddOrUpdateUserAddressFragment();
         Bundle args = new Bundle();
-        args.putBoolean(ARG_IS_UPDATE, false);
-        args.putInt(ARG_USER_ID, userId);
+        args.putBoolean(ARG_IS_UPDATE, isUpdate);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,7 +44,6 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             isUpdate = getArguments().getBoolean(ARG_IS_UPDATE);
-            userId = getArguments().getInt(ARG_USER_ID);
         }
     }
 

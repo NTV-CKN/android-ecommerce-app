@@ -16,22 +16,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.LocationRestriction;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.data.model.user_manage.address.AddressSuggestion;
 import com.infix.phukiencongnghe.databinding.FragmentAddressDeliveryPickerBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AddressDeliveryPickerFragment extends Fragment {
+public class AddressDeliveryPickerFragment extends Fragment implements OnMapReadyCallback {
     private FragmentAddressDeliveryPickerBinding binding;
     private AddressDeliveryPickerAdapter addressDeliveryPickerAdapter;
     private AddressDeliveryPickerViewModel addressDeliveryPickerViewModel;
     private  PlacesClient placesClient;
+    private GoogleMap googleMap;
 
     private LocationRestriction currentRegionRestriction = null;
 
@@ -87,6 +94,12 @@ public class AddressDeliveryPickerFragment extends Fragment {
         initViewModel();
         initRecyclerView();
         setSearchRegionRestriction(provinceCityLat, provinceCityLng);
+
+        //sdk map
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_fragment);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
     }
 
     @Override
@@ -97,9 +110,7 @@ public class AddressDeliveryPickerFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        addressDeliveryPickerAdapter = new AddressDeliveryPickerAdapter(addressSuggestion -> {
-
-        });
+        addressDeliveryPickerAdapter = new AddressDeliveryPickerAdapter(this::handleAddressSuggestionSelect);
 
         binding.rvAddressSuggest.setAdapter(addressDeliveryPickerAdapter);
     }
@@ -165,5 +176,32 @@ public class AddressDeliveryPickerFragment extends Fragment {
 
     private void releasePlacesMap() {
         placesClient = null;
+    }
+
+    private void handleAddressSuggestionSelect(AddressSuggestion addressSuggestion) {
+        Log.d("AddressDeliveryPickerFragment", "Address Suggest Click");
+        if(addressSuggestion == null) return;
+        addressDeliveryPickerViewModel.getPlaceDetail(addressSuggestion.getPlaceId(),placesClient, latLng -> {
+            Log.d("AddressDeliveryPickerFragment", "Address Suggest Click 2");
+
+            if(googleMap != null) {
+                binding.rvAddressSuggest.setVisibility(View.GONE);
+                binding.mapFragment.setVisibility(View.VISIBLE);
+
+                //clear  vị trí cũ
+                googleMap.clear();
+                googleMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(addressSuggestion.getTitle()));
+
+                Log.d("AddressDeliveryPickerFragment", "Zoom Place");
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.5f));
+            }
+        });
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        this.googleMap = googleMap;
     }
 }

@@ -63,7 +63,7 @@
         app:layout_constraintGuide_percent="0.9" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_confirm_address_delivery_picker"
         style="@style/ButtonPositive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
