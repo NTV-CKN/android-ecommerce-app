@@ -26,9 +26,11 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.LocationRestriction;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.model.user_manage.address.AddressSuggestion;
 import com.infix.phukiencongnghe.databinding.FragmentAddressDeliveryPickerBinding;
+import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,33 +48,8 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
     private final Handler searchHandler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable = null;
 
-    //args from newInstance
-    private double provinceCityLat;
-    private double provinceCityLng;
-//    private static final String ARG_LAT = "AddressDeliveryPickerFragment.ARG_LAT";
-//    private static final String ARG_LNG = "AddressDeliveryPickerFragment.ARG_LNG";
-
     public AddressDeliveryPickerFragment() {
 
-    }
-
-//    public static AddressDeliveryPickerFragment newInstance(double provinceCityLat, double provinceCityLng) {
-//        AddressDeliveryPickerFragment fragment = new AddressDeliveryPickerFragment();
-//        Bundle args = new Bundle();
-//        args.putDouble(ARG_LAT, provinceCityLat);
-//        args.putDouble(ARG_LNG, provinceCityLng);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            provinceCityLng = getArguments().getDouble(ARG_LNG);
-//            provinceCityLat = getArguments().getDouble(ARG_LAT);
-//            Log.d("SVU", provinceCityLat + " " + provinceCityLng);
-//        }
     }
 
     @Override
@@ -89,6 +66,7 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initViewModel();
         AddressDeliveryPickerViewModel.LatLngCurrent latLngCurrent = addressDeliveryPickerViewModel.latLng.getValue();
         if(latLngCurrent == null || latLngCurrent.getCurLat() == null || latLngCurrent.getCurLng() == null) {
             requireActivity().getSupportFragmentManager().popBackStack();
@@ -97,7 +75,6 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
 
         initEditTextEnterAddressKey();
         initPlacesMap();
-        initViewModel();
         initRecyclerView();
         setSearchRegionRestriction(latLngCurrent.getCurLat(), latLngCurrent.getCurLng());
 
@@ -112,7 +89,7 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
             binding.mapFragment.setVisibility(View.VISIBLE);
             binding.imgCenterMarker.setVisibility(View.VISIBLE);
             binding.btnConfirmAddressDeliveryPicker.setEnabled(true);
-            moveCameraToLocation(new LatLng(latLngCurrent.getCurLat(), latLngCurrent.getCurLng()), "");
+            moveCameraToLocation(new LatLng(latLngCurrent.getCurLat(), latLngCurrent.getCurLng()), latLngCurrent.getDetailAddress());
         }
     }
 
@@ -130,7 +107,7 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
     }
 
     private void initViewModel() {
-        addressDeliveryPickerViewModel = new ViewModelProvider(this).get(AddressDeliveryPickerViewModel.class);
+        addressDeliveryPickerViewModel = new ViewModelProvider(requireActivity()).get(AddressDeliveryPickerViewModel.class);
         //observer list AddressSuggestion
         addressDeliveryPickerViewModel.addressSuggestions.observe(getViewLifecycleOwner(), lst -> {
             if (lst == null) return;
@@ -209,12 +186,12 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
                 binding.mapFragment.setVisibility(View.VISIBLE);
                 binding.btnConfirmAddressDeliveryPicker.setEnabled(true);
 
-                moveCameraToLocation(latLng, addressSuggestion.getTitle());
+                moveCameraToLocation(latLng, addressSuggestion.getTitle() + ", " + addressSuggestion.getSubtitle());
             }
         });
     }
 
-    private void moveCameraToLocation(LatLng latLng, String title) {
+    private void moveCameraToLocation(LatLng latLng, String detailAddress) {
         if (googleMap == null) return;
 
         googleMap.clear();
@@ -230,14 +207,21 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
             Log.d("AddressDeliveryPickerFragment", "New lat: : " + newLat + " , new lng: " + newLng);
 
             binding.btnConfirmAddressDeliveryPicker.setOnClickListener(v -> {
-                handleConfirmAddressSelection(newLat, newLng);
+                handleConfirmAddressSelection(newLat, newLng, detailAddress);
             });
         });
     }
 
-    private void handleConfirmAddressSelection(double lat, double lng) {
+    private void handleConfirmAddressSelection(double lat, double lng, String detailAddress) {
         Log.d("AddressDeliveryPickerFragment", "chốt tọa độ: " + lat + " - " + lng);
-        addressDeliveryPickerViewModel.setLatLng(new AddressDeliveryPickerViewModel.LatLngCurrent(lat, lng));
+        SnackbarUtils.showSnackbarWithAction(
+                binding.getRoot(),
+                "Bạn có chắc muốn chọn vị trí này?",
+                Snackbar.LENGTH_LONG,() -> {
+                    addressDeliveryPickerViewModel.setLatLng(new AddressDeliveryPickerViewModel.LatLngCurrent(lat, lng,detailAddress));
+                    requireActivity().getSupportFragmentManager()
+                            .popBackStack();
+                });
     }
 
     @Override

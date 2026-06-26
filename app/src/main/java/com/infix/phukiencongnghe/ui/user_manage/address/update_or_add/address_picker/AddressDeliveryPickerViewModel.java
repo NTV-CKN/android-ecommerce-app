@@ -34,10 +34,16 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
 
     public static class  LatLngCurrent {
         private Double curLat, curLng;
+        private String detailAddress;
 
-        public LatLngCurrent(Double curLat, Double curLng) {
+        public LatLngCurrent(Double curLat, Double curLng, String detailAddress) {
             this.curLat = curLat;
+            this.detailAddress = detailAddress;
             this.curLng = curLng;
+        }
+
+        public String getDetailAddress() {
+            return detailAddress;
         }
 
         public Double getCurLat() {
@@ -46,6 +52,15 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
 
         public Double getCurLng() {
             return curLng;
+        }
+
+        @Override
+        public String toString() {
+            return "LatLngCurrent{" +
+                    "curLat=" + curLat +
+                    ", curLng=" + curLng +
+                    ", detailAddress='" + detailAddress + '\'' +
+                    '}';
         }
     }
 
