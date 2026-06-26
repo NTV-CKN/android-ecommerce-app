@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class AddressDeliveryPickerViewModel extends ViewModel {
+    //Nếu là update thì đồng nghĩa người dùng đang ở giao diện chỉnh sửa, ta sẽ gắn Lat/Lng đã có và hiện gg map sdk lên
+    private boolean isUpdate;
+
     //Khi AddOrUpdateUserAddressFragment nhấn vào để mở ra AddressDeliveryPickerFragment
     //thì sẽ truyền vào curLat/curLng, nếu sau đó user di chuyển cam qua lại thì nó sẽ lưu cập nhật lại
     private final MutableLiveData<LatLngCurrent> _latLng = new MutableLiveData<>();
@@ -31,10 +34,16 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
 
     public static class  LatLngCurrent {
         private Double curLat, curLng;
+        private String detailAddress;
 
-        public LatLngCurrent(Double curLat, Double curLng) {
+        public LatLngCurrent(Double curLat, Double curLng, String detailAddress) {
             this.curLat = curLat;
+            this.detailAddress = detailAddress;
             this.curLng = curLng;
+        }
+
+        public String getDetailAddress() {
+            return detailAddress;
         }
 
         public Double getCurLat() {
@@ -43,6 +52,15 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
 
         public Double getCurLng() {
             return curLng;
+        }
+
+        @Override
+        public String toString() {
+            return "LatLngCurrent{" +
+                    "curLat=" + curLat +
+                    ", curLng=" + curLng +
+                    ", detailAddress='" + detailAddress + '\'' +
+                    '}';
         }
     }
 
@@ -83,10 +101,10 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
                 .addOnFailureListener(
                         e -> {
                             callback.accept(new ArrayList<>());
-                            Log.e("GG_DEBUG", "LỖI: " + e.getMessage());
+                            Log.e("AddressDeliveryPickerViewModel", "LỖI: " + e.getMessage());
                         }
                 ).addOnCanceledListener(() -> {
-                    Log.e("GG_DEBUG", "HUY");
+                    Log.e("AddressDeliveryPickerViewModel", "HUY");
 
                 });
     }
@@ -121,6 +139,14 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
 
     public void setLatLng(LatLngCurrent latLng) {
         _latLng.setValue(latLng);
+    }
+
+    public boolean isUpdate() {
+        return isUpdate;
+    }
+
+    public void setIsUpdate(boolean isUpdate) {
+        this.isUpdate = isUpdate;
     }
 
     public void resetStates() {

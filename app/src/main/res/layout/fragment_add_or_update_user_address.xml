@@ -28,8 +28,8 @@
         android:id="@+id/tv_label_add_or_update_user_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -83,16 +83,25 @@
         app:layout_constraintStart_toStartOf="@+id/spinner_province_city_uoa_user_address"
         app:layout_constraintTop_toBottomOf="@+id/spinner_province_city_uoa_user_address" />
 
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_view_mini_uoa_user_address"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/edt_nav_delivery_address_uoa_user_address"
+        app:layout_constraintStart_toStartOf="@+id/edt_nav_delivery_address_uoa_user_address"
+        app:layout_constraintTop_toBottomOf="@+id/edt_nav_delivery_address_uoa_user_address" />
+
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_address_default_uoa_user_address"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:text="@string/txt_put_default_address"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         app:layout_constraintEnd_toEndOf="@+id/edt_nav_delivery_address_uoa_user_address"
         app:layout_constraintStart_toStartOf="@+id/edt_nav_delivery_address_uoa_user_address"
-        app:layout_constraintTop_toBottomOf="@+id/edt_nav_delivery_address_uoa_user_address" />
+        app:layout_constraintTop_toBottomOf="@+id/map_view_mini_uoa_user_address" />
 
     <Button
         android:id="@+id/btn_cancel_uoa_user_address"

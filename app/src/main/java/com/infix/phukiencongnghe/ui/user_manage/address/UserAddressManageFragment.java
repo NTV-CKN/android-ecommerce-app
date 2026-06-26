@@ -13,18 +13,21 @@ import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
-import com.infix.phukiencongnghe.data.repository.user_manage.address.UserAddressManageRepositoryImpl;
-import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.databinding.FragmentUserAddressManageBinding;
 import com.infix.phukiencongnghe.ui.adapter.address_manage.user.UserAddressAdapter;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.AddOrUpdateUserAddressFragment;
+import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.AddOrUpdateUserAddressViewModel;
+import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 public class UserAddressManageFragment extends Fragment {
     private FragmentUserAddressManageBinding binding;
+
     private UserAddressManageViewModel userAddressManageViewModel;
+    //Dùng để thực hiện truyền UserAddressDTO/trạng thái cập nhật hay thêm địa chỉ
+    private AddOrUpdateUserAddressViewModel addOrUpdateUserAddressViewModel;
+
     private UserAddressAdapter userAddressAdapter;
     private LoadingDialog loadingDialog;
 
@@ -45,6 +48,7 @@ public class UserAddressManageFragment extends Fragment {
         loadingDialog = new LoadingDialog();
         initRecyclerView();
         initUserAddressManageViewModel();
+        initAddOrUpdateAddressVM();
         setEvents();
     }
 
@@ -64,13 +68,19 @@ public class UserAddressManageFragment extends Fragment {
         binding.rvUserAddressManage.setAdapter(userAddressAdapter);
     }
 
-    private void initUserAddressManageViewModel() {
-        IUserAddressManageRepository repository = new UserAddressManageRepositoryImpl(
-                RetrofitHelper.getUserAddressManageService()
-        );
 
+    private void initAddOrUpdateAddressVM() {
+        AddOrUpdateUserAddressViewModel.Factory factory =
+                new AddOrUpdateUserAddressViewModel.Factory(InjectUtils.createUserAddressManageRepository(requireContext()));
+
+        addOrUpdateUserAddressViewModel =
+                new ViewModelProvider(requireActivity(), factory).get(AddOrUpdateUserAddressViewModel.class);
+
+    }
+
+    private void initUserAddressManageViewModel() {
         UserAddressManageViewModel.Factory factory =
-                new UserAddressManageViewModel.Factory(repository);
+                new UserAddressManageViewModel.Factory(InjectUtils.createUserAddressManageRepository(requireContext()));
 
         userAddressManageViewModel =
                 new ViewModelProvider(requireActivity(), factory).get(UserAddressManageViewModel.class);
@@ -110,12 +120,12 @@ public class UserAddressManageFragment extends Fragment {
     }
 
     private void goToAddOrUpdateUserAddressFragment(boolean isUpdate) {
-        AddOrUpdateUserAddressFragment addOrUpdateUserAddressFragment
-                = AddOrUpdateUserAddressFragment.newInstance(isUpdate);
+        addOrUpdateUserAddressViewModel.setIsUpdate(isUpdate);
 
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fcv_user_manage, addOrUpdateUserAddressFragment)
+                .replace(R.id.fcv_user_manage, new AddOrUpdateUserAddressFragment())
+                .addToBackStack(null)
                 .commit();
     }
 }
