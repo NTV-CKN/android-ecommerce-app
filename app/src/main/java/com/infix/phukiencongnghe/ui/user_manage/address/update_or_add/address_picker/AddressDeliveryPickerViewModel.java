@@ -21,16 +21,30 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class AddressDeliveryPickerViewModel extends ViewModel {
+    //Khi AddOrUpdateUserAddressFragment nhấn vào để mở ra AddressDeliveryPickerFragment
+    //thì sẽ truyền vào curLat/curLng, nếu sau đó user di chuyển cam qua lại thì nó sẽ lưu cập nhật lại
+    private final MutableLiveData<LatLngCurrent> _latLng = new MutableLiveData<>();
+    public final LiveData<LatLngCurrent> latLng = _latLng;
 
     private final MutableLiveData<List<AddressSuggestion>> _addressSuggestions = new MutableLiveData<>();
     public final LiveData<List<AddressSuggestion>> addressSuggestions = _addressSuggestions;
-//
-//    //If user update address => enter address must not null
-//    private final MutableLiveData<String> _enterAddress = new MutableLiveData<>();
-//    public final LiveData<String> enterAddress = _enterAddress;
-//
-//    private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
-//    public final LiveData<Boolean> isLoading = _isLoading;
+
+    public static class  LatLngCurrent {
+        private Double curLat, curLng;
+
+        public LatLngCurrent(Double curLat, Double curLng) {
+            this.curLat = curLat;
+            this.curLng = curLng;
+        }
+
+        public Double getCurLat() {
+            return curLat;
+        }
+
+        public Double getCurLng() {
+            return curLng;
+        }
+    }
 
     public void searchAddress(
             String keyword,
@@ -105,7 +119,12 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
                 });
     }
 
+    public void setLatLng(LatLngCurrent latLng) {
+        _latLng.setValue(latLng);
+    }
+
     public void resetStates() {
         _addressSuggestions.setValue(null);
+        _latLng.setValue(null);
     }
 }
