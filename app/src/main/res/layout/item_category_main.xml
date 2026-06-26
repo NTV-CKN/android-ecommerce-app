@@ -10,7 +10,7 @@
         android:id="@+id/imgCategory"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/item_circle_category_main"
+        android:background="@drawable/bg_category_selected"
         android:padding="12dp"
         android:scaleType="centerInside"/>
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:textSize="12sp"
-        android:textColor="@color/tech_text_main"
+        android:textColor="@color/category_text_selector"
         android:gravity="center"
         android:maxLines="2"
         android:maxWidth="70dp"/>

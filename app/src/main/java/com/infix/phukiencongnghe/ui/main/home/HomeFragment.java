@@ -102,7 +102,15 @@ public class HomeFragment extends Fragment {
         // Thao tác với UI trong Fragment sử dụng getViewLifecycleOwner() để tránh leak memory
         homeViewModel.categoryLiveData.observe(getViewLifecycleOwner(), categoryList -> {
             if (categoryList != null) {
-                CategoryAdapter adapter = new CategoryAdapter(categoryList);
+                CategoryAdapter adapter =
+                        new CategoryAdapter(
+                                categoryList,
+                                category -> {
+                                    // tạm thời chưa làm gì
+                                    // sau này bấm category chuyển màn product category
+
+                                }
+                        );
                 recycleViewCategory.setAdapter(adapter);
             }
         });

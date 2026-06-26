@@ -3,6 +3,7 @@ package com.infix.phukiencongnghe.data.source.remote.main;
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductDetailsDTO;
 
+import com.infix.phukiencongnghe.data.dto.response.ProductPageDTO;
 import java.util.List;
 
 import retrofit2.Call;
@@ -20,4 +21,31 @@ public interface FeatureProductService {
     @GET("/api/v1/product/search")
     Call<List<FeatureProductDTO>> searchProduct(@Query("keyword") String keyword);
 
+
+    @GET("/api/v1/product/category")
+    Call<ProductPageDTO> getProductByCategory(
+            @Query("categoryId")
+            Integer categoryId,
+
+            @Query("page")
+            Integer page,
+
+            @Query("pageSize")
+            Integer pageSize,
+
+            @Query("minPrice")
+            Double minPrice,
+
+            @Query("maxPrice")
+            Double maxPrice,
+
+            @Query("sortBy")
+            String sortBy,
+
+            @Query("keyword")
+            String keyword,
+
+            @Query("direction")
+            String direction
+    );
 }

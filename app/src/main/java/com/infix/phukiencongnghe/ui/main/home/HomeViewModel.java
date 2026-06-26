@@ -10,6 +10,7 @@ import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
 import com.infix.phukiencongnghe.data.repository.main.category.ICategoryRepository;
 import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
+import com.infix.phukiencongnghe.data.dto.response.ProductPageDTO;
 
 import java.util.List;
 
@@ -132,5 +133,51 @@ public class HomeViewModel extends ViewModel {
     public void resetStates() {
         _notifyMsg.setValue(null);
         _isLoading.setValue(null);
+    }
+
+    public void loadProductByCategory(Integer categoryId) {
+        _isLoading.setValue(true);
+        featureProductRepository
+                .getProductByCategory(
+                        categoryId,
+                        1,
+                        10,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                )
+                .enqueue(new Callback<ProductPageDTO>() {
+                    @Override
+                    public void onResponse(
+                            Call<ProductPageDTO> call,
+                            Response<ProductPageDTO> response
+                    ) {
+                        if(response.isSuccessful()
+                                && response.body() != null){
+                            ProductPageDTO data =
+                                    response.body();
+                            _ftProdLiveData.setValue(
+                                    data.getProducts()
+                            );
+                        } else {
+                            _notifyMsg.setValue(
+                                    "Không tải được sản phẩm"
+                            );
+                        }
+                        _isLoading.setValue(false);
+                    }
+                    @Override
+                    public void onFailure(
+                            Call<ProductPageDTO> call,
+                            Throwable t
+                    ) {
+                        _notifyMsg.setValue(
+                                t.getMessage()
+                        );
+                        _isLoading.setValue(false);
+                    }
+                });
     }
 }

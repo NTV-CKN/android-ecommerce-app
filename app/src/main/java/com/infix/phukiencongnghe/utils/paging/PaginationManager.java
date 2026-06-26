@@ -28,9 +28,16 @@ public class PaginationManager {
         return new PaginationRequest(_currentPage.getValue() != null ? _currentPage.getValue().getPage() : 1, pageSize);
     }
 
-    public void setTotalPages(int totalCount) {
-        int pages = (int) Math.ceil((double) totalCount / pageSize);
-        _totalPages.setValue(pages == 0 ? 1 : pages);
+// code cua vu nguyen
+//    public void setTotalPages(int totalCount) {
+//        int pages = (int) Math.ceil((double) totalCount / pageSize);
+//        _totalPages.setValue(pages == 0 ? 1 : pages);
+//    }
+
+    public void setTotalPages(int totalPages) {
+        _totalPages.setValue(
+                totalPages <= 0 ? 1 : totalPages
+        );
     }
 
     public void setCurrentPage(int page) {
