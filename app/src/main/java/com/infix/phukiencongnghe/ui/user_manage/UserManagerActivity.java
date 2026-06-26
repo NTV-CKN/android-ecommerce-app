@@ -8,6 +8,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.databinding.ActivityUserManagerBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
@@ -15,6 +16,9 @@ import com.infix.phukiencongnghe.ui.main.MainActivity;
 import com.infix.phukiencongnghe.ui.share_viewmodel.UserEntityViewModel;
 import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageFragment;
 import com.infix.phukiencongnghe.utils.ApiClient;
+import com.infix.phukiencongnghe.utils.AppUtils;
+import com.infix.phukiencongnghe.utils.SharePrefUtils;
+import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 public class UserManagerActivity extends AppCompatActivity {
     private ActivityUserManagerBinding binding;
@@ -32,11 +36,7 @@ public class UserManagerActivity extends AppCompatActivity {
     }
 
     private void setOnLogoutForApiClient() {
-        ApiClient.setOnLogoutListener(() -> {
-            Intent intent = new Intent(getBaseContext(), AuthActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        ApiClient.setOnLogoutListener(() -> AppUtils.startNewTaskWithClearStack(getBaseContext(), AuthActivity.class));
     }
 
     private void setupMyToolbar() {
@@ -62,7 +62,22 @@ public class UserManagerActivity extends AppCompatActivity {
                         .replace(R.id.fcv_user_manage, new UserAddressManageFragment())
                         .commit();
             } else if (id == R.id.nav_logout) {
-
+                SnackbarUtils.showSnackbarWithAction(
+                        binding.getRoot(),
+                        "Bạn có chắc muốn đăng xuất không?",
+                        Snackbar.LENGTH_LONG,
+                        () -> {
+                            SharePrefUtils.saveAccessTokenAndRefreshTokenToPrefFile(
+                                    AuthActivity.USER_AUTH_FILE,
+                                    AuthActivity.KEY_ACCESS_TOKEN,
+                                    AuthActivity.KEY_REFRESH_TOKEN,
+                                    null,
+                                    null,
+                                    getBaseContext()
+                            );
+                            AppUtils.startNewTaskWithClearStack(getBaseContext(), AuthActivity.class);
+                        }
+                );
             }
 
             binding.drawerLayout.closeDrawer(GravityCompat.START);
