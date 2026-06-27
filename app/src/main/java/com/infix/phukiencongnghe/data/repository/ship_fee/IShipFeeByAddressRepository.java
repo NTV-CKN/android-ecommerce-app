@@ -8,4 +8,5 @@ import retrofit2.Call;
 
 public interface IShipFeeByAddressRepository {
     Call<List<ShipFeeByAddressDTO>> getShipFeeByAddresses();
+    Call<ShipFeeByAddressDTO> getShipFeeByProvinceCity(String provinceCity);
 }

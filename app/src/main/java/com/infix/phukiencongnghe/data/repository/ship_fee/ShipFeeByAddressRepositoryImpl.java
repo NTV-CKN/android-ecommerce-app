@@ -18,4 +18,9 @@ public class ShipFeeByAddressRepositoryImpl implements IShipFeeByAddressReposito
     public Call<List<ShipFeeByAddressDTO>> getShipFeeByAddresses() {
         return shipFeeByAddressService.getShipFeeByAddresses();
     }
+
+    @Override
+    public Call<ShipFeeByAddressDTO> getShipFeeByProvinceCity(String provinceCity) {
+        return shipFeeByAddressService.getShipFeeByProvinceCity(provinceCity);
+    }
 }
