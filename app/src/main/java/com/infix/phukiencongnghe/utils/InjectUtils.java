@@ -8,6 +8,8 @@ import com.infix.phukiencongnghe.data.repository.ship_fee.IShipFeeByAddressRepos
 import com.infix.phukiencongnghe.data.repository.ship_fee.ShipFeeByAddressRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.UserAddressManageRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.user_manage.profile.IUserProfileRepository;
+import com.infix.phukiencongnghe.data.repository.user_manage.profile.UserProfileRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.local.AppDatabase;
 import com.infix.phukiencongnghe.data.source.local.source.user.UserLocalDataSourceImpl;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
@@ -33,6 +35,12 @@ public class InjectUtils {
     public static IUserAddressManageRepository createUserAddressManageRepository(Context context) {
         return new UserAddressManageRepositoryImpl(
                 RetrofitHelper.getUserAddressManageService()
+        );
+    }
+
+    public static IUserProfileRepository createUserProfileRepository() {
+        return new UserProfileRepositoryImpl(
+                RetrofitHelper.getProfileService()
         );
     }
 }

@@ -76,4 +76,5 @@
     <string name="txtview_type_account_profile">Loại tài khoản</string>
     <string name="btn_submit_profile">Lưu thay đổi</string>
     <string name="btn_change_password_profile">Đổi mật khẩu</string>
+    <string name="txt_profile_personal">Thông tin cá nhân</string>
 </resources>
