@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,8 @@ public class UserAddressManageFragment extends Fragment {
             requireActivity().setResult(Activity.RESULT_OK,intent);
             requireActivity().finish();
         }
+            addOrUpdateUserAddressViewModel.setUserAddressState(userAddressDTO);
+            goToAddOrUpdateUserAddressFragment(true);
         });
 
         binding.rvUserAddressManage.setAdapter(userAddressAdapter);
@@ -96,7 +99,10 @@ public class UserAddressManageFragment extends Fragment {
 
     private void initAddOrUpdateAddressVM() {
         AddOrUpdateUserAddressViewModel.Factory factory =
-                new AddOrUpdateUserAddressViewModel.Factory(InjectUtils.createUserAddressManageRepository(requireContext()));
+                new AddOrUpdateUserAddressViewModel.Factory(
+                        InjectUtils.createUserAddressManageRepository(requireContext()),
+                        InjectUtils.createShipFeeByAddressRepository()
+                );
 
         addOrUpdateUserAddressViewModel =
                 new ViewModelProvider(requireActivity(), factory).get(AddOrUpdateUserAddressViewModel.class);

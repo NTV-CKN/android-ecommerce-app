@@ -1,6 +1,9 @@
 package com.infix.phukiencongnghe.ui.header;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +80,20 @@ public class HeaderFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setEvents();
+        initUserHeader();
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void initUserHeader() {
+        boolean isLogin = SharePrefUtils.isLogin(AuthActivity.USER_AUTH_FILE, AuthActivity.KEY_ACCESS_TOKEN,
+        AuthActivity.KEY_REFRESH_TOKEN, requireContext());
+        if(isLogin) {
+            SharedPreferences prefs = requireContext().getSharedPreferences(AuthActivity.USER_AUTH_FILE, Context.MODE_PRIVATE);
+            String fullName = prefs.getString("KEY_FULL_NAME", "User");
+            txtView_user_header_fragment.setText("Hi, " + fullName);
+        } else {
+            txtView_user_header_fragment.setText("Chưa đăng nhập");
+        }
     }
 
     private void setEvents() {
@@ -99,5 +116,11 @@ public class HeaderFragment extends Fragment {
             intent = new Intent(requireContext(), AuthActivity.class);
         }
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initUserHeader();
     }
 }

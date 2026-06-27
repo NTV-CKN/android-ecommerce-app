@@ -8,19 +8,24 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.content.Intent;
+import android.view.inputmethod.EditorInfo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.repository.main.product.FeatureProductRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.local.source.search.SearchLocalRepositoryImpl;
 import com.infix.phukiencongnghe.databinding.FragmentSearchBinding;
 import com.infix.phukiencongnghe.ui.adapter.search.RecentSearchProductAdapter;
 import com.infix.phukiencongnghe.ui.adapter.search.SearchKeywordAdapter;
 import com.infix.phukiencongnghe.ui.adapter.search.SearchResultAdapter;
+import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
+import com.infix.phukiencongnghe.ui.searchadvance.SearchAdvanceActivity;
+
 
 public class SearchFragment extends Fragment {
 
@@ -61,7 +66,7 @@ public class SearchFragment extends Fragment {
         setupRecyclerView();
         observeData();
         setupSearchListener();
-
+        setupKeyboardSearch();
         showHistoryLayout();
 
         return binding.getRoot();
@@ -126,12 +131,30 @@ public class SearchFragment extends Fragment {
 
                                             product -> {
 
+                                                // lưu recent
                                                 viewModel
                                                         .saveRecentProduct(
                                                                 product
                                                         );
 
-                                                // mở Product Detail sau
+                                                ProductDetailsFragment fragment =
+                                                        ProductDetailsFragment
+                                                                .newInstance(
+                                                                        product.getId()
+                                                                );
+
+                                                if (isAdded()) {
+
+                                                    requireActivity()
+                                                            .getSupportFragmentManager()
+                                                            .beginTransaction()
+                                                            .replace(
+                                                                    R.id.search_fragment_container,
+                                                                    fragment
+                                                            )
+                                                            .addToBackStack(null)
+                                                            .commit();
+                                                }
                                             }
                                     )
                             );
@@ -163,9 +186,6 @@ public class SearchFragment extends Fragment {
                                                         .setSelection(
                                                                 keyword.length()
                                                         );
-
-                                                // KHÔNG gọi searchProduct ở đây
-                                                // vì setText sẽ trigger TextWatcher
                                             }
                                     )
                             );
@@ -188,7 +208,24 @@ public class SearchFragment extends Fragment {
 
                                             item -> {
 
-                                                // mở Product Detail sau
+                                                ProductDetailsFragment fragment =
+                                                        ProductDetailsFragment
+                                                                .newInstance(
+                                                                        item.getProductId()
+                                                                );
+
+                                                if (isAdded()) {
+
+                                                    requireActivity()
+                                                            .getSupportFragmentManager()
+                                                            .beginTransaction()
+                                                            .replace(
+                                                                    R.id.search_fragment_container,
+                                                                    fragment
+                                                            )
+                                                            .addToBackStack(null)
+                                                            .commit();
+                                                }
                                             }
                                     )
                             );
@@ -255,6 +292,69 @@ public class SearchFragment extends Fragment {
                     }
                 });
     }
+
+    private void setupKeyboardSearch() {
+
+        binding.edtSearch.setOnEditorActionListener(
+                (v, actionId, event) -> {
+
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH
+                            || actionId == EditorInfo.IME_ACTION_DONE) {
+
+                        String keyword =
+                                binding.edtSearch
+                                        .getText()
+                                        .toString()
+                                        .trim();
+
+                        if (!keyword.isEmpty()) {
+
+                            Intent intent =
+                                    new Intent(
+                                            requireContext(),
+                                            SearchAdvanceActivity.class
+                                    );
+
+                            intent.putExtra(
+                                    "keyword",
+                                    keyword
+                            );
+
+                            startActivity(intent);
+                        }
+
+                        return true;
+                    }
+
+                    return false;
+                }
+        );
+    }
+
+    private void loadInitialKeyword() {
+
+        if(getArguments() == null){
+            return;
+        }
+
+        String keyword =
+                getArguments()
+                        .getString(
+                                "keyword"
+                        );
+
+        if(keyword != null){
+
+            binding.edtSearch.setText(
+                    keyword
+            );
+
+            binding.edtSearch.setSelection(
+                    keyword.length()
+            );
+        }
+    }
+
 
     private void showHistoryLayout() {
 

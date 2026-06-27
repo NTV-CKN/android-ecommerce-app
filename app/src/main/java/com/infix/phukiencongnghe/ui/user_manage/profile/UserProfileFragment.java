@@ -2,7 +2,9 @@ package com.infix.phukiencongnghe.ui.user_manage.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -13,6 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.databinding.FragmentUserAddressManageBinding;
+import com.infix.phukiencongnghe.ui.auth.AuthActivity;
+import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
@@ -23,6 +28,13 @@ public class UserProfileFragment extends Fragment {
     private String userToken;
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        return inflater.inflate(R.layout.fragment_user_profile, container, false);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         edtFullname = view.findViewById(R.id.edtFullname);
@@ -30,10 +42,14 @@ public class UserProfileFragment extends Fragment {
         edtAccountType = view.findViewById(R.id.edtAccountType);
         btnSaveProfile = view.findViewById(R.id.btnSaveProfile);
 
-        viewModel = new ViewModelProvider(this).get(UserProfileViewModel.class);
-        String[] tokens = SharePrefUtils.getAccessRefreshTokenFromPrefFile("AppPrefs",
-                "ACCESS_TOKEN",
-                "REFRESH_TOKEN",
+        UserProfileViewModel.Factory factory = new UserProfileViewModel.Factory(
+                InjectUtils.createUserProfileRepository()
+        );
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(UserProfileViewModel.class);
+        String[] tokens = SharePrefUtils.getAccessRefreshTokenFromPrefFile(
+                AuthActivity.USER_AUTH_FILE,
+                AuthActivity.KEY_ACCESS_TOKEN,
+                AuthActivity.KEY_REFRESH_TOKEN,
                 requireContext());
 
         if (tokens != null && tokens[0] != null) {

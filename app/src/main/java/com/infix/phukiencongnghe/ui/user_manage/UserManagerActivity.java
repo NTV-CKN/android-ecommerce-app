@@ -2,6 +2,8 @@ package com.infix.phukiencongnghe.ui.user_manage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -15,6 +17,7 @@ import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.main.MainActivity;
 import com.infix.phukiencongnghe.ui.share_viewmodel.UserEntityViewModel;
 import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageFragment;
+import com.infix.phukiencongnghe.ui.user_manage.profile.UserProfileFragment;
 import com.infix.phukiencongnghe.utils.ApiClient;
 import com.infix.phukiencongnghe.utils.AppUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
@@ -43,6 +46,8 @@ public class UserManagerActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fcv_user_manage,UserAddressManageFragment.newInstance(true)).commit();
         }else{
             getSupportFragmentManager().beginTransaction().replace(R.id.fcv_user_manage,UserAddressManageFragment.newInstance(false)).commit();
+        if (savedInstanceState == null) {
+            setDefaultNavigationItem(1);
         }
     }
 
@@ -68,7 +73,11 @@ public class UserManagerActivity extends AppCompatActivity {
             if (id == R.id.nav_home) {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
-            } else if (id == R.id.nav_address_user) {
+            }else if(id == R.id.nav_profile_user){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fcv_user_manage, new UserProfileFragment())
+                        .commit();
+            }else if (id == R.id.nav_address_user) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fcv_user_manage, new UserAddressManageFragment())
                         .commit();
@@ -94,5 +103,15 @@ public class UserManagerActivity extends AppCompatActivity {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
+    }
+
+    private void setDefaultNavigationItem(int index) {
+        Menu menu = binding.navigationView.getMenu();
+        if (menu.size() > index) {
+            MenuItem firstItem = menu.getItem(index);
+            firstItem.setChecked(true);
+
+            binding.navigationView.getMenu().performIdentifierAction(firstItem.getItemId(), 0);
+        }
     }
 }
