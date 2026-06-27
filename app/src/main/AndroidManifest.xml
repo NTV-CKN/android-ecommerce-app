@@ -74,8 +74,12 @@
             android:name=".ui.search.SearchProductActivity"
             android:exported="true"/>
 
+<!--        <activity-->
+<!--            android:name=".ui.product_category.ProductCategoryActivity"-->
+<!--            android:exported="true"/>-->
+
         <activity
-            android:name=".ui.product_category.ProductCategoryActivity"
+            android:name=".ui.searchadvance.SearchAdvanceActivity"
             android:exported="true"/>
 
     </application>

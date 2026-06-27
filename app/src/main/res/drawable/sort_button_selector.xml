@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- SELECTED -->
+
+    <item android:state_selected="true">
+
+        <shape>
+
+            <!-- xanh đậm hơn -->
+
+            <solid android:color="#1976D2"/>
+
+            <corners android:radius="20dp"/>
+
+            <stroke
+                android:width="2dp"
+                android:color="#0D47A1"/>
+
+        </shape>
+
+    </item>
+
+
+    <!-- NORMAL -->
+
+    <item>
+
+        <shape>
+
+            <!-- xanh nhạt -->
+
+            <solid android:color="#42A5F5"/>
+
+            <corners android:radius="20dp"/>
+
+        </shape>
+
+    </item>
+
+</selector>

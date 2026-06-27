@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="#F8F8F8">
+
+
+    <!-- SEARCH -->
+
+    <EditText
+        android:id="@+id/edt_search"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Tìm kiếm"
+        android:paddingStart="12dp"
+        android:textSize="14sp"/>
+
+
+    <!-- SORT BAR -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="10dp"
+
+        android:orientation="horizontal">
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_newest"
+
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+
+            android:layout_weight="1"
+
+            android:text="MỚI NHẤT"
+
+            android:textColor="#FFFFFF"
+
+            android:background="@drawable/sort_button_selector"
+
+            android:backgroundTint="@null"/>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_price"
+
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+
+            android:layout_weight="1"
+
+            android:layout_marginStart="6dp"
+
+            android:text="GIÁ ▼"
+
+            android:textColor="#FFFFFF"
+
+            android:background="@drawable/sort_button_selector"
+
+            android:backgroundTint="@null"/>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_rating"
+
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+
+            android:layout_weight="1"
+
+            android:layout_marginStart="6dp"
+
+            android:text="ĐÁNH GIÁ ▼"
+
+            android:textColor="#FFFFFF"
+
+            android:background="@drawable/sort_button_selector"
+
+            android:backgroundTint="@null"/>
+
+    </LinearLayout>
+
+
+    <!-- TOGGLE FILTER -->
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_toggle_filter"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="10dp"
+        android:text="Lọc ▼"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/sort_button_selector"/>
+
+
+    <!-- COLLAPSE FILTER LAYOUT -->
+
+    <LinearLayout
+        android:id="@+id/filter_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+
+        <!-- CATEGORY -->
+
+        <Spinner
+            android:id="@+id/sp_category"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"/>
+
+
+        <!-- PRICE -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+
+            <EditText
+                android:id="@+id/edt_min_price"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:hint="Giá tối thiểu"
+                android:inputType="number"/>
+
+
+            <EditText
+                android:id="@+id/edt_max_price"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:hint="Giá tối đa"
+                android:inputType="number"/>
+
+        </LinearLayout>
+
+
+        <!-- APPLY -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal"
+
+            android:layout_marginTop="10dp">
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_clear_filter"
+
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+
+                android:layout_weight="1"
+
+                android:textColor="#FFFFFF"
+
+                android:text="Xóa lọc"
+                android:background="@drawable/filter_blue"/>
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_apply_filter"
+
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+
+                android:layout_weight="1"
+
+                android:layout_marginStart="10dp"
+
+                android:textColor="#FFFFFF"
+
+                android:text="Áp dụng"
+                android:background="@drawable/filter_blue"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!-- PRODUCT LIST -->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_product"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="12dp"/>
+
+
+    <!-- PAGINATION -->
+
+    <com.infix.phukiencongnghe.utils.paging.custom_view.PaginationBarView
+        android:id="@+id/paginationBar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"/>
+
+</LinearLayout>
