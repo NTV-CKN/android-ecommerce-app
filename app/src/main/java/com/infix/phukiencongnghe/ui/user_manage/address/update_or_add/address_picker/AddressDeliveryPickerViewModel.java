@@ -3,9 +3,11 @@ package com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.address_p
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
@@ -13,18 +15,35 @@ import com.google.android.libraries.places.api.model.LocationRestriction;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.gson.Gson;
+import com.infix.phukiencongnghe.data.dto.response.ExceptionResponseDTO;
+import com.infix.phukiencongnghe.data.dto.response.ShipFeeByAddressDTO;
+import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 import com.infix.phukiencongnghe.data.model.user_manage.address.AddressSuggestion;
+import com.infix.phukiencongnghe.data.repository.ship_fee.IShipFeeByAddressRepository;
+import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
+import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.AddOrUpdateUserAddressViewModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 //Lớp này chịu trách nhiệm quản lí LatLngCurrent, nhận sự thay đổi lng/lat/address detail từ người dùng
 //Đầu vào: LatLngCurrent,  isUpdate: boolean
 public class AddressDeliveryPickerViewModel extends ViewModel {
+    private final IShipFeeByAddressRepository shipFeeByAddressRepository;
+
     //Nếu là update thì đồng nghĩa người dùng đang ở giao diện chỉnh sửa, ta sẽ gắn Lat/Lng đã có và hiện gg map sdk lên
     private boolean isUpdate;
+    //Khi tạo AddressDeliveryPicker thì ta gọi load data từ provinceCity của AddOrUpdateUserAddress
+    private Double baseLat, baseLng;
 
     //Khi AddOrUpdateUserAddressFragment nhấn vào để mở ra AddressDeliveryPickerFragment
     //thì sẽ truyền vào curLat/curLng, nếu sau đó user di chuyển cam qua lại thì nó sẽ lưu cập nhật lại
@@ -34,36 +53,8 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
     private final MutableLiveData<List<AddressSuggestion>> _addressSuggestions = new MutableLiveData<>();
     public final LiveData<List<AddressSuggestion>> addressSuggestions = _addressSuggestions;
 
-    public static class  LatLngCurrent {
-        private Double curLat, curLng;
-        private String detailAddress;
-
-        public LatLngCurrent(Double curLat, Double curLng, String detailAddress) {
-            this.curLat = curLat;
-            this.detailAddress = detailAddress;
-            this.curLng = curLng;
-        }
-
-        public String getDetailAddress() {
-            return detailAddress;
-        }
-
-        public Double getCurLat() {
-            return curLat;
-        }
-
-        public Double getCurLng() {
-            return curLng;
-        }
-
-        @Override
-        public String toString() {
-            return "LatLngCurrent{" +
-                    "curLat=" + curLat +
-                    ", curLng=" + curLng +
-                    ", detailAddress='" + detailAddress + '\'' +
-                    '}';
-        }
+    public AddressDeliveryPickerViewModel(IShipFeeByAddressRepository shipFeeByAddressRepository) {
+        this.shipFeeByAddressRepository = shipFeeByAddressRepository;
     }
 
     public void searchAddress(
@@ -143,6 +134,29 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
         _latLng.setValue(latLng);
     }
 
+    public void initBaseLatLngProvinceCity(String provinceCity) {
+        shipFeeByAddressRepository.getShipFeeByProvinceCity(provinceCity).enqueue(new Callback<ShipFeeByAddressDTO>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<ShipFeeByAddressDTO> call,
+                    @NonNull Response<ShipFeeByAddressDTO> response
+            ) {
+                if (response.isSuccessful()) {
+                    ShipFeeByAddressDTO succ = response.body();
+                    if (succ != null) {
+                        baseLat = succ.getLatitude();
+                        baseLng = succ.getLongitude();
+                        Log.d("AddressDeliveryPickerViewModel", baseLat + ", " + baseLng);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ShipFeeByAddressDTO> call, @NonNull Throwable
+                    throwable) {}
+        });
+    }
+
     public boolean isUpdate() {
         return isUpdate;
     }
@@ -154,5 +168,57 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
     public void resetStates() {
         _addressSuggestions.setValue(null);
         _latLng.setValue(null);
+        baseLat = null;
+        baseLng = null;
+    }
+
+    public static class  LatLngCurrent {
+        private Double curLat, curLng;
+        private String detailAddress;
+
+        public LatLngCurrent(Double curLat, Double curLng, String detailAddress) {
+            this.curLat = curLat;
+            this.detailAddress = detailAddress;
+            this.curLng = curLng;
+        }
+
+        public String getDetailAddress() {
+            return detailAddress;
+        }
+
+        public Double getCurLat() {
+            return curLat;
+        }
+
+        public Double getCurLng() {
+            return curLng;
+        }
+
+        @Override
+        public String toString() {
+            return "LatLngCurrent{" +
+                    "curLat=" + curLat +
+                    ", curLng=" + curLng +
+                    ", detailAddress='" + detailAddress + '\'' +
+                    '}';
+        }
+    }
+
+    public static class Factory implements ViewModelProvider.Factory {
+        private IShipFeeByAddressRepository shipFeeByAddressRepository;
+
+        public Factory(
+                IShipFeeByAddressRepository shipFeeByAddressRepository
+        ) {
+            this.shipFeeByAddressRepository = shipFeeByAddressRepository;
+        }
+
+        @NonNull
+        @Override
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            if (modelClass.isAssignableFrom(AddressDeliveryPickerViewModel.class))
+                return (T) new AddressDeliveryPickerViewModel(shipFeeByAddressRepository);
+            throw new IllegalArgumentException("Model class illegal");
+        }
     }
 }

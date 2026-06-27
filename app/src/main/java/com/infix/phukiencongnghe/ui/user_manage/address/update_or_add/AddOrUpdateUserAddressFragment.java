@@ -104,7 +104,11 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
     }
 
     private void initAddressDeliveryPickerVM() {
-        addressDeliveryPickerViewModel = new ViewModelProvider(requireActivity()).get(AddressDeliveryPickerViewModel.class);
+        AddressDeliveryPickerViewModel.Factory factory = new AddressDeliveryPickerViewModel.Factory(
+                InjectUtils.createShipFeeByAddressRepository()
+        );
+
+        addressDeliveryPickerViewModel = new ViewModelProvider(requireActivity(), factory).get(AddressDeliveryPickerViewModel.class);
     }
 
     private void initAddOrUpdateAddressVM() {
