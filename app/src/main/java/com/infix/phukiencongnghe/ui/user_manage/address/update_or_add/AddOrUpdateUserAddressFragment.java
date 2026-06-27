@@ -21,6 +21,7 @@ import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.dto.response.ShipFeeByAddressDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.databinding.FragmentAddOrUpdateUserAddressBinding;
+import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.address_picker.AddressDeliveryPickerFragment;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.address_picker.AddressDeliveryPickerViewModel;
 import com.infix.phukiencongnghe.utils.InjectUtils;
@@ -31,6 +32,7 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
     //Giúp xác định nếu fragment này đã load lần đầu tiên thì các lần sau sẽ không tạo lại đối tượng
     //UserAddressDTO và LatLngCurrent, tránh làm mất data từ AddressDeliveryPicker
     private boolean isFirstLoad = true;
+    private LoadingDialog loadingDialog;
 
     private FragmentAddOrUpdateUserAddressBinding binding;
 
@@ -55,11 +57,11 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.mapViewMiniUoaUserAddress.onCreate(savedInstanceState);
+        loadingDialog = new LoadingDialog();
         setEvents();
         initAddressDeliveryPickerVM();
         initAddOrUpdateAddressVM();
         observeAddOrUpdateVM();
-        observeAddressDeliveryPickerVM();
         inflateDataForm();
     }
 
@@ -93,6 +95,7 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        addOrUpdateUserAddressViewModel.setLoadingState(null);
     }
 
     private void initAddressDeliveryPickerVM() {
@@ -116,48 +119,35 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
         addressDeliveryPickerViewModel.setIsUpdate(addOrUpdateUserAddressViewModel.isUpdate());
     }
 
-    private void observeAddressDeliveryPickerVM() {
-        //LatLngCurrent: Lắng nghe cập nhật khi ngưòi dùng đổi các chỉ số về address detail, lat/lng
-        addressDeliveryPickerViewModel.latLng.observe(getViewLifecycleOwner(), latLngCurrent -> {
-            Log.d("AddOrUpdateUserAddressFragment", "." + latLngCurrent);
-            if (latLngCurrent == null) return;
-
-            UserAddressDTO userAddressDTO = addOrUpdateUserAddressViewModel.userAddress.getValue();
-            userAddressDTO.setAddressDetail(latLngCurrent.getDetailAddress());
-            userAddressDTO.setLatitude(latLngCurrent.getCurLat());
-            userAddressDTO.setLongitude(latLngCurrent.getCurLng());
-
-            inflateDataForm();
-        });
-    }
-
     private void observeAddOrUpdateVM() {
         //shipFeeByAddress
         addOrUpdateUserAddressViewModel.shipFeeByAddresses.observe(
                 getViewLifecycleOwner(),
                 shipFeeByAddressDTOS -> {
                     if (!addOrUpdateUserAddressViewModel.isUpdate() && shipFeeByAddressDTOS != null) {
-                        //Thêm vào spinner
-                        ShipFeeSpinnerAdapter shipFeeAdapter = new ShipFeeSpinnerAdapter(requireContext(), shipFeeByAddressDTOS);
-                        binding.spinnerProvinceCityUoaUserAddress.setAdapter(shipFeeAdapter);
+                        if (binding.spinnerProvinceCityUoaUserAddress.getAdapter() == null) {
+                            ShipFeeSpinnerAdapter shipFeeAdapter = new ShipFeeSpinnerAdapter(requireContext(), shipFeeByAddressDTOS);
+                            binding.spinnerProvinceCityUoaUserAddress.setAdapter(shipFeeAdapter);
+                        }
 
                         //Nếu là lần đầu tải thì sẽ tạo dữ liệu tạm
                         if (isFirstLoad) {
-                            binding.spinnerProvinceCityUoaUserAddress.setSelection(0);
+                            int selected = 1;
+                            binding.spinnerProvinceCityUoaUserAddress.setSelection(selected);
 
                             addOrUpdateUserAddressViewModel.setUserAddressState(
                                     new UserAddressDTO(
                                             null,
                                             "",
                                             "",
-                                            shipFeeByAddressDTOS.get(1).getProvinceCity(),
+                                            shipFeeByAddressDTOS.get(selected).getProvinceCity(),
                                             "",
-                                            shipFeeByAddressDTOS.get(1).getLatitude()
-                                            , shipFeeByAddressDTOS.get(1).getLongitude()
+                                            shipFeeByAddressDTOS.get(selected).getLatitude()
+                                            , shipFeeByAddressDTOS.get(selected).getLongitude()
                                     ));
                             addressDeliveryPickerViewModel.setLatLng(new AddressDeliveryPickerViewModel.LatLngCurrent(
-                                    shipFeeByAddressDTOS.get(1).getLatitude()
-                                    , shipFeeByAddressDTOS.get(1).getLongitude(),
+                                    shipFeeByAddressDTOS.get(selected).getLatitude()
+                                    , shipFeeByAddressDTOS.get(selected).getLongitude(),
                                     ""
                             ));
 
@@ -194,6 +184,19 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
                         binding.spinnerProvinceCityUoaUserAddress.setSelection(0);
                     }
                 });
+
+        //show loading
+        addOrUpdateUserAddressViewModel.isLoading.observe(getViewLifecycleOwner(), isLoading -> {
+            if(isLoading == null) return;
+
+            if(isLoading)
+                loadingDialog.show(
+                        requireActivity().getSupportFragmentManager(),
+                        null
+                );
+            else
+                loadingDialog.dismiss();
+        });
     }
 
     //hiển thị userAddressDTO lên form nhập
@@ -201,7 +204,6 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
         UserAddressDTO userAddressDTO = addOrUpdateUserAddressViewModel.userAddress.getValue();
         if (userAddressDTO == null) return;
 
-        checkAndShowMiniMap();
         binding.edtNavDeliveryAddressUoaUserAddress.setText(userAddressDTO.getAddressDetail());
         binding.edtPhoneNumberUoaUserAddress.setText(userAddressDTO.getPhoneNumber());
         binding.edtReceiverNameUoaUserAddress.setText(userAddressDTO.getReceiverName());
@@ -210,6 +212,8 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
                         ? getString(R.string.txt_update_user_address)
                         : getString(R.string.txt_add_user_address)
         );
+
+        checkAndShowMiniMap();
     }
 
     private void setEvents() {
@@ -230,14 +234,37 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
                 if (selectedShipFee != null) {
                     UserAddressDTO userAddressDTO = addOrUpdateUserAddressViewModel.userAddress.getValue();
                     if (userAddressDTO == null) return;
+                    Log.d("AddOrUpdate", userAddressDTO.toString());
 
-                    userAddressDTO.setLongitude(selectedShipFee.getLongitude());
-                    userAddressDTO.setLatitude(selectedShipFee.getLatitude());
-                    userAddressDTO.setProvinceCity(selectedShipFee.getProvinceCity());
+                    if (addOrUpdateUserAddressViewModel.isReturnFromAddressDelivery()) {
+                        Log.d("AddOrUpdate", "2");
+                        addOrUpdateUserAddressViewModel.setReturnFromAddressDelivery(false);
+                        inflateDataForm();
 
-                    inflateDataForm();
-                    binding.edtNavDeliveryAddressUoaUserAddress.setText("");
+                        return;
+                    }
+
+                    Log.d("AddOrUpdate", "1");
+
+                    if (!selectedShipFee.getProvinceCity().equals(userAddressDTO.getProvinceCity())) {
+                        userAddressDTO.setProvinceCity(selectedShipFee.getProvinceCity());
+                        userAddressDTO.setLongitude(selectedShipFee.getLongitude());
+                        userAddressDTO.setLatitude(selectedShipFee.getLatitude());
+                        userAddressDTO.setAddressDetail("");
+
+                        if (binding != null) {
+                            binding.edtNavDeliveryAddressUoaUserAddress.setText("");
+                        }
+
+                        addressDeliveryPickerViewModel.setLatLng(new AddressDeliveryPickerViewModel.LatLngCurrent(
+                                selectedShipFee.getLatitude(),
+                                selectedShipFee.getLongitude(),
+                                ""
+                        ));
+                    }
                 }
+                inflateDataForm();
+
             }
 
             @Override
@@ -247,6 +274,7 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
     }
 
     private void goToAddressDeliveryPickerFragment() {
+        addOrUpdateUserAddressViewModel.setReturnFromAddressDelivery(true);
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fcv_user_manage, new AddressDeliveryPickerFragment())

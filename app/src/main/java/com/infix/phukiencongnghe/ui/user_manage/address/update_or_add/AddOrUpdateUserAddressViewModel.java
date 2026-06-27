@@ -28,6 +28,11 @@ public class AddOrUpdateUserAddressViewModel extends ViewModel {
     private IShipFeeByAddressRepository shipFeeByAddressRepository;
 
     private boolean isUpdate;
+    //Khi tạo giao diện AddOrUpdate fragment thì nó có logic check và tạo lại spinner + set select,
+    //ta sử dụng biến này để tránh trường hợp dữ liệu từ AddressDeliveryPicker trả về nhưng
+    //vô tình bị refresh theo logic AddOrUpdate Fragment
+    //Nếu là false tức nó chưa đi qua Picker
+    private boolean isReturnFromAddressDelivery = false;
 
     private final MutableLiveData<UserAddressDTO> _userAddress = new MutableLiveData<>();
     public final LiveData<UserAddressDTO> userAddress = _userAddress;
@@ -62,6 +67,18 @@ public class AddOrUpdateUserAddressViewModel extends ViewModel {
 
     public void setIsUpdate(boolean isUpdate) {
         this.isUpdate = isUpdate;
+    }
+
+    public void setLoadingState(Boolean bool) {
+        _isLoading.setValue(bool);
+    }
+
+    public boolean isReturnFromAddressDelivery() {
+        return isReturnFromAddressDelivery;
+    }
+
+    public void setReturnFromAddressDelivery(boolean returnFromAddressDelivery) {
+        isReturnFromAddressDelivery = returnFromAddressDelivery;
     }
 
     //Nếu trạng thái là thêm địa chỉ thì đi kéo data và gọi để tạo UserAddressDTO mới
