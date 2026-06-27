@@ -59,8 +59,7 @@ public class UserAddressManageViewModel extends ViewModel {
             public void onResponse(Call<List<UserAddressDTO>> call, Response<List<UserAddressDTO>> response) {
                 if (response.isSuccessful()) {
                     List<UserAddressDTO> succ = response.body();
-                    if (succ != null && !succ.isEmpty())
-                        _userAddresses.setValue(succ);
+                    _userAddresses.setValue(succ != null ? succ : new java.util.ArrayList<>());
                 } else {
                     Gson gson = new Gson();
                     ResponseBody responseBody = response.errorBody();

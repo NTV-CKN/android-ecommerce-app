@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.dto.request.CartLocalDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
 import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
@@ -28,10 +29,12 @@ import com.infix.phukiencongnghe.ui.adapter.feature_product.ProductVariantAdapte
 import com.infix.phukiencongnghe.ui.adapter.feature_product.RelatedProductAdapter;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
+import com.infix.phukiencongnghe.ui.payment.PaymentFragment;
 import com.infix.phukiencongnghe.ui.share_viewmodel.MainViewModel;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +101,66 @@ public class ProductDetailsFragment extends Fragment {
             if(!hasFocus){
                 validateAndSetQuantity();
             }
+        });
+        binding.btnBuyNow.setOnClickListener(v->{
+            // kiem tra dang nhap truoc khi mua sp
+            boolean isLogin = SharePrefUtils.isLogin(AuthActivity.USER_AUTH_FILE, AuthActivity.KEY_ACCESS_TOKEN,AuthActivity.KEY_REFRESH_TOKEN,v.getContext());
+            if(!isLogin){
+                SnackbarUtils.showBaseSnackbar(binding.getRoot(),"Vui lòng đăng nhập để mua sản phẩm!",Snackbar.LENGTH_SHORT);
+                return;
+            }
+            if (productId == null) {
+                SnackbarUtils.showBaseSnackbar(binding.getRoot(), "Không tìm thấy thông tin sản phẩm!", Snackbar.LENGTH_SHORT);
+                return;
+            }
+           Integer currentVariantId =this.selectedVariantId;
+            if (currentVariantId == null) {
+                SnackbarUtils.showBaseSnackbar(binding.getRoot(), "Vui lòng chọn một thể loại sản phẩm trước khi mua!", Snackbar.LENGTH_SHORT);
+                return;
+            }
+            int quantitySend = this.selectQuantity;
+            try {
+                String qty = binding.edtQuantityNumber.getText().toString().trim();
+                if (!qty.isEmpty()) {
+                    quantitySend = Integer.parseInt(qty);
+                }
+            } catch (NumberFormatException e) {
+                quantitySend = this.selectQuantity;
+            }
+            if (productDetailsViewModel.productDetails.getValue() == null) {
+                SnackbarUtils.showBaseSnackbar(binding.getRoot(), "Dữ liệu sản phẩm chưa sẵn sàng!", Snackbar.LENGTH_SHORT);
+                return;
+            }
+            String productName = productDetailsViewModel.productDetails.getValue().getName();
+            BigDecimal price = productDetailsViewModel.productDetails.getValue().getMinPrice();
+            String productImg = "";
+            if(productDetailsViewModel.productDetails.getValue().getProductVariants() != null){
+                for(ProductVariantDTO variantDTO : productDetailsViewModel.productDetails.getValue().getProductVariants()){
+                    if(variantDTO.getId() == currentVariantId){
+                        price = variantDTO.getPrice();
+                        if(variantDTO.getImageUrl() !=null && !variantDTO.getImageUrl().isEmpty()){
+                            productImg = variantDTO.getImageUrl();
+                        }
+                        break;
+                    }
+                }
+            }
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("IS_BUY_NOW", true);
+            bundle.putInt("BUY_NOW_PRODUCT_ID", productId);
+            bundle.putInt("BUY_NOW_VARIANT_ID", currentVariantId);
+            bundle.putInt("BUY_NOW_QUANTITY", quantitySend);
+            bundle.putString("BUY_NOW_PRODUCT_NAME", productName);
+            bundle.putLong("BUY_NOW_PRODUCT_PRICE", price.longValue());
+            bundle.putString("BUY_NOW_PRODUCT_IMAGE", productImg);
+            PaymentFragment paymentFragment = new PaymentFragment();
+            paymentFragment.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fcv_main_content,paymentFragment)
+                    .addToBackStack(null)
+                    .commit();
+
+            // chua viet xong
         });
         binding.btnAddToCart.setOnClickListener(v -> {
             // kiem tra dang nhap truoc khi them sp vao gio hang
