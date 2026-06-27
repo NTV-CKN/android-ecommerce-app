@@ -68,4 +68,12 @@
     <string name="default_web_client_id">idk</string>
     <string name="txt_update_user_address">Cập nhật địa chỉ</string>
     <string name="txt_add_user_address">Thêm địa chỉ</string>
+    <string name="profile_email">Email</string>
+    <string name="btn_profile_submit_change">Lưu thay đổi</string>
+    <string name="edt_fullname_hint">Nhập họ và tên của bạn</string>
+    <string name="txtview_fullname_profile">Họ và tên</string>
+    <string name="txtview_email_profile">Email tài khoản</string>
+    <string name="txtview_type_account_profile">Loại tài khoản</string>
+    <string name="btn_submit_profile">Lưu thay đổi</string>
+    <string name="btn_change_password_profile">Đổi mật khẩu</string>
 </resources>

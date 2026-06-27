@@ -26,8 +26,10 @@ import com.infix.phukiencongnghe.ui.adapter.feature_product.ProductImageSliderAd
 import com.infix.phukiencongnghe.ui.adapter.feature_product.ProductReviewAdapter;
 import com.infix.phukiencongnghe.ui.adapter.feature_product.ProductVariantAdapter;
 import com.infix.phukiencongnghe.ui.adapter.feature_product.RelatedProductAdapter;
+import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.share_viewmodel.MainViewModel;
+import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.util.ArrayList;
@@ -98,12 +100,29 @@ public class ProductDetailsFragment extends Fragment {
             }
         });
         binding.btnAddToCart.setOnClickListener(v -> {
+            // kiem tra dang nhap truoc khi them sp vao gio hang
+            boolean isLogin = SharePrefUtils.isLogin(AuthActivity.USER_AUTH_FILE, AuthActivity.KEY_ACCESS_TOKEN,AuthActivity.KEY_REFRESH_TOKEN,v.getContext());
+            if(!isLogin){
+                SnackbarUtils.showBaseSnackbar(binding.getRoot(),"Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!",Snackbar.LENGTH_SHORT);
+                return;
+            }
+
+
             Integer currentVariantId = this.selectedVariantId;
             if(currentVariantId == null){
                 SnackbarUtils.showBaseSnackbar(binding.getRoot(),"Vui lòng chọn một thể loại sản phẩm", Snackbar.LENGTH_SHORT);
                 return;
             }
-            CartLocalDTO request = new CartLocalDTO(this.selectedVariantId, this.selectQuantity);
+            int quantitySend = 1;
+            try{
+                String qty = binding.edtQuantityNumber.getText().toString().trim();
+                if(!qty.isEmpty()){
+                    quantitySend = Integer.parseInt(qty);
+                }
+            } catch (NumberFormatException e) {
+                quantitySend = 1;
+            }
+            CartLocalDTO request = new CartLocalDTO(currentVariantId, quantitySend);
             productDetailsViewModel.addtoCart(request);
         });
     }
