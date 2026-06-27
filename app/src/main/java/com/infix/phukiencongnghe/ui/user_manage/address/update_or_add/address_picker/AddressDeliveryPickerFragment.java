@@ -99,7 +99,8 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
             binding.mapFragment.setVisibility(View.VISIBLE);
             binding.imgCenterMarker.setVisibility(View.VISIBLE);
             binding.btnConfirmAddressDeliveryPicker.setEnabled(true);
-            moveCameraToLocation(new LatLng(latLngCurrent.getCurLat(), latLngCurrent.getCurLng()), latLngCurrent.getDetailAddress());
+            binding.edtEnterAddressAddressDeliveryPicker.setEnabled(false);
+//            moveCameraToLocation(new LatLng(latLngCurrent.getCurLat(), latLngCurrent.getCurLng()), latLngCurrent.getDetailAddress());
         }
     }
 
@@ -271,5 +272,16 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.googleMap = googleMap;
+        if(addressDeliveryPickerViewModel.isUpdate()) {
+            UserAddressDTO userAddressDTO = addOrUpdateUserAddressViewModel.userAddress.getValue();
+            if(userAddressDTO == null) return;
+
+            AddressDeliveryPickerViewModel.LatLngCurrent latLngCurrent = addressDeliveryPickerViewModel.latLng.getValue();
+            if (latLngCurrent != null && latLngCurrent.getCurLat() != null && latLngCurrent.getCurLng() != null) {
+                moveCameraToLocation(
+                        new LatLng(latLngCurrent.getCurLat(), latLngCurrent.getCurLng()), userAddressDTO.getAddressDetail()
+                );
+            }
+        }
     }
 }

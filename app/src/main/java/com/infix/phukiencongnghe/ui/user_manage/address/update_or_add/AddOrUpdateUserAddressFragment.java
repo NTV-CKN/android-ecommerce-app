@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.dto.request.AddUserAddressDTO;
+import com.infix.phukiencongnghe.data.dto.request.UpdateUserAddressDTO;
 import com.infix.phukiencongnghe.data.dto.response.ShipFeeByAddressDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.databinding.FragmentAddOrUpdateUserAddressBinding;
@@ -172,8 +173,8 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
                                 }
                             }
                         }
-
-                    } else if (addOrUpdateUserAddressViewModel.isUpdate()) {
+                    }
+                    else if (addOrUpdateUserAddressViewModel.isUpdate()) {
                         UserAddressDTO userAddressDTO = addOrUpdateUserAddressViewModel.userAddress.getValue();
                         if (userAddressDTO == null) return;
 
@@ -186,14 +187,22 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
                         ShipFeeSpinnerAdapter shipFeeAdapter = new ShipFeeSpinnerAdapter(requireContext(), List.of(shipFeeByAddressDTO));
                         binding.spinnerProvinceCityUoaUserAddress.setAdapter(shipFeeAdapter);
                         binding.spinnerProvinceCityUoaUserAddress.setSelection(0);
+
+                        addressDeliveryPickerViewModel.setLatLng(new AddressDeliveryPickerViewModel.LatLngCurrent(
+                                userAddressDTO.getLatitude(),
+                                userAddressDTO.getLongitude(),
+                                userAddressDTO.getAddressDetail()
+                        ));
+
+                        binding.switchAddressDefaultUoaUserAddress.setChecked(userAddressDTO.getDefault());
                     }
                 });
 
         //show loading
         addOrUpdateUserAddressViewModel.isLoading.observe(getViewLifecycleOwner(), isLoading -> {
-            if(isLoading == null) return;
+            if (isLoading == null) return;
 
-            if(isLoading)
+            if (isLoading)
                 loadingDialog.show(
                         requireActivity().getSupportFragmentManager(),
                         null
@@ -204,7 +213,7 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
 
         //msg notify
         addOrUpdateUserAddressViewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
-            if(msg == null) return;
+            if (msg == null) return;
             Toast.makeText(
                     requireContext(),
                     msg,
@@ -240,20 +249,36 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
         handleSpinnerProvinceCityClicked();
 
         //confirm click
-        binding.btnConfirmUoaUserAddress.setOnClickListener(v-> handleConfirmClick());
+        binding.btnConfirmUoaUserAddress.setOnClickListener(v -> handleConfirmClick());
+
+        //cancel
+        binding.btnCancelUoaUserAddress.setOnClickListener(v -> handleCancelClick());
 
         //switch default address
         binding.switchAddressDefaultUoaUserAddress.setOnCheckedChangeListener((btnView, isChecked) -> {
             UserAddressDTO userAddressDTO = addOrUpdateUserAddressViewModel.userAddress.getValue();
-            if(userAddressDTO == null) return;
+            if (userAddressDTO == null) return;
 
+//            if(isFirstLoad && addOrUpdateUserAddressViewModel.isUpdate()) {
+//                isFirstLoad = false;
+//                return;
+//            }
             userAddressDTO.setDefault(isChecked);
         });
     }
 
+    public void handleCancelClick() {
+        SnackbarUtils.showSnackbarWithAction(
+                binding.getRoot(),
+                "Bạn có chắc muốn thoát không?",
+                Snackbar.LENGTH_LONG,
+                () -> requireActivity().getSupportFragmentManager().popBackStack()
+        );
+    }
+
     private void handleConfirmClick() {
         UserAddressDTO userAddressDTO = addOrUpdateUserAddressViewModel.userAddress.getValue();
-        if(userAddressDTO == null) return;
+        if (userAddressDTO == null) return;
 
         String receiverName = binding.edtReceiverNameUoaUserAddress.getText().toString();
         String phoneNumber = binding.edtPhoneNumberUoaUserAddress.getText().toString();
@@ -262,27 +287,42 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
         userAddressDTO.setReceiverName(receiverName);
         userAddressDTO.setPhoneNumber(phoneNumber);
 
-        if(userAddressDTO.checkDataValid()) {
+        if (userAddressDTO.checkDataValid()) {
             SnackbarUtils.showSnackbarWithAction(
                     binding.getRoot(),
                     "Bạn có chắc chắn với hành động này?",
                     Snackbar.LENGTH_LONG,
                     () -> {
-                        AddUserAddressDTO addUserAddressDTO = new AddUserAddressDTO(
-                                userAddressDTO.getPhoneNumber(),
-                                userAddressDTO.getAddressDetail(),
-                                userAddressDTO.getProvinceCity(),
-                                userAddressDTO.getDefault(),
-                                userAddressDTO.getReceiverName(),
-                                userAddressDTO.getLatitude(),
-                                userAddressDTO.getLongitude()
-                        );
+                        if (!addOrUpdateUserAddressViewModel.isUpdate()) {
+                            AddUserAddressDTO addUserAddressDTO = new AddUserAddressDTO(
+                                    userAddressDTO.getPhoneNumber(),
+                                    userAddressDTO.getAddressDetail(),
+                                    userAddressDTO.getProvinceCity(),
+                                    userAddressDTO.getDefault(),
+                                    userAddressDTO.getReceiverName(),
+                                    userAddressDTO.getLatitude(),
+                                    userAddressDTO.getLongitude()
+                            );
 
-                        if(!addOrUpdateUserAddressViewModel.isUpdate())
                             addOrUpdateUserAddressViewModel.addUserAddress(addUserAddressDTO, () ->
                                     requireActivity().getSupportFragmentManager().popBackStack());
+                        } else {
+                            UpdateUserAddressDTO updateUserAddressDTO = new UpdateUserAddressDTO(
+                                    userAddressDTO.getId(),
+                                    userAddressDTO.getPhoneNumber(),
+                                    userAddressDTO.getAddressDetail(),
+                                    userAddressDTO.getProvinceCity(),
+                                    userAddressDTO.getDefault(),
+                                    userAddressDTO.getReceiverName(),
+                                    userAddressDTO.getLatitude(),
+                                    userAddressDTO.getLongitude()
+                            );
+
+                            addOrUpdateUserAddressViewModel.updateUserAddress(updateUserAddressDTO, () ->
+                                    requireActivity().getSupportFragmentManager().popBackStack());
+                        }
                     });
-        }else
+        } else
             SnackbarUtils.showBaseSnackbar(
                     binding.getRoot(),
                     "Có dữ liệu không hợp lệ",

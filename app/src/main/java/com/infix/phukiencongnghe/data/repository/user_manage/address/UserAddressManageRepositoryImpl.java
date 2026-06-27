@@ -1,6 +1,7 @@
 package com.infix.phukiencongnghe.data.repository.user_manage.address;
 
 import com.infix.phukiencongnghe.data.dto.request.AddUserAddressDTO;
+import com.infix.phukiencongnghe.data.dto.request.UpdateUserAddressDTO;
 import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManageService;
@@ -24,5 +25,10 @@ public class UserAddressManageRepositoryImpl  implements IUserAddressManageRepos
     @Override
     public Call<SuccessBasicDTO> addUserAddress(AddUserAddressDTO addUserAddressDTO) {
         return userAddressManageService.addUserAddress(addUserAddressDTO);
+    }
+
+    @Override
+    public Call<SuccessBasicDTO> updateUserAddress(UpdateUserAddressDTO updateUserAddressDTO) {
+        return userAddressManageService.updateUserAddress(updateUserAddressDTO);
     }
 }

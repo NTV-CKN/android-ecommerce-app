@@ -119,11 +119,6 @@ public class UserAddressDTO implements Serializable {
             return false;
         }
 
-        String phoneRegex = "^(0|\\+84)(3|5|7|8|9)[0-9]{8}$";
-        if (!phoneNumber.trim().matches(phoneRegex)) {
-            return false;
-        }
-
         if (provinceCity == null || provinceCity.trim().isEmpty()) {
             return false;
         }

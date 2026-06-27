@@ -1,6 +1,7 @@
 package com.infix.phukiencongnghe.data.source.remote.user_manage;
 
 import com.infix.phukiencongnghe.data.dto.request.AddUserAddressDTO;
+import com.infix.phukiencongnghe.data.dto.request.UpdateUserAddressDTO;
 import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 
@@ -17,4 +18,7 @@ public interface UserAddressManageService {
 
     @POST("/api/v1/user-manage-address/add-address")
     Call<SuccessBasicDTO> addUserAddress(@Body AddUserAddressDTO addUserAddressDTO);
+
+    @POST("/api/v1/user-manage-address/update-address")
+    Call<SuccessBasicDTO> updateUserAddress(@Body UpdateUserAddressDTO updateUserAddressDTO);
 }
