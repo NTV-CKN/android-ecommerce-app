@@ -38,19 +38,20 @@ public class UserManagerActivity extends AppCompatActivity {
         setupMyToolbar();
         setOnLogoutForApiClient();
         handleIntent();
-    }
-
-    private void handleIntent() {
-        boolean isFromPayment = getIntent().getBooleanExtra("IS_FROM_PAYMENT",false);
-        if(isFromPayment){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fcv_user_manage,UserAddressManageFragment.newInstance(true)).commit();
-        }else{
-            getSupportFragmentManager().beginTransaction().replace(R.id.fcv_user_manage,UserAddressManageFragment.newInstance(false)).commit();
         if (savedInstanceState == null) {
             setDefaultNavigationItem(1);
         }
     }
 
+    private void handleIntent() {
+        boolean isFromPayment = getIntent().getBooleanExtra("IS_FROM_PAYMENT", false);
+        if (isFromPayment) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fcv_user_manage, UserAddressManageFragment.newInstance(true)).commit();
+        } else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fcv_user_manage, UserAddressManageFragment.newInstance(false)).commit();
+
+        }
+    }
     private void setOnLogoutForApiClient() {
         ApiClient.setOnLogoutListener(() -> AppUtils.startNewTaskWithClearStack(getBaseContext(), AuthActivity.class));
     }
