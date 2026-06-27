@@ -254,7 +254,18 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
             Log.d("AddressDeliveryPickerFragment", "New lat: : " + newLat + " , new lng: " + newLng);
 
             binding.btnConfirmAddressDeliveryPicker.setOnClickListener(v -> {
-                handleConfirmAddressSelection(newLat, newLng, detailAddress);
+                double distanceKm = addressDeliveryPickerViewModel.calculateDistanceToRepositoryBase(newLat, newLng);
+                double MAX_ALLOWED_DISTANCE_KM = 45.0;
+
+                if (distanceKm > MAX_ALLOWED_DISTANCE_KM) {
+                    SnackbarUtils.showBaseSnackbar(
+                            binding.getRoot(),
+                            "Vị trí bạn ghim không thuộc Tỉnh/Thành phố đã chọn trước đó. Vui lòng kiểm tra lại!",
+                            Snackbar.LENGTH_LONG
+                    );
+                } else {
+                    handleConfirmAddressSelection(newLat, newLng, detailAddress);
+                }
             });
         });
     }
