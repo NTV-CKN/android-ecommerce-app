@@ -86,6 +86,8 @@ public class AuthActivity extends AppCompatActivity {
                     this
             );
 
+            SharePrefUtils.saveStringToPrefFile(USER_AUTH_FILE, "KEY_FULL_NAME", user.getFullName(), this);
+
             //Khi đăng nhập thành công tiến hành thiết lập lại giá trị của access/refresh Token trong ApiClient
             ApiClient.setAccessTokenAndRefreshToken(
                     jwtFromLoginDTO.getAccessToken(),

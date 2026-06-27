@@ -19,16 +19,20 @@
 
     <TextView
         android:id="@+id/txtWelcome"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/text_welcome_header_fragment"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
         android:layout_marginStart="12dp"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/imgAvatar"
+        app:layout_constraintEnd_toStartOf="@id/btnSearch"
         app:layout_constraintTop_toTopOf="@id/imgAvatar"
-        app:layout_constraintBottom_toBottomOf="@id/imgAvatar"
-        app:layout_constraintStart_toEndOf="@id/imgAvatar"/>
+        app:layout_constraintBottom_toBottomOf="@id/imgAvatar"/>
 
     <ImageView
         android:id="@+id/btnCart"
