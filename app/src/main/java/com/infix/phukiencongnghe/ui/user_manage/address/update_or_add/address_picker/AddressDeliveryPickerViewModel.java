@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+//Lớp này chịu trách nhiệm quản lí LatLngCurrent, nhận sự thay đổi lng/lat/address detail từ người dùng
+//Đầu vào: LatLngCurrent,  isUpdate: boolean
 public class AddressDeliveryPickerViewModel extends ViewModel {
     //Nếu là update thì đồng nghĩa người dùng đang ở giao diện chỉnh sửa, ta sẽ gắn Lat/Lng đã có và hiện gg map sdk lên
     private boolean isUpdate;

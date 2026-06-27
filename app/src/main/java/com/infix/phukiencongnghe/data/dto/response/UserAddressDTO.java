@@ -95,4 +95,18 @@ public class UserAddressDTO implements Serializable {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
+    @Override
+    public String toString() {
+        return "UserAddressDTO{" +
+                "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", addressDetail='" + addressDetail + '\'' +
+                ", provinceCity='" + provinceCity + '\'' +
+                ", isDefault=" + isDefault +
+                ", receiverName='" + receiverName + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
 }
