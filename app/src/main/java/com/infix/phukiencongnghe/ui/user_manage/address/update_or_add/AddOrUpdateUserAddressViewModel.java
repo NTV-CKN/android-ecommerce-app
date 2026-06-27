@@ -7,8 +7,11 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.gson.Gson;
+import com.infix.phukiencongnghe.common.OnCallbackListener;
+import com.infix.phukiencongnghe.data.dto.request.AddUserAddressDTO;
 import com.infix.phukiencongnghe.data.dto.response.ExceptionResponseDTO;
 import com.infix.phukiencongnghe.data.dto.response.ShipFeeByAddressDTO;
+import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.data.repository.ship_fee.IShipFeeByAddressRepository;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
@@ -118,6 +121,46 @@ public class AddOrUpdateUserAddressViewModel extends ViewModel {
 
             @Override
             public void onFailure(@NonNull Call<List<ShipFeeByAddressDTO>> call, @NonNull Throwable throwable) {
+                _isLoading.setValue(false);
+                _notifyMsg.setValue(throwable.getMessage());
+            }
+        });
+    }
+
+    public void addUserAddress(AddUserAddressDTO addUserAddressDTO, OnCallbackListener onCallbackListener) {
+        _isLoading.setValue(true);
+        userAddressManageRepository.addUserAddress(addUserAddressDTO).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<SuccessBasicDTO> call,
+                    @NonNull Response<SuccessBasicDTO> response
+            ) {
+                if (response.isSuccessful()) {
+                    SuccessBasicDTO succ = response.body();
+                    if (succ != null && succ.isSuccess())
+                       _notifyMsg.setValue(succ.getMessage());
+                    onCallbackListener.onRevoke();
+                } else {
+                    Gson gson = new Gson();
+                    ResponseBody responseBody = response.errorBody();
+                    if (responseBody == null) {
+                        _notifyMsg.setValue("Không thể hiểu lỗi");
+                        return;
+                    }
+                    ExceptionResponseDTO exc = null;
+                    try {
+                        exc = gson.fromJson(responseBody.string(), ExceptionResponseDTO.class);
+                        if(exc == null) return;
+                        _notifyMsg.setValue(exc.getMessage());
+                    } catch (IOException e) {
+                        _notifyMsg.setValue(e.getMessage());
+                    }
+                }
+                _isLoading.setValue(false);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<SuccessBasicDTO> call, @NonNull Throwable throwable) {
                 _isLoading.setValue(false);
                 _notifyMsg.setValue(throwable.getMessage());
             }

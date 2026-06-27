@@ -109,4 +109,37 @@ public class UserAddressDTO implements Serializable {
                 ", longitude=" + longitude +
                 '}';
     }
+
+    public boolean checkDataValid() {
+        if (receiverName == null || receiverName.trim().isEmpty()) {
+            return false;
+        }
+
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            return false;
+        }
+
+        String phoneRegex = "^(0|\\+84)(3|5|7|8|9)[0-9]{8}$";
+        if (!phoneNumber.trim().matches(phoneRegex)) {
+            return false;
+        }
+
+        if (provinceCity == null || provinceCity.trim().isEmpty()) {
+            return false;
+        }
+
+        if (addressDetail == null || addressDetail.trim().isEmpty()) {
+            return false;
+        }
+
+        if (latitude == null || longitude == null) {
+            return false;
+        }
+
+        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+            return false;
+        }
+
+        return true;
+    }
 }
