@@ -6,17 +6,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
-import com.infix.phukiencongnghe.databinding.ItemSearchResultBinding;
-import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
-
-import java.util.List;
 import com.bumptech.glide.Glide;
+import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
+import com.infix.phukiencongnghe.databinding.ItemSearchAdvanceBinding;
+
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 
-public class SearchResultAdapter extends
-        RecyclerView.Adapter<SearchResultAdapter.ViewHolder>{
+public class SearchAdvanceAdapter extends
+        RecyclerView.Adapter<SearchAdvanceAdapter.ViewHolder> {
 
     public interface OnItemClick {
         void onClick(FeatureProductDTO product);
@@ -25,7 +24,7 @@ public class SearchResultAdapter extends
     private List<FeatureProductDTO> list;
     private OnItemClick listener;
 
-    public SearchResultAdapter(
+    public SearchAdvanceAdapter(
             List<FeatureProductDTO> list,
             OnItemClick listener
     ) {
@@ -36,10 +35,10 @@ public class SearchResultAdapter extends
     public static class ViewHolder
             extends RecyclerView.ViewHolder {
 
-        ItemSearchResultBinding binding;
+        ItemSearchAdvanceBinding binding;
 
         public ViewHolder(
-                ItemSearchResultBinding binding
+                ItemSearchAdvanceBinding binding
         ) {
             super(binding.getRoot());
             this.binding = binding;
@@ -53,8 +52,8 @@ public class SearchResultAdapter extends
             int viewType
     ) {
 
-        ItemSearchResultBinding binding =
-                ItemSearchResultBinding.inflate(
+        ItemSearchAdvanceBinding binding =
+                ItemSearchAdvanceBinding.inflate(
                         LayoutInflater.from(
                                 parent.getContext()
                         ),
@@ -77,7 +76,8 @@ public class SearchResultAdapter extends
         holder.binding.txtName
                 .setText(item.getName());
 
-        // FIX NULL PRICE
+
+        // PRICE
 
         if(item.getMinPrice() != null){
 
@@ -98,28 +98,48 @@ public class SearchResultAdapter extends
 
             holder.binding.txtPrice
                     .setText("0");
-
         }
+
+
+        // RATING
+
+        if(item.getAvgStar() != null){
+
+            holder.binding.txtRating
+                    .setText(
+                            "★ " +
+                                    String.format(
+                                            "%.1f",
+                                            item.getAvgStar()
+                                    )
+                    );
+
+        } else {
+
+            holder.binding.txtRating
+                    .setText(
+                            "★ 0.0"
+                    );
+        }
+
+
+        // IMAGE
 
         Glide.with(holder.itemView.getContext())
                 .load(item.getMainImage())
                 .into(holder.binding.imgProduct);
 
-        holder.itemView
-                .setOnClickListener(v -> {
 
-                    listener.onClick(item);
-                });
+        holder.itemView.setOnClickListener(
+                v -> listener.onClick(item)
+        );
     }
 
     @Override
     public int getItemCount() {
 
-        if(list == null){
-
-            return 0;
-        }
-
-        return list.size();
+        return list == null
+                ? 0
+                : list.size();
     }
 }
