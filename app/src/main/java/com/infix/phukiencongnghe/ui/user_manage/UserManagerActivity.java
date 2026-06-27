@@ -27,6 +27,7 @@ public class UserManagerActivity extends AppCompatActivity {
     private ActivityUserManagerBinding binding;
     private ActionBarDrawerToggle toggle;
     private UserEntityViewModel userEntityViewModel;
+    public static final String EXTRA_SELECTED_ADDRESS = "SELECTED_ADDRESS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,15 @@ public class UserManagerActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setupMyToolbar();
         setOnLogoutForApiClient();
+        handleIntent();
+    }
+
+    private void handleIntent() {
+        boolean isFromPayment = getIntent().getBooleanExtra("IS_FROM_PAYMENT",false);
+        if(isFromPayment){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fcv_user_manage,UserAddressManageFragment.newInstance(true)).commit();
+        }else{
+            getSupportFragmentManager().beginTransaction().replace(R.id.fcv_user_manage,UserAddressManageFragment.newInstance(false)).commit();
         if (savedInstanceState == null) {
             setDefaultNavigationItem(1);
         }
