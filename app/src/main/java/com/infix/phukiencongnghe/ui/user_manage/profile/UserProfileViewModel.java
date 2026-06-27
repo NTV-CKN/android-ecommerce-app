@@ -1,13 +1,14 @@
 package com.infix.phukiencongnghe.ui.user_manage.profile;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.request.UpdateUserDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserProfileDTO;
 import com.infix.phukiencongnghe.data.repository.user_manage.profile.IUserProfileRepository;
-import com.infix.phukiencongnghe.data.source.remote.user_manage.UserProfileService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,5 +72,21 @@ public class UserProfileViewModel extends ViewModel {
             }
         });
     }
+    public static class Factory implements ViewModelProvider.Factory {
+        private final IUserProfileRepository profileRepository;
 
+        public Factory(IUserProfileRepository profileRepository) {
+            this.profileRepository = profileRepository;
+        }
+
+        @NonNull
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            if (modelClass.isAssignableFrom(UserProfileViewModel.class)) {
+                return (T) new UserProfileViewModel(profileRepository);
+            }
+            throw new IllegalArgumentException("Không tìm thấy class ViewModel hợp lệ: " + modelClass.getName());
+        }
+    }
 }
