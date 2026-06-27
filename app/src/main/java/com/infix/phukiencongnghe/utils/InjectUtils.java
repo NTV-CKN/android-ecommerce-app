@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.auth.IAuthRepository;
+import com.infix.phukiencongnghe.data.repository.ship_fee.IShipFeeByAddressRepository;
+import com.infix.phukiencongnghe.data.repository.ship_fee.ShipFeeByAddressRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.UserAddressManageRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.local.AppDatabase;
@@ -19,6 +21,12 @@ public class InjectUtils {
                         AppDatabase.getInstance(context).userDAO()
                 ),
                 new AuthRemoteDataSourceImpl()
+        );
+    }
+
+    public static IShipFeeByAddressRepository createShipFeeByAddressRepository() {
+        return new ShipFeeByAddressRepositoryImpl(
+                RetrofitHelper.getShipFeeByAddressService()
         );
     }
 

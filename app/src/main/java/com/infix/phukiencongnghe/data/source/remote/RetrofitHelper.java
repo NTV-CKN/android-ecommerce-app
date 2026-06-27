@@ -4,6 +4,7 @@ import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
 import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
+import com.infix.phukiencongnghe.data.source.remote.ship_fee.ShipFeeByAddressService;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManageService;
 import com.infix.phukiencongnghe.utils.ApiClient;
 
@@ -30,6 +31,10 @@ public class RetrofitHelper {
 
     public static UserAddressManageService getUserAddressManageService() {
         return generateRetrofit().create(UserAddressManageService.class);
+    }
+
+    public static ShipFeeByAddressService getShipFeeByAddressService() {
+        return generateRetrofit().create(ShipFeeByAddressService.class);
     }
 
     private static Retrofit generateRetrofit() {

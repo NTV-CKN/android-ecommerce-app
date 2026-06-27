@@ -66,4 +66,6 @@
     <string name="text_home_mouse">CHUỘT MÁY TÍNH</string>
     <string name="text_home_keyboard">BÀN PHÍM</string>
     <string name="default_web_client_id">idk</string>
+    <string name="txt_update_user_address">Cập nhật địa chỉ</string>
+    <string name="txt_add_user_address">Thêm địa chỉ</string>
 </resources>
