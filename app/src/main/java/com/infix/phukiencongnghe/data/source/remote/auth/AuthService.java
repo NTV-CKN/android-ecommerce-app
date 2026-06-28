@@ -35,4 +35,7 @@ public interface AuthService {
 
     @POST("/api/v1/auth/login-google")
     Call<JwtFromLoginDTO> loginGoogle(@Body UserLoginGoogleDTO userLoginGoogleDTO);
+
+    @POST("/api/v1/auth/check-role-admin")
+    Call<SuccessBasicDTO> isUserAdmin();
 }

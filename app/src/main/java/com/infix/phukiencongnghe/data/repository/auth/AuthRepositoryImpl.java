@@ -62,6 +62,11 @@ public class AuthRepositoryImpl implements IAuthRepository {
     }
 
     @Override
+    public Call<SuccessBasicDTO> isUserAdmin() {
+        return authService.isUserAdmin();
+    }
+
+    @Override
     public void loginGoogle(String idToken, OnLoginGoogleListener onLoginGoogleListener) {
         authRemoteDataSource.onLoginGoogle(idToken, onLoginGoogleListener);
     }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_24px"
+            app:showAsAction="ifRoom"
+            android:title="@string/txt_home" />
+        <item
+            android:id="@+id/nav_product_admin"
+            android:icon="@drawable/ic_box_24px"
+            app:showAsAction="ifRoom"
+            android:title="@string/txt_manage_product_admin" />
+        <item
+            android:id="@+id/nav_voucher_admin"
+            android:icon="@drawable/ic_voucher"
+            app:showAsAction="ifRoom"
+            android:title="@string/txt_manage_voucher_admin" />
+        <item
+            android:id="@+id/nav_order_admin"
+            android:icon="@drawable/ic_orders_24px"
+            app:showAsAction="ifRoom"
+            android:title="@string/txt_manage_order_admin" />
+
+    </group>
+</menu>
