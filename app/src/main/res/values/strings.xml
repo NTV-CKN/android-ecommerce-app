@@ -77,7 +77,7 @@
     <string name="btn_submit_profile">Lưu thay đổi</string>
     <string name="btn_change_password_profile">Đổi mật khẩu</string>
     <string name="payment_total_price">Tổng cộng</string>
-    <string name="payment_tv_choice_voucher">Chọn mã giảm giá</string>
+    <string name="payment_tv_choice_voucher">Chọn mã giảm giá vận chuyển</string>
     <string name="payment_title_product">Sản phẩm</string>
     <string name="payment_change_address">Thay đổi</string>
     <string name="payment_user_address">Địa chỉ giao hàng</string>
@@ -91,4 +91,5 @@
     <string name="payment_cod">Thanh toán khi nhận hàng (COD)</string>
     <string name="title_payment">Thanh toán</string>
     <string name="txt_profile_personal">Thông tin cá nhân</string>
+    <string name="payment_choice_voucher_order">Chọn mã giảm giá cho đơn hàng</string>
 </resources>

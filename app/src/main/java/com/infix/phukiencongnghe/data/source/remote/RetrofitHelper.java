@@ -5,6 +5,7 @@ import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
 import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
 import com.infix.phukiencongnghe.data.source.remote.main.SliderShowService;
+import com.infix.phukiencongnghe.data.source.remote.payment.PaymentMethodService;
 import com.infix.phukiencongnghe.data.source.remote.ship_fee.ShipFeeByAddressService;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManageService;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserProfileService;
@@ -45,6 +46,9 @@ public class RetrofitHelper {
 
     public static ShipFeeByAddressService getShipFeeByAddressService() {
         return generateRetrofit().create(ShipFeeByAddressService.class);
+    }
+    public static PaymentMethodService getPaymentMethod(){
+        return generateRetrofit().create(PaymentMethodService.class);
     }
 
     private static Retrofit generateRetrofit() {

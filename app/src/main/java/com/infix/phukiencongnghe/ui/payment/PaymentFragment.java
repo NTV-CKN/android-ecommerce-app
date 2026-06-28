@@ -18,8 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.data.dto.response.CheckoutProductDTO;
+import com.infix.phukiencongnghe.data.dto.response.PaymentMethodDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.payment.PaymentMethodRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.databinding.FragmentPaymentBinding;
 import com.infix.phukiencongnghe.databinding.FragmentProductDetailsBinding;
@@ -40,6 +42,7 @@ import java.util.List;
 public class PaymentFragment extends Fragment {
     private FragmentPaymentBinding binding;
     private UserAddressManageViewModel userAddressManageViewModel;
+    private PaymentMethodViewModel paymentMethodViewModel;
     private UserAddressDTO selectedAddress;
     private ActivityResultLauncher<Intent> selectAddressLauncher;
     private LoadingDialog loadingDialog;
@@ -89,8 +92,32 @@ public class PaymentFragment extends Fragment {
                 showProductCheckout(productName, productPrice,productImage,productImage, buyNowQuantity);
             }
         }
+        initPaymentMethods();
         initUserAddressManage();
         setEvent();
+    }
+
+    private void initPaymentMethods() {
+        PaymentMethodViewModel.Fatory fatory = new PaymentMethodViewModel.Fatory(new PaymentMethodRepositoryImpl());
+        paymentMethodViewModel = new ViewModelProvider(this,fatory).get(PaymentMethodViewModel.class);
+        paymentMethodViewModel.getPaymentMethods();
+
+        paymentMethodViewModel.paymentMethods.observe(getViewLifecycleOwner(), methods->{
+            if(methods == null || methods.isEmpty()) return;
+            for(PaymentMethodDTO dto : methods){
+                if(dto.getId() == 1){
+                    binding.rbCod.setText(dto.getNameMethod() + "\n" + dto.getSubTitle());
+                    binding.rbCod.setTag(dto.getId());
+                }else if(dto.getId() == 2){
+                    binding.rbBankTransfer.setText(dto.getNameMethod()+ "\n" + dto.getSubTitle());
+                    binding.rbBankTransfer.setTag(dto.getId());
+                }
+            }
+        });
+        paymentMethodViewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
+            if (msg == null) return;
+            SnackbarUtils.showBaseSnackbar(binding.getRoot(), msg, Snackbar.LENGTH_SHORT);
+        });
     }
 
     private void showProductCheckout(String productName, Long productPrice, String productImage, String productImage1, int buyNowQuantity) {

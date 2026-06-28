@@ -26,6 +26,7 @@ import com.infix.phukiencongnghe.data.repository.main.slider_show.SliderShowRepo
 import com.infix.phukiencongnghe.ui.adapter.categories.CategoryAdapter;
 import com.infix.phukiencongnghe.ui.adapter.feature_product.FeatureProductAdapter;
 import com.infix.phukiencongnghe.ui.adapter.slider_show.SliderShowAdapter;
+import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,15 @@ public class HomeFragment extends Fragment {
         recyclerViewKeyboard.setAdapter(keyboardAdapter);
         viewPagerBanner.setAdapter(showAdapter);
 
-
+        featureProductAdapter.setOnItemClickListener(product -> {
+            navigateToProductDetails(product.getId());
+        });
+        mouseAdapter.setOnItemClickListener(product -> {
+            navigateToProductDetails(product.getId());
+        });
+        keyboardAdapter.setOnItemClickListener(product -> {
+            navigateToProductDetails(product.getId());
+        });
         new TabLayoutMediator(tabLayoutDots, viewPagerBanner, (tab, position) -> {
         }).attach();
 
@@ -140,6 +149,15 @@ public class HomeFragment extends Fragment {
         homeViewModel.loadMouseProduct(8);
         homeViewModel.loadKeyboardProduct(8);
         homeViewModel.loadSliderShow();
+    }
+
+    private void navigateToProductDetails(Integer id) {
+        if(id == null) return;
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fcv_main_content, ProductDetailsFragment.newInstance(id))
+                .addToBackStack(null)
+                .commit();
     }
 
     private void observeViewModel() {
@@ -185,7 +203,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
     @Override
     public void onResume() {
         super.onResume();

@@ -232,7 +232,7 @@ public class ProductDetailsFragment extends Fragment {
             }else{
                 binding.tvProductPrice.setText("0.0 VNĐ");
             }
-            binding.tvProductWarranty.setText("Bảo hành: " + details.getWarrantyPeriod());
+            binding.tvProductWarranty.setText("Bảo hành: " + details.getWarrantyPeriod() + " tháng");
             binding.tvProductDescription.setText(details.getDescription());
             List<String> allImage = new ArrayList<>();
             if(details.getImages() != null){
@@ -258,6 +258,13 @@ public class ProductDetailsFragment extends Fragment {
                 }
             });
             binding.rvProductVariants.setAdapter(variantAdapter);
+            if(details.getProductVariants() !=null && !details.getProductVariants().isEmpty()){
+                ProductVariantDTO fistVariant = details.getProductVariants().get(0);
+                this.selectedVariantId = fistVariant.getId();
+                if (fistVariant.getPrice() != null) {
+                    binding.tvProductPrice.setText(String.format("%,.0f", fistVariant.getPrice()) + "VNĐ");
+                }
+            }
             ProductImageSliderAdapter sliderAdapter = new ProductImageSliderAdapter();
             binding.mainImage.setAdapter(sliderAdapter);
             if(details.getImages()!=null && !details.getImages().isEmpty()){

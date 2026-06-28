@@ -155,7 +155,54 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/payment_card_voucher_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_card_rounded"
+            android:padding="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/payment_card_voucher"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
+            <ImageView
+                android:id="@+id/payment_img_voucher_order_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_voucher"
+                android:contentDescription="Voucher tổng đơn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/payment_tv_voucher_order_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/payment_choice_voucher_order"
+                android:textSize="13sp"
+                android:textColor="@android:color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/payment_img_voucher_order_icon"
+                app:layout_constraintEnd_toStartOf="@id/img_voucher_order_arrow" />
+
+            <ImageView
+                android:id="@+id/img_voucher_order_arrow"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@android:drawable/arrow_down_float"
+                android:rotation="270"
+                android:contentDescription="Mở chọn voucher tổng đơn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <TextView
             android:id="@+id/payment_tv_label_payment_method"
             android:layout_width="wrap_content"
@@ -164,7 +211,7 @@
             android:text="@string/payment_method"
             android:textStyle="bold"
             android:textSize="13sp"
-            app:layout_constraintTop_toBottomOf="@id/payment_card_voucher"
+            app:layout_constraintTop_toBottomOf="@id/payment_card_voucher_order"
             app:layout_constraintStart_toStartOf="parent" />
 
         <RadioGroup
