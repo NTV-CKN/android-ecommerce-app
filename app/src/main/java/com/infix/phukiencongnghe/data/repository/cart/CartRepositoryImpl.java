@@ -30,6 +30,10 @@ public class CartRepositoryImpl implements ICartRepository {
         return cartService.updateQuantity(itemId, qty);
     }
 
+    public Call<BadgeCartDTO> getCartCount() {
+        return cartService.getCount();
+    }
+
     public Call<CartDTO> deleteItem(Integer itemId) {
         return cartService.deleteItem(itemId);
     }

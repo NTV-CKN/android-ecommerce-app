@@ -20,6 +20,8 @@ public interface ICartRepository {
 
     public Call<CartDTO> deleteItem(Integer itemId);
 
+    public Call<BadgeCartDTO> getCartCount();
+
     public Call<CartDTO> clearCart();
     public Call<BadgeCartDTO> addCart(CartLocalDTO request);
 }

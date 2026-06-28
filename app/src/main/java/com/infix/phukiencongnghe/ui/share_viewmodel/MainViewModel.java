@@ -8,6 +8,10 @@ public class MainViewModel extends ViewModel {
     private final MutableLiveData<Long> _cartBadgeCount = new MutableLiveData<>();
     public final LiveData<Long> cartBadgetCount = _cartBadgeCount;
 
+    public MutableLiveData<Long> getCartBadgeCount() {
+        return _cartBadgeCount;
+    }
+
     public void setCartBadgetCount(long count){
         _cartBadgeCount.setValue(count);
     }

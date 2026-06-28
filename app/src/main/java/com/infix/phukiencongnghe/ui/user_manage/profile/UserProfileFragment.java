@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,8 @@ public class UserProfileFragment extends Fragment {
     private Button btnSaveProfile;
     private String userToken;
 
+    private ImageView imgAvatar;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class UserProfileFragment extends Fragment {
         edtEmail = view.findViewById(R.id.edtEmail);
         edtAccountType = view.findViewById(R.id.edtAccountType);
         btnSaveProfile = view.findViewById(R.id.btnSaveProfile);
+        imgAvatar = view.findViewById(R.id.imgAvatarProfile);
 
         UserProfileViewModel.Factory factory = new UserProfileViewModel.Factory(
                 InjectUtils.createUserProfileRepository()
@@ -58,6 +62,18 @@ public class UserProfileFragment extends Fragment {
         } else {
             Intent intent = new Intent(requireActivity(), com.infix.phukiencongnghe.ui.auth.AuthActivity.class);
             startActivity(intent);
+        }
+
+        android.content.SharedPreferences prefs = requireContext().getSharedPreferences(
+                com.infix.phukiencongnghe.ui.auth.AuthActivity.USER_AUTH_FILE,
+                android.content.Context.MODE_PRIVATE
+        );
+        String avatarUrl = prefs.getString("KEY_AVATAR", "");
+        if (avatarUrl != null && !avatarUrl.isEmpty()) {
+            com.bumptech.glide.Glide.with(requireContext())
+                    .load(avatarUrl)
+                    .circleCrop()
+                    .into(imgAvatar);
         }
 
         observeViewModel();
@@ -84,6 +100,18 @@ public class UserProfileFragment extends Fragment {
                 edtFullname.setText(profile.getFullName());
                 edtEmail.setText(profile.getEmail());
                 edtAccountType.setText(profile.getTypeAccount());
+            }
+        });
+
+        viewModel.updateSuccessName.observe(getViewLifecycleOwner(), newName -> {
+            if (newName != null) {
+                android.content.SharedPreferences prefs = requireContext().getSharedPreferences(
+                        com.infix.phukiencongnghe.ui.auth.AuthActivity.USER_AUTH_FILE,
+                        android.content.Context.MODE_PRIVATE
+                );
+                prefs.edit().putString("KEY_FULL_NAME", newName).apply();
+
+                edtFullname.setText(newName);
             }
         });
         viewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
