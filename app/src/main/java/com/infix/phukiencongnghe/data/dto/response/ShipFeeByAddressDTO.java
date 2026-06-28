@@ -31,4 +31,28 @@ public class ShipFeeByAddressDTO {
     public Double getLongitude() {
         return longitude;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setProvinceCity(String provinceCity) {
+        this.provinceCity = provinceCity;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 }

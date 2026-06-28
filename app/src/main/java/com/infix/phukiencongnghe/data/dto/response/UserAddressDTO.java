@@ -95,4 +95,46 @@ public class UserAddressDTO implements Serializable {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
+    @Override
+    public String toString() {
+        return "UserAddressDTO{" +
+                "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", addressDetail='" + addressDetail + '\'' +
+                ", provinceCity='" + provinceCity + '\'' +
+                ", isDefault=" + isDefault +
+                ", receiverName='" + receiverName + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
+
+    public boolean checkDataValid() {
+        if (receiverName == null || receiverName.trim().isEmpty()) {
+            return false;
+        }
+
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            return false;
+        }
+
+        if (provinceCity == null || provinceCity.trim().isEmpty()) {
+            return false;
+        }
+
+        if (addressDetail == null || addressDetail.trim().isEmpty()) {
+            return false;
+        }
+
+        if (latitude == null || longitude == null) {
+            return false;
+        }
+
+        if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -8,6 +8,11 @@
             app:showAsAction="ifRoom"
             android:title="@string/txt_home" />
         <item
+            android:id="@+id/nav_profile_user"
+            android:icon="@drawable/ic_profile_avt"
+            app:showAsAction="ifRoom"
+            android:title="@string/txt_profile_personal" />
+        <item
             android:id="@+id/nav_address_user"
             android:icon="@drawable/ic_location_chip_24px"
             app:showAsAction="ifRoom"

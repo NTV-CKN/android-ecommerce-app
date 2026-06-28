@@ -66,6 +66,8 @@
     <string name="text_home_mouse">CHUỘT MÁY TÍNH</string>
     <string name="text_home_keyboard">BÀN PHÍM</string>
     <string name="default_web_client_id">idk</string>
+    <string name="txt_update_user_address">Cập nhật địa chỉ</string>
+    <string name="txt_add_user_address">Thêm địa chỉ</string>
     <string name="profile_email">Email</string>
     <string name="btn_profile_submit_change">Lưu thay đổi</string>
     <string name="edt_fullname_hint">Nhập họ và tên của bạn</string>
@@ -74,4 +76,19 @@
     <string name="txtview_type_account_profile">Loại tài khoản</string>
     <string name="btn_submit_profile">Lưu thay đổi</string>
     <string name="btn_change_password_profile">Đổi mật khẩu</string>
+    <string name="payment_total_price">Tổng cộng</string>
+    <string name="payment_tv_choice_voucher">Chọn mã giảm giá</string>
+    <string name="payment_title_product">Sản phẩm</string>
+    <string name="payment_change_address">Thay đổi</string>
+    <string name="payment_user_address">Địa chỉ giao hàng</string>
+    <string name="payment_method">Phương thức thanh toán</string>
+    <string name="payment">ĐẶT HÀNG</string>
+    <string name="payment_total_price_value">Tổng cộng</string>
+    <string name="payment_discount">Giảm giá</string>
+    <string name="payment_shipfee">Phí vận chuyển</string>
+    <string name="payment_tam_early_price">Tạm tính</string>
+    <string name="payment_online">Chuyển khoản / Online</string>
+    <string name="payment_cod">Thanh toán khi nhận hàng (COD)</string>
+    <string name="title_payment">Thanh toán</string>
+    <string name="txt_profile_personal">Thông tin cá nhân</string>
 </resources>
