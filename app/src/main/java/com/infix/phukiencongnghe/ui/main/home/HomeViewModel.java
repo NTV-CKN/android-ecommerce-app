@@ -8,9 +8,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
+import com.infix.phukiencongnghe.data.dto.response.SliderShowDTO;
 import com.infix.phukiencongnghe.data.repository.main.category.ICategoryRepository;
 import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
 import com.infix.phukiencongnghe.data.dto.response.ProductPageDTO;
+import com.infix.phukiencongnghe.data.repository.main.slider_show.ISliderShowRepository;
 
 import java.util.List;
 
@@ -19,11 +21,22 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeViewModel extends ViewModel {
+
+
+
     /*
         REPOSITORY
      */
     private final ICategoryRepository categoryRepository;
     private final IProductRepository featureProductRepository;
+    private final ISliderShowRepository sliderShowRepository;
+
+    /*
+        SLIDER SHOW
+     */
+    private final MutableLiveData<List<SliderShowDTO>> _sliderLiveData = new MutableLiveData<>();
+    public final LiveData<List<SliderShowDTO>> sliderLiveData = _sliderLiveData;
+
     /*
         CATEGORY
     */
@@ -52,28 +65,52 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
     public final LiveData<Boolean> isLoading = _isLoading;
 
-    public HomeViewModel(ICategoryRepository categoryRepository, IProductRepository featureProductRepository) {
+    public HomeViewModel(ICategoryRepository categoryRepository, IProductRepository featureProductRepository, ISliderShowRepository sliderShowRepository) {
         this.featureProductRepository = featureProductRepository;
         this.categoryRepository = categoryRepository;
+        this.sliderShowRepository = sliderShowRepository;
     }
 
     public static class Factory implements ViewModelProvider.Factory {
         private final ICategoryRepository categoryRepository;
         private final IProductRepository productRepository;
+        private final ISliderShowRepository sliderShowRepository;
 
         public Factory(ICategoryRepository categoryRepository,
-                       IProductRepository productRepository) {
+                       IProductRepository productRepository, ISliderShowRepository sliderShowRepository) {
             this.categoryRepository = categoryRepository;
             this.productRepository = productRepository;
+            this.sliderShowRepository = sliderShowRepository;
         }
 
         @NonNull
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
             if (modelClass.isAssignableFrom(HomeViewModel.class))
-                return (T) new HomeViewModel(categoryRepository, productRepository);
+                return (T) new HomeViewModel(categoryRepository, productRepository, sliderShowRepository);
             throw new IllegalArgumentException("Model class illegal");
         }
+    }
+
+    public void loadSliderShow() {
+        _isLoading.setValue(true);
+        sliderShowRepository.getSliderShow().enqueue(new Callback<List<SliderShowDTO>>() {
+            @Override
+            public void onResponse(Call<List<SliderShowDTO>> call, Response<List<SliderShowDTO>> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    _sliderLiveData.setValue(response.body());
+                } else {
+                    _notifyMsg.setValue("Không thể load banner");
+                }
+                _isLoading.setValue(false);
+            }
+
+            @Override
+            public void onFailure(Call<List<SliderShowDTO>> call, Throwable throwable) {
+                _notifyMsg.setValue("Lỗi không thể kết nối " + throwable.getMessage());
+                _isLoading.setValue(false);
+            }
+        });
     }
 
     public void loadFeatureProduct(Integer categoryId, int limit, MutableLiveData<List<FeatureProductDTO>> targetLiveData) {

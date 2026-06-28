@@ -69,10 +69,9 @@
 
         <activity
             android:name=".ui.cart.CartActivity"
-            android:exported="false"/>
+            android:exported="true"/>
         <activity
             android:name=".ui.search.SearchProductActivity"
-            android:exported="true"/>
 
 <!--        <activity-->
 <!--            android:name=".ui.product_category.ProductCategoryActivity"-->
