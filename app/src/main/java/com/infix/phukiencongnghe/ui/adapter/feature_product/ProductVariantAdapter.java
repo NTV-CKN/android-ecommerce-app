@@ -1,6 +1,8 @@
 package com.infix.phukiencongnghe.ui.adapter.feature_product;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -46,10 +49,17 @@ public class ProductVariantAdapter extends RecyclerView.Adapter<ProductVariantAd
                 .load(variantDTO.getImageUrl())
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imgVariant);
-        if(position == selected){
-            holder.itemView.setAlpha(1.0f);
-        }else{
-            holder.itemView.setAlpha(0.4f);
+        boolean isSelected = position == selected;
+        if(isSelected){
+            holder.cardVariant.setCardBackgroundColor(Color.parseColor("#E3F2FD"));
+            holder.cardVariant.setCardElevation(6f);
+            holder.tvVariantName.setTextColor(Color.parseColor("#1565C0"));
+            holder.tvVariantName.setTypeface(null, Typeface.BOLD);
+        }else {
+            holder.cardVariant.setCardBackgroundColor(Color.WHITE);
+            holder.cardVariant.setCardElevation(2f);
+            holder.tvVariantName.setTextColor(Color.BLACK);
+            holder.tvVariantName.setTypeface(null, Typeface.NORMAL);
         }
         holder.itemView.setOnClickListener(v -> {
             int preSelected = selected;
@@ -74,11 +84,14 @@ public class ProductVariantAdapter extends RecyclerView.Adapter<ProductVariantAd
         void onItemClick(ProductVariantDTO variant);
     }
     static class ProductVariantViewHolder extends RecyclerView.ViewHolder {
+        public CardView cardVariant;
         ImageView imgVariant;
         TextView tvVariantName;
+        
 
         public ProductVariantViewHolder(@NonNull View itemView) {
             super(itemView);
+            cardVariant = (CardView) itemView;
             imgVariant = itemView.findViewById(R.id.img_variant);
             tvVariantName = itemView.findViewById(R.id.tv_variant_name);
         }
