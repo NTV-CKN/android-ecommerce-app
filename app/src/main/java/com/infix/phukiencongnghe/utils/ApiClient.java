@@ -120,6 +120,14 @@ public class ApiClient {
         ApiClient.refreshToken = refreshToken;
     }
 
+    public static String getAccessToken() {
+        return accessToken;
+    }
+
+    public static String getRefreshToken() {
+        return refreshToken;
+    }
+
     //Hàm này có nhiệm vụ thiết lập hàm kích hoạt onLogout() mỗi khi chuyển qua 1 activity mới.
     //Các activity sẽ tự đi kiểm soát logic logout tương ứng
     public static void setOnLogoutListener(OnLogoutListener onLogoutListener) {
