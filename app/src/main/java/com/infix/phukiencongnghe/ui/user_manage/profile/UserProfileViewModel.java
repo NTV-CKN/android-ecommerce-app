@@ -1,5 +1,7 @@
 package com.infix.phukiencongnghe.ui.user_manage.profile;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.infix.phukiencongnghe.data.dto.request.UpdateUserDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserProfileDTO;
 import com.infix.phukiencongnghe.data.repository.user_manage.profile.IUserProfileRepository;
+
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,9 +58,9 @@ public class UserProfileViewModel extends ViewModel {
     public void updateFullName(String token, String newName) {
         _isLoading.setValue(true);
         UpdateUserDTO body = new UpdateUserDTO(newName);
-        profileRepository.updateFullName(token, body).enqueue(new Callback<String>() {
+        profileRepository.updateFullName(token, body).enqueue(new Callback<Map<String, Object>>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 _isLoading.setValue(false);
                 if (response.isSuccessful()) {
                     _notifyMsg.setValue("Cập nhật họ và tên thành công!");
@@ -66,8 +70,9 @@ public class UserProfileViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable throwable) {
+            public void onFailure(Call<Map<String, Object>> call, Throwable throwable) {
                 _isLoading.setValue(false);
+                Log.d("SVUI", throwable.getMessage());
                 _notifyMsg.setValue("Lỗi kết nối mạng: " + throwable.getMessage());
             }
         });

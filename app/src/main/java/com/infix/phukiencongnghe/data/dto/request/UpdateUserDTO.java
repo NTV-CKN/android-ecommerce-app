@@ -7,6 +7,9 @@ public class UpdateUserDTO {
         this.fullName = fullName;
     }
 
+    public UpdateUserDTO() {
+    }
+
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
 }
