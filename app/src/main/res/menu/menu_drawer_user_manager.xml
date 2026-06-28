@@ -17,10 +17,19 @@
             android:icon="@drawable/ic_location_chip_24px"
             app:showAsAction="ifRoom"
             android:title="@string/txt_address_deliver" />
+
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout_24px"
             app:showAsAction="ifRoom"
             android:title="@string/txt_logout" />
+    </group>
+
+    <group android:id="@+id/group_admin_features" android:visible="false">
+        <item
+            android:id="@+id/nav_admin"
+            android:icon="@drawable/ic_supervisor_account_24px"
+            app:showAsAction="ifRoom"
+            android:title="@string/txt_admin" />
     </group>
 </menu>

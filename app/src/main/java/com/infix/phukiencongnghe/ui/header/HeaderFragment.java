@@ -17,15 +17,23 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.cart.ICartRepository;
+import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
+import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.cart.CartActivity;
+import com.infix.phukiencongnghe.ui.cart.CartViewModel;
 import com.infix.phukiencongnghe.ui.share_viewmodel.MainViewModel;
 import com.infix.phukiencongnghe.ui.user_manage.UserManagerActivity;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 
 public class HeaderFragment extends Fragment {
-    private ImageView imgView_user_header_fragment, imgView_search_header_fragment, imgView_cart_header_fragment;
+    private ImageView imgView_user_header_fragment, imgView_search_header_fragment, imgView_cart_header_fragment, imgAvatar;
     private TextView txtView_user_header_fragment, txtView_cart_badge_header_fragment;
+    private MainViewModel mainViewModel;
+
+    CartViewModel cartViewModel;
 
     public HeaderFragment() {}
 
@@ -40,16 +48,25 @@ public class HeaderFragment extends Fragment {
         imgView_cart_header_fragment = view.findViewById(R.id.btnCart);
         txtView_cart_badge_header_fragment = view.findViewById(R.id.tvCartBadge);
 
-        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        CartService cartService = RetrofitHelper.getCartService();
+        ICartRepository cartRepository = new CartRepositoryImpl(cartService);
+        CartViewModel.Factory factory = new CartViewModel.Factory(cartRepository);
+        cartViewModel = new ViewModelProvider(this, factory).get(CartViewModel.class);
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+
         mainViewModel.cartBadgetCount.observe(getViewLifecycleOwner(), totalCount -> {
-            if(totalCount == null){
-                return;
-            }
-            if(txtView_cart_badge_header_fragment != null){
+            if (totalCount == null || totalCount == 0) {
+                txtView_cart_badge_header_fragment.setText("0");
+            } else {
                 txtView_cart_badge_header_fragment.setText(String.valueOf(totalCount));
-                txtView_cart_badge_header_fragment.setVisibility(View.VISIBLE);
             }
         });
+        cartViewModel.badgeCountLiveData.observe(getViewLifecycleOwner(), totalCount -> {
+            if (totalCount != null) {
+                mainViewModel.setCartBadgetCount(totalCount);
+            }
+        });
+
         imgView_cart_header_fragment.setOnClickListener(view1 -> {
             String[] tokens = com.infix.phukiencongnghe.utils.SharePrefUtils.getAccessRefreshTokenFromPrefFile(
                     com.infix.phukiencongnghe.ui.auth.AuthActivity.USER_AUTH_FILE,
@@ -91,6 +108,14 @@ public class HeaderFragment extends Fragment {
             SharedPreferences prefs = requireContext().getSharedPreferences(AuthActivity.USER_AUTH_FILE, Context.MODE_PRIVATE);
             String fullName = prefs.getString("KEY_FULL_NAME", "User");
             txtView_user_header_fragment.setText("Hi, " + fullName);
+            String avatarUrl = prefs.getString("KEY_AVATAR", "");
+
+            if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                com.bumptech.glide.Glide.with(requireContext())
+                        .load(avatarUrl)
+                        .circleCrop()
+                        .into(imgView_user_header_fragment);
+            }
         } else {
             txtView_user_header_fragment.setText("Chưa đăng nhập");
         }
@@ -121,6 +146,7 @@ public class HeaderFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        cartViewModel.loadCartCount();
         initUserHeader();
     }
 }

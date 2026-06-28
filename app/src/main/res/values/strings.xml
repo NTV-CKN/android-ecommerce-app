@@ -92,4 +92,8 @@
     <string name="title_payment">Thanh toán</string>
     <string name="txt_profile_personal">Thông tin cá nhân</string>
     <string name="payment_choice_voucher_order">Chọn mã giảm giá cho đơn hàng</string>
+    <string name="txt_manage_product_admin">Quản lí sản phẩm</string>
+    <string name="txt_manage_voucher_admin">Quản lí voucher</string>
+    <string name="txt_manage_order_admin">Quản lí đơn hàng</string>
+    <string name="txt_admin">Quản trị</string>
 </resources>

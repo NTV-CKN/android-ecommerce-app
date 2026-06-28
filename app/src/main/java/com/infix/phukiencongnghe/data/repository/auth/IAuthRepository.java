@@ -19,6 +19,7 @@ public interface IAuthRepository {
     Call<SuccessBasicDTO> sendMailResetPassword(String email);
     Call<JwtFromLoginDTO> loginLocal(UserLoginDTO userLoginDTO);
     Call<JwtFromLoginDTO> loginGoogle(UserLoginGoogleDTO userLoginGoogleDTO);
+    Call<SuccessBasicDTO> isUserAdmin();
 
     void loginGoogle(String idToken, OnLoginGoogleListener onLoginGoogleListener);
     void insertUserEntity(UserEntity user, OnCallbackListener onCallbackListener);

@@ -27,6 +27,9 @@ public interface CartService {
     @DELETE("/api/v1/cart/items")
     Call<CartDTO> clearCart();
 
+    @GET("/api/v1/cart/count")
+    Call<BadgeCartDTO> getCount();
+
     @POST("api/v1/cart/add")
     Call<BadgeCartDTO> addCart(@Body CartLocalDTO request);
 

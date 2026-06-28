@@ -9,19 +9,23 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.source.local.AppDatabase;
 import com.infix.phukiencongnghe.databinding.ActivityUserManagerBinding;
+import com.infix.phukiencongnghe.ui.admin.AdminActivity;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.main.MainActivity;
+import com.infix.phukiencongnghe.ui.share_viewmodel.RoleUserViewModel;
 import com.infix.phukiencongnghe.ui.share_viewmodel.UserEntityViewModel;
 import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageFragment;
 import com.infix.phukiencongnghe.ui.user_manage.profile.UserProfileFragment;
 import com.infix.phukiencongnghe.utils.ApiClient;
 import com.infix.phukiencongnghe.utils.AppExecutors;
 import com.infix.phukiencongnghe.utils.AppUtils;
+import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
@@ -32,6 +36,8 @@ public class UserManagerActivity extends AppCompatActivity {
     public static final String EXTRA_SELECTED_ADDRESS = "SELECTED_ADDRESS";
     private boolean isFromPayment = false;
 
+    private RoleUserViewModel roleUserViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +46,38 @@ public class UserManagerActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setupMyToolbar();
         setOnLogoutForApiClient();
+
+        initRoleUserViewModel();
+
         if (savedInstanceState == null) {
             setDefaultNavigationItem(1);
         }
 
         handleIntent();
+    }
+
+    private void initRoleUserViewModel() {
+        RoleUserViewModel.Factory factory = new RoleUserViewModel.Factory(
+                InjectUtils.createAuthRepository(this)
+        );
+
+        roleUserViewModel = new ViewModelProvider(this, factory).get(RoleUserViewModel.class);
+        //gọi check có phải admin hay không
+        roleUserViewModel.isUserAdmin();
+
+        //observe is Admin
+        roleUserViewModel.isAdmin.observe(this, isAdmin -> {
+            if(isAdmin == null) return;
+
+            handleIsUserAdmin(isAdmin);
+        });
+    }
+
+    private void handleIsUserAdmin(Boolean isAdmin) {
+        if(isAdmin == null) return;
+
+        Menu menu = binding.navigationView.getMenu();
+        menu.setGroupVisible(R.id.group_admin_features, isAdmin);
     }
 
     private void handleIntent() {
@@ -112,6 +145,9 @@ public class UserManagerActivity extends AppCompatActivity {
                             AppUtils.startNewTaskWithClearStack(getBaseContext(), AuthActivity.class);
                         }
                 );
+            }else if(id == R.id.nav_admin) {
+                Intent intent = new Intent(this, AdminActivity.class);
+                startActivity(intent);
             }
 
             binding.drawerLayout.closeDrawer(GravityCompat.START);

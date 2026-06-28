@@ -21,6 +21,9 @@ import retrofit2.Response;
 public class UserProfileViewModel extends ViewModel {
     private final IUserProfileRepository profileRepository;
 
+    private final MutableLiveData<String> _updateSuccessName = new MutableLiveData<>();
+    public LiveData<String> updateSuccessName = _updateSuccessName;
+
     private final MutableLiveData<UserProfileDTO> _userProfile = new MutableLiveData<>();
     public LiveData<UserProfileDTO> userProfile = _userProfile;
 
@@ -64,6 +67,7 @@ public class UserProfileViewModel extends ViewModel {
                 _isLoading.setValue(false);
                 if (response.isSuccessful()) {
                     _notifyMsg.setValue("Cập nhật họ và tên thành công!");
+                    _updateSuccessName.setValue(newName);
                 } else {
                     _notifyMsg.setValue("Lỗi khi cập nhật thông tin");
                 }
