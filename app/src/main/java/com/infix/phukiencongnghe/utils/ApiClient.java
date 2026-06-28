@@ -196,8 +196,10 @@ public class ApiClient {
                 context
         );
 
-        AppDatabase.getInstance(context)
-                        .userDAO().clear();
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            AppDatabase.getInstance(context)
+                    .userDAO().clear();
+        });
         onLogoutListener.onLogout();
         alreadyLogout = true;
     }
