@@ -20,6 +20,7 @@ import com.infix.phukiencongnghe.ui.share_viewmodel.UserEntityViewModel;
 import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageFragment;
 import com.infix.phukiencongnghe.ui.user_manage.profile.UserProfileFragment;
 import com.infix.phukiencongnghe.utils.ApiClient;
+import com.infix.phukiencongnghe.utils.AppExecutors;
 import com.infix.phukiencongnghe.utils.AppUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
@@ -80,8 +81,10 @@ public class UserManagerActivity extends AppCompatActivity {
                         "Bạn có chắc muốn đăng xuất không?",
                         Snackbar.LENGTH_LONG,
                         () -> {
-                            AppDatabase.getInstance(this)
-                                    .userDAO().clear();
+                            AppExecutors.getInstance().diskIO().execute(() -> {
+                                AppDatabase.getInstance(this)
+                                        .userDAO().clear();
+                            });
                             SharePrefUtils.saveAccessTokenAndRefreshTokenToPrefFile(
                                     AuthActivity.USER_AUTH_FILE,
                                     AuthActivity.KEY_ACCESS_TOKEN,
