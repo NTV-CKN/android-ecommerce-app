@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.infix.phukiencongnghe.data.dto.response.BadgeCartDTO;
 import com.infix.phukiencongnghe.data.dto.response.CartDTO;
 import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.data.repository.cart.ICartRepository;
@@ -21,6 +22,9 @@ import retrofit2.Response;
 public class CartViewModel extends ViewModel {
     private final ICartRepository cartRepository;
 
+    private final MutableLiveData<Integer> _badgeCountLiveData = new MutableLiveData<>();
+    public final LiveData<Integer> badgeCountLiveData = _badgeCountLiveData;
+
     private final MutableLiveData<CartDTO> _cartLiveData = new MutableLiveData<>();
     public final LiveData<CartDTO> cartLiveData = _cartLiveData;
 
@@ -33,6 +37,21 @@ public class CartViewModel extends ViewModel {
 
     public CartViewModel(ICartRepository cartRepository) {
         this.cartRepository = cartRepository;
+    }
+
+    public void loadCartCount() {
+        cartRepository.getCartCount().enqueue(new Callback<BadgeCartDTO>() {
+            @Override
+            public void onResponse(Call<BadgeCartDTO> call, Response<BadgeCartDTO> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _badgeCountLiveData.setValue(response.body().getNumOfItems().intValue());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BadgeCartDTO> call, Throwable t) {
+            }
+        });
     }
 
     public void loadCart() {
@@ -59,7 +78,7 @@ public class CartViewModel extends ViewModel {
     public void updateQuantity(Integer itemId, Integer qty, boolean plus) {
         int newQty = plus ? qty + 1 : qty - 1;
         if (newQty < 1) return;
-        cartRepository.updateQuantity(itemId, qty).enqueue(new Callback<CartDTO>() {
+        cartRepository.updateQuantity(itemId, newQty).enqueue(new Callback<CartDTO>() {
             @Override
             public void onResponse(Call<CartDTO> call, Response<CartDTO> response) {
                 if(response.isSuccessful() && response.body() != null) {
