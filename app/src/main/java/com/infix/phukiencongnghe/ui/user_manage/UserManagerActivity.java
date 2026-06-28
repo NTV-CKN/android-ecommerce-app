@@ -30,6 +30,7 @@ public class UserManagerActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private UserEntityViewModel userEntityViewModel;
     public static final String EXTRA_SELECTED_ADDRESS = "SELECTED_ADDRESS";
+    private boolean isFromPayment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,19 +40,17 @@ public class UserManagerActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setupMyToolbar();
         setOnLogoutForApiClient();
-        handleIntent();
         if (savedInstanceState == null) {
             setDefaultNavigationItem(1);
         }
+
+        handleIntent();
     }
 
     private void handleIntent() {
-        boolean isFromPayment = getIntent().getBooleanExtra("IS_FROM_PAYMENT", false);
+        isFromPayment = getIntent().getBooleanExtra("IS_FROM_PAYMENT", false);
         if (isFromPayment) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fcv_user_manage, UserAddressManageFragment.newInstance(true)).commit();
-        } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fcv_user_manage, UserAddressManageFragment.newInstance(false)).commit();
-
+            setDefaultNavigationItem(2);
         }
     }
     private void setOnLogoutForApiClient() {
@@ -83,6 +82,12 @@ public class UserManagerActivity extends AppCompatActivity {
                         .replace(R.id.fcv_user_manage, new UserProfileFragment())
                         .commit();
             }else if (id == R.id.nav_address_user) {
+                if(isFromPayment) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fcv_user_manage, UserAddressManageFragment.newInstance(true)).commit();
+                    return true;
+                }
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fcv_user_manage, new UserAddressManageFragment())
                         .commit();

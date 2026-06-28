@@ -25,6 +25,7 @@ import com.infix.phukiencongnghe.databinding.FragmentCartBinding;
 import com.infix.phukiencongnghe.ui.adapter.cart.CartAdapter;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
+import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
@@ -66,7 +67,10 @@ public class CartFragment extends Fragment {
 
         setupRecyclerView();
 
-        viewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        CartViewModel.Factory factory= new CartViewModel.Factory(
+                InjectUtils.createCartRepository()
+        );
+        viewModel = new ViewModelProvider(requireActivity(), factory).get(CartViewModel.class);
         observeViewModel();
 
         // 4. Cài đặt các sự kiện Click trên màn hình chính

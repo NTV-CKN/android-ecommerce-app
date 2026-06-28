@@ -13,8 +13,8 @@ public class UserProfileRepositoryImpl implements IUserProfileRepository {
 
     UserProfileService profileService;
 
-    public UserProfileRepositoryImpl() {
-        this.profileService = RetrofitHelper.getProfileService();
+    public UserProfileRepositoryImpl(UserProfileService userProfileService) {
+        this.profileService = userProfileService;
     }
 
     @Override

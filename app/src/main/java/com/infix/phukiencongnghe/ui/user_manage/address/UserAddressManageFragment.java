@@ -88,9 +88,10 @@ public class UserAddressManageFragment extends Fragment {
             intent.putExtra(UserManagerActivity.EXTRA_SELECTED_ADDRESS, userAddressDTO);
             requireActivity().setResult(Activity.RESULT_OK,intent);
             requireActivity().finish();
-        }
+        }else {
             addOrUpdateUserAddressViewModel.setUserAddressState(userAddressDTO);
             goToAddOrUpdateUserAddressFragment(true);
+        }
         });
 
         binding.rvUserAddressManage.setAdapter(userAddressAdapter);

@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.auth.IAuthRepository;
+import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.cart.ICartRepository;
 import com.infix.phukiencongnghe.data.repository.ship_fee.IShipFeeByAddressRepository;
 import com.infix.phukiencongnghe.data.repository.ship_fee.ShipFeeByAddressRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
@@ -29,6 +31,12 @@ public class InjectUtils {
     public static IShipFeeByAddressRepository createShipFeeByAddressRepository() {
         return new ShipFeeByAddressRepositoryImpl(
                 RetrofitHelper.getShipFeeByAddressService()
+        );
+    }
+
+    public static ICartRepository createCartRepository() {
+        return new CartRepositoryImpl(
+                RetrofitHelper.getCartService()
         );
     }
 
