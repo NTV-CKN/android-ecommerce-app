@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.infix.phukiencongnghe.data.dto.request.RefreshTokenDTO;
 import com.infix.phukiencongnghe.data.dto.response.JwtFromLoginDTO;
+import com.infix.phukiencongnghe.data.source.local.AppDatabase;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
@@ -195,6 +196,8 @@ public class ApiClient {
                 context
         );
 
+        AppDatabase.getInstance(context)
+                        .userDAO().clear();
         onLogoutListener.onLogout();
         alreadyLogout = true;
     }

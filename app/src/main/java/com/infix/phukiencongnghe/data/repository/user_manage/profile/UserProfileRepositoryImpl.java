@@ -5,6 +5,8 @@ import com.infix.phukiencongnghe.data.dto.response.UserProfileDTO;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserProfileService;
 
+import java.util.Map;
+
 import retrofit2.Call;
 
 public class UserProfileRepositoryImpl implements IUserProfileRepository {
@@ -21,7 +23,7 @@ public class UserProfileRepositoryImpl implements IUserProfileRepository {
     }
 
     @Override
-    public Call<String> updateFullName(String token, UpdateUserDTO req) {
-        return profileService.updateFullName(token, req);
+    public Call<Map<String, Object>> updateFullName(String token, UpdateUserDTO req) {
+        return profileService.updateFullName( req);
     }
 }

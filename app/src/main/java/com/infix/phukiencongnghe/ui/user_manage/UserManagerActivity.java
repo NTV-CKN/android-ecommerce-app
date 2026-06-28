@@ -12,6 +12,7 @@ import androidx.core.view.GravityCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.data.source.local.AppDatabase;
 import com.infix.phukiencongnghe.databinding.ActivityUserManagerBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.main.MainActivity;
@@ -53,7 +54,9 @@ public class UserManagerActivity extends AppCompatActivity {
         }
     }
     private void setOnLogoutForApiClient() {
-        ApiClient.setOnLogoutListener(() -> AppUtils.startNewTaskWithClearStack(getBaseContext(), AuthActivity.class));
+        ApiClient.setOnLogoutListener(() -> {
+            AppUtils.startNewTaskWithClearStack(getBaseContext(), AuthActivity.class);
+        });
     }
 
     private void setupMyToolbar() {
@@ -88,6 +91,8 @@ public class UserManagerActivity extends AppCompatActivity {
                         "Bạn có chắc muốn đăng xuất không?",
                         Snackbar.LENGTH_LONG,
                         () -> {
+                            AppDatabase.getInstance(this)
+                                    .userDAO().clear();
                             SharePrefUtils.saveAccessTokenAndRefreshTokenToPrefFile(
                                     AuthActivity.USER_AUTH_FILE,
                                     AuthActivity.KEY_ACCESS_TOKEN,
