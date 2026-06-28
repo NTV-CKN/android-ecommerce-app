@@ -1,12 +1,16 @@
 package com.infix.phukiencongnghe.ui.cart;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.response.CartDTO;
 import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.data.repository.cart.ICartRepository;
+import com.infix.phukiencongnghe.data.repository.user_manage.profile.IUserProfileRepository;
+import com.infix.phukiencongnghe.ui.user_manage.profile.UserProfileViewModel;
 
 import java.util.List;
 
@@ -118,4 +122,22 @@ public class CartViewModel extends ViewModel {
         });
     }
 
+    public static class Factory implements ViewModelProvider.Factory {
+        private final ICartRepository cartRepository;
+
+        public Factory(ICartRepository cartRepository) {
+            this.cartRepository = cartRepository;
+        }
+
+
+        @NonNull
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            if (modelClass.isAssignableFrom(CartViewModel.class)) {
+                return (T) new CartViewModel(cartRepository);
+            }
+            throw new IllegalArgumentException("Không tìm thấy class ViewModel hợp lệ: " + modelClass.getName());
+        }
+    }
 }
