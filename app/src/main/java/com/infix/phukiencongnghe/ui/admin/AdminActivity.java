@@ -12,7 +12,9 @@ import androidx.core.view.GravityCompat;
 
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.databinding.ActivityAdminBinding;
+import com.infix.phukiencongnghe.ui.admin.order.OrderManageAdminFragment;
 import com.infix.phukiencongnghe.ui.admin.product.ProductManageAdminFragment;
+import com.infix.phukiencongnghe.ui.admin.voucher.VoucherManageAdminFragment;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.main.MainActivity;
 import com.infix.phukiencongnghe.utils.ApiClient;
@@ -68,9 +70,15 @@ public class AdminActivity extends AppCompatActivity {
                         .replace(R.id.fcv_admin_manage, new ProductManageAdminFragment())
                         .commit();
             } else if (id == R.id.nav_voucher_admin) {
-
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fcv_admin_manage, new VoucherManageAdminFragment())
+                        .commit();
             }else if(id == R.id.nav_order_admin) {
-
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fcv_admin_manage, new OrderManageAdminFragment())
+                        .commit();
             }
 
             binding.drawerLayoutAdmin.closeDrawer(GravityCompat.START);
