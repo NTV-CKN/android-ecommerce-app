@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.admin.product.ProductManageAdminFragment">
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp">
 
-</FrameLayout>
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/sv_search_product"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:iconifiedByDefault="false"
+            app:queryHint="@string/txt_search_product_by_id_or_name" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_admin_products"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_admin_product" />
+
+    <com.infix.phukiencongnghe.utils.paging.custom_view.PaginationBarView
+        android:layout_width="match_parent"
+        android:layout_height="72dp" />
+</LinearLayout>
