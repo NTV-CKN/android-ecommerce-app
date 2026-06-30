@@ -126,14 +126,17 @@ public class OrderHistoryFragment extends Fragment {
         });
 
         orderHistoryViewModel.isLoading.observe(getViewLifecycleOwner(), bool -> {
-            if (bool == null) return;
-            if (bool) {
+            if (Boolean.TRUE.equals(bool)) {
+                if (loadingDialog==null) {
+                    loadingDialog = new LoadingDialog();
+                }
                 if (!loadingDialog.isAdded()) {
-                    loadingDialog.show(requireActivity().getSupportFragmentManager(), null);
+                    loadingDialog.show(getChildFragmentManager(), "LoadingDialog");
                 }
             } else {
-                if (loadingDialog.isAdded()) {
-                    loadingDialog.dismiss();
+                if (loadingDialog!=null) {
+                   loadingDialog.dismissAllowingStateLoss();
+                   loadingDialog = null;
                 }
             }
         });
@@ -156,10 +159,11 @@ public class OrderHistoryFragment extends Fragment {
                 OrderHistoryDTO currentOrder = orderHistoryViewModel.getCurrentOrder();
                 if (currentOrder != null) {
                     OrderDetailFragment fragment = OrderDetailFragment.newInstance(currentOrder, details);
+                    orderHistoryViewModel.clearOrderDetails();
                     requireActivity().getSupportFragmentManager()
                             .beginTransaction()
                             .addToBackStack(null)
-                            .replace(R.id.fcv_main_content, fragment)
+                            .replace(R.id.fcv_user_manage, fragment)
                             .commit();
                 }
             } else if (details != null) {

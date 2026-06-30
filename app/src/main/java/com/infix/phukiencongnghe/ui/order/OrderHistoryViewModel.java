@@ -135,4 +135,7 @@ public class OrderHistoryViewModel extends ViewModel {
         _orderDetails.setValue(null);
         currentOrder = null;
     }
+    public void clearOrderDetails() {
+        _orderDetails.setValue(null);
+    }
 }
