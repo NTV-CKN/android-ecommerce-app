@@ -18,6 +18,7 @@ import com.infix.phukiencongnghe.databinding.ActivityUserManagerBinding;
 import com.infix.phukiencongnghe.ui.admin.AdminActivity;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.main.MainActivity;
+import com.infix.phukiencongnghe.ui.order.OrderHistoryFragment;
 import com.infix.phukiencongnghe.ui.share_viewmodel.RoleUserViewModel;
 import com.infix.phukiencongnghe.ui.share_viewmodel.UserEntityViewModel;
 import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageFragment;
@@ -123,6 +124,10 @@ public class UserManagerActivity extends AppCompatActivity {
                 }
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fcv_user_manage, new UserAddressManageFragment())
+                        .commit();
+            }else if(id == R.id.nav_order_history) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fcv_user_manage, new OrderHistoryFragment())
                         .commit();
             } else if (id == R.id.nav_logout) {
                 SnackbarUtils.showSnackbarWithAction(
