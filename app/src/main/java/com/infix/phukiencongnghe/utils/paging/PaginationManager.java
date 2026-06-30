@@ -34,6 +34,11 @@ public class PaginationManager {
 //        _totalPages.setValue(pages == 0 ? 1 : pages);
 //    }
 
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
     public void setTotalPages(int totalPages) {
         _totalPages.setValue(
                 totalPages <= 0 ? 1 : totalPages
