@@ -25,11 +25,8 @@ public class ProductManageAdminViewModel extends ViewModel {
     private final ICategoryRepository categoryRepository;
     private final IProductAdminRepository productAdminRepository;
 
-    private MutableLiveData<List<CategoryDTO>> _categories = new MutableLiveData<>();
-    public LiveData<List<CategoryDTO>> categories = _categories;
-
-    private MutableLiveData<PageResponseDTO<ProductAdminPageDTO>> _products = new MutableLiveData<>();
-    public LiveData<PageResponseDTO<ProductAdminPageDTO>> products = _products;
+    private MutableLiveData<PageResponseDTO<ProductAdminPageDTO>> _productsAdmin = new MutableLiveData<>();
+    public LiveData<PageResponseDTO<ProductAdminPageDTO>> productsAdmin = _productsAdmin;
 
     //pagination
     private PaginationManager paginationManager;
@@ -41,20 +38,40 @@ public class ProductManageAdminViewModel extends ViewModel {
         paginationManager = new PaginationManager(12);
     }
 
-    public void loadCategoriesAvailable() {
-        categoryRepository.getParentCategory().enqueue(new Callback<List<CategoryDTO>>() {
+    public void loadProducts(String keyWord, String nameCategory, int page, int pageSize) {
+        productAdminRepository.loadProducts(
+                keyWord, nameCategory, page, pageSize).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<CategoryDTO>> call, Response<List<CategoryDTO>> response) {
-                if (response.isSuccessful())
-                    if (response.body() != null)
-                        _categories.setValue(response.body());
+            public void onResponse(
+                    @NonNull Call<PageResponseDTO<ProductAdminPageDTO>> call,
+                    @NonNull Response<PageResponseDTO<ProductAdminPageDTO>> response) {
+                if(response.isSuccessful()) {
+                    PageResponseDTO<ProductAdminPageDTO> body = response.body();
+                    if(body != null)
+                        _productsAdmin.setValue(body);
+                }
             }
 
             @Override
-            public void onFailure(Call<List<CategoryDTO>> call, Throwable throwable) {
+            public void onFailure(
+                    @NonNull Call<PageResponseDTO<ProductAdminPageDTO>> call,
+                    @NonNull Throwable throwable) {
                 Log.d("ProductManageAdminViewModel", throwable.getMessage());
             }
         });
+    }
+
+    public void setCurrentPageAndPageSizeState(int page, int pageSize) {
+        paginationManager.setCurrentPage(page);
+        paginationManager.setTotalPages(pageSize);
+    }
+
+    public int getPageSize() {
+        return paginationManager.getPageSize();
+    }
+
+    public PaginationManager getPaginationManager() {
+        return paginationManager;
     }
 
     public static class Factory implements ViewModelProvider.Factory {
