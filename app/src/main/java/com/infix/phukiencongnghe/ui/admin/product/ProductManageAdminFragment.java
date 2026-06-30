@@ -18,6 +18,7 @@ import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.databinding.FragmentProductManageAdminBinding;
 import com.infix.phukiencongnghe.ui.adapter.admin.product.ProductAdminAdapter;
 import com.infix.phukiencongnghe.ui.adapter.categories.CategoryAdapter;
+import com.infix.phukiencongnghe.ui.admin.product.add_or_update.AddOrUpdateProductFragment;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 
 import java.util.ArrayList;
@@ -48,6 +49,17 @@ public class ProductManageAdminFragment extends Fragment {
         observeCurrentPageAndPageSize();
         setEventForViewPaginationBar();
         setSearchViewChange();
+        setEvents();
+    }
+
+    private void setEvents() {
+        binding.imgAddProductAdmin.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fcv_admin_manage, new AddOrUpdateProductFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
     }
 
     private void setEventForViewPaginationBar() {
