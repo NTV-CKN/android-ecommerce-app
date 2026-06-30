@@ -104,5 +104,12 @@
     <string name="text_code_prefix">Mã: %s</string>
     <string name="order_detail_list">Danh sách sản phẩm</string>
     <string name="order_details_title">Chi tiết đơn hàng</string>
+    <string name="txt_list_sub_image">Danh sách ảnh phụ ([+] Thêm mới)</string>
+    <string name="txt_image_general_product">HÌNH ẢNH SẢN PHẨM CHUNG</string>
+    <string name="txt_description_product">Mô tả sản phẩm</string>
+    <string name="txt_warranty_period">Thời gian bảo hành (tháng)</string>
+    <string name="txt_subtitle">Tiêu đề phụ (Subtitle)</string>
+    <string name="txt_name_general_product">Tên sản phẩm chung</string>
+    <string name="txt_add_new_product_variant">THÊM BIẾN THỂ MỚI</string>
 
 </resources>
