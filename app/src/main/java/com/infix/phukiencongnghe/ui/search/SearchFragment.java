@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.data.repository.main.product.FeatureProductRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.common.product.FeatureProductRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.local.source.search.SearchLocalRepositoryImpl;
 import com.infix.phukiencongnghe.databinding.FragmentSearchBinding;
 import com.infix.phukiencongnghe.ui.adapter.search.RecentSearchProductAdapter;

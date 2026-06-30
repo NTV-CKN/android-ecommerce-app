@@ -1,4 +1,4 @@
-package com.infix.phukiencongnghe.data.repository.main.slider_show;
+package com.infix.phukiencongnghe.data.repository.common.slider_show;
 
 import com.infix.phukiencongnghe.data.dto.response.SliderShowDTO;
 

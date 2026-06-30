@@ -1,6 +1,5 @@
 package com.infix.phukiencongnghe.ui.searchadvance;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +23,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.GridLayoutManager;
-import com.infix.phukiencongnghe.data.repository.main.category.CategoryRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.common.category.CategoryRepositoryImpl;
 
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.data.repository.main.product.FeatureProductRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.common.product.FeatureProductRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.local.source.search.SearchLocalRepositoryImpl;
 import com.infix.phukiencongnghe.ui.adapter.search.SearchAdvanceAdapter;
 import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
-import com.infix.phukiencongnghe.ui.search.SearchProductActivity;
 import com.infix.phukiencongnghe.utils.paging.custom_view.PaginationBarView;
 
 public class SearchAdvanceFragment extends Fragment {

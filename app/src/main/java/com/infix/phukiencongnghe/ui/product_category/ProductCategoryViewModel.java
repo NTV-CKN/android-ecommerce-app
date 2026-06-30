@@ -10,8 +10,8 @@ import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductPageDTO;
 import com.infix.phukiencongnghe.data.model.Page;
-import com.infix.phukiencongnghe.data.repository.main.category.ICategoryRepository;
-import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
+import com.infix.phukiencongnghe.data.repository.common.category.ICategoryRepository;
+import com.infix.phukiencongnghe.data.repository.common.product.IProductRepository;
 import com.infix.phukiencongnghe.utils.paging.PaginationManager;
 import com.infix.phukiencongnghe.utils.paging.PaginationRequest;
 

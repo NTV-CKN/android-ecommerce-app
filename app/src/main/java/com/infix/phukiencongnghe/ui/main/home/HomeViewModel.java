@@ -9,10 +9,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
 import com.infix.phukiencongnghe.data.dto.response.SliderShowDTO;
-import com.infix.phukiencongnghe.data.repository.main.category.ICategoryRepository;
-import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
+import com.infix.phukiencongnghe.data.repository.common.category.ICategoryRepository;
+import com.infix.phukiencongnghe.data.repository.common.product.IProductRepository;
 import com.infix.phukiencongnghe.data.dto.response.ProductPageDTO;
-import com.infix.phukiencongnghe.data.repository.main.slider_show.ISliderShowRepository;
+import com.infix.phukiencongnghe.data.repository.common.slider_show.ISliderShowRepository;
 
 import java.util.List;
 
