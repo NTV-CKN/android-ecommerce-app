@@ -16,6 +16,8 @@ import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddres
 import com.infix.phukiencongnghe.data.repository.user_manage.address.UserAddressManageRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.user_manage.profile.IUserProfileRepository;
 import com.infix.phukiencongnghe.data.repository.user_manage.profile.UserProfileRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.voucher.IVoucherRepository;
+import com.infix.phukiencongnghe.data.repository.voucher.VoucherRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.local.AppDatabase;
 import com.infix.phukiencongnghe.data.source.local.source.user.UserLocalDataSourceImpl;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
@@ -23,6 +25,13 @@ import com.infix.phukiencongnghe.data.source.remote.admin.product.ProductAdminRe
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthRemoteDataSourceImpl;
 
 public class InjectUtils {
+
+    public static IVoucherRepository createVoucherRepository() {
+        return new VoucherRepositoryImpl(
+                RetrofitHelper.getVoucherService()
+        );
+    }
+
     public static IAuthRepository createAuthRepository(Context context) {
         return new AuthRepositoryImpl(
                 RetrofitHelper.getAuthService(),
