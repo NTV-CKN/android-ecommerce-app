@@ -96,4 +96,5 @@
     <string name="txt_manage_voucher_admin">Quản lí voucher</string>
     <string name="txt_manage_order_admin">Quản lí đơn hàng</string>
     <string name="txt_admin">Quản trị</string>
+    <string name="txt_search_product_by_id_or_name">Tìm kiếm theo tên hoặc mã sản phẩm...</string>
 </resources>

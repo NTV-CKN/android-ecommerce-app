@@ -65,6 +65,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
+    implementation(libs.firebase.storage)
 
     //room
     implementation (libs.room.runtime)
