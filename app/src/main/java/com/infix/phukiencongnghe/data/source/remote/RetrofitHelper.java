@@ -1,10 +1,13 @@
 package com.infix.phukiencongnghe.data.source.remote;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
 import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
 import com.infix.phukiencongnghe.data.source.remote.main.SliderShowService;
+import com.infix.phukiencongnghe.data.source.remote.order.OrderSerivce;
 import com.infix.phukiencongnghe.data.source.remote.payment.PaymentMethodService;
 import com.infix.phukiencongnghe.data.source.remote.ship_fee.ShipFeeByAddressService;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManageService;
@@ -50,7 +53,9 @@ public class RetrofitHelper {
     public static PaymentMethodService getPaymentMethod(){
         return generateRetrofit().create(PaymentMethodService.class);
     }
-
+    public static OrderSerivce getOrderService() {
+        return generateRetrofit().create(OrderSerivce.class);
+    }
     private static Retrofit generateRetrofit() {
         return ApiClient.getRetrofitClient();
     }

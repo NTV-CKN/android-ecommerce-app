@@ -96,4 +96,7 @@
     <string name="txt_manage_voucher_admin">Quản lí voucher</string>
     <string name="txt_manage_order_admin">Quản lí đơn hàng</string>
     <string name="txt_admin">Quản trị</string>
+    <string name="title_order_history">Lịch sử đặt hàng</string>
+    <string name="order_history_total">Tổng tiền:</string>
+    <string name="order_history_see_details">Xem chi tiết</string>
 </resources>
