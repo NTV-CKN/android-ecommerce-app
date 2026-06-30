@@ -20,16 +20,15 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.data.repository.main.category.CategoryRepositoryImpl;
-import com.infix.phukiencongnghe.data.repository.main.product.FeatureProductRepositoryImpl;
-import com.infix.phukiencongnghe.data.repository.main.slider_show.SliderShowRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.common.category.CategoryRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.common.product.FeatureProductRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.common.slider_show.SliderShowRepositoryImpl;
 import com.infix.phukiencongnghe.ui.adapter.categories.CategoryAdapter;
 import com.infix.phukiencongnghe.ui.adapter.feature_product.FeatureProductAdapter;
 import com.infix.phukiencongnghe.ui.adapter.slider_show.SliderShowAdapter;
 import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class HomeFragment extends Fragment {
 

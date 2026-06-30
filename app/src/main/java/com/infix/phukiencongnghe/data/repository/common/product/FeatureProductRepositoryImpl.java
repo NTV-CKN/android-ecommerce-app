@@ -1,4 +1,4 @@
-package com.infix.phukiencongnghe.data.repository.main.product;
+package com.infix.phukiencongnghe.data.repository.common.product;
 
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductPageDTO;

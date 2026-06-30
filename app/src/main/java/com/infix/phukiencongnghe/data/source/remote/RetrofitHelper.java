@@ -1,6 +1,8 @@
 package com.infix.phukiencongnghe.data.source.remote;
 
+
 import androidx.lifecycle.ViewModelProvider;
+import com.infix.phukiencongnghe.data.source.remote.admin.product.ProductAdminService;
 
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
@@ -55,6 +57,9 @@ public class RetrofitHelper {
     }
     public static OrderSerivce getOrderService() {
         return generateRetrofit().create(OrderSerivce.class);
+    }
+    public static ProductAdminService getProductAdminService() {
+        return generateRetrofit().create(ProductAdminService.class);
     }
     private static Retrofit generateRetrofit() {
         return ApiClient.getRetrofitClient();

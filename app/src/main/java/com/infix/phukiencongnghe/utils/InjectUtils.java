@@ -2,10 +2,14 @@ package com.infix.phukiencongnghe.utils;
 
 import android.content.Context;
 
+import com.infix.phukiencongnghe.data.repository.admin.product.IProductAdminRepository;
+import com.infix.phukiencongnghe.data.repository.admin.product.ProductAdminRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.auth.IAuthRepository;
 import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.cart.ICartRepository;
+import com.infix.phukiencongnghe.data.repository.common.category.CategoryRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.common.category.ICategoryRepository;
 import com.infix.phukiencongnghe.data.repository.ship_fee.IShipFeeByAddressRepository;
 import com.infix.phukiencongnghe.data.repository.ship_fee.ShipFeeByAddressRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
@@ -15,6 +19,7 @@ import com.infix.phukiencongnghe.data.repository.user_manage.profile.UserProfile
 import com.infix.phukiencongnghe.data.source.local.AppDatabase;
 import com.infix.phukiencongnghe.data.source.local.source.user.UserLocalDataSourceImpl;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
+import com.infix.phukiencongnghe.data.source.remote.admin.product.ProductAdminRemoteDataSourceImpl;
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthRemoteDataSourceImpl;
 
 public class InjectUtils {
@@ -50,5 +55,17 @@ public class InjectUtils {
         return new UserProfileRepositoryImpl(
                 RetrofitHelper.getProfileService()
         );
+    }
+
+    public static IProductAdminRepository createProductAdminRepository() {
+        return new ProductAdminRepositoryImpl(
+                new ProductAdminRemoteDataSourceImpl(
+                        RetrofitHelper.getProductAdminService()
+                )
+        );
+    }
+
+    public static ICategoryRepository createCategoryRepository() {
+        return new CategoryRepositoryImpl();
     }
 }

@@ -128,4 +128,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         this.listener = listener;
     }
 
+    public void update(List<CategoryDTO> categoryDTOS) {
+        this.categoryList.clear();
+        this.categoryList.addAll(categoryDTOS);
+
+        notifyDataSetChanged();
+    }
 }

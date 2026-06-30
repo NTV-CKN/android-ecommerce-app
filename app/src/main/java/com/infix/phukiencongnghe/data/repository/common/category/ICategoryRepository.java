@@ -1,4 +1,4 @@
-package com.infix.phukiencongnghe.data.repository.main.category;
+package com.infix.phukiencongnghe.data.repository.common.category;
 
 import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 
