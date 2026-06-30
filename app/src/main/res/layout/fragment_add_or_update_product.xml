@@ -4,6 +4,7 @@
     xmlns:tools="http://tools.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools1="http://schemas.android.com/tools"
     android:background="@color/tech_background">
 
     <androidx.core.widget.NestedScrollView
@@ -11,6 +12,8 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@id/btn_save_total"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -18,7 +21,18 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCategory"
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                tools1:listitem="@layout/item_category"
+                android:clipToPadding="false"
+                android:elevation="2dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                android:paddingTop="10dp"
+                android:paddingBottom="0dp" />
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,19 +149,19 @@
                     android:layout_marginStart="16dp"
                     android:orientation="vertical">
 
-<!--                    <androidx.recyclerview.widget.RecyclerView-->
-<!--                        android:id="@+id/rv_sub_photos"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="90dp"-->
-<!--                        android:orientation="horizontal" />-->
+                    <!--                    <androidx.recyclerview.widget.RecyclerView-->
+                    <!--                        android:id="@+id/rv_sub_photos"-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="90dp"-->
+                    <!--                        android:orientation="horizontal" />-->
 
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginTop="4dp"-->
-<!--                        android:text="Danh sách ảnh phụ"-->
-<!--                        android:textColor="@color/tech_text_muted"-->
-<!--                        android:textSize="12sp" />-->
+                    <!--                    <TextView-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_marginTop="4dp"-->
+                    <!--                        android:text="Danh sách ảnh phụ"-->
+                    <!--                        android:textColor="@color/tech_text_muted"-->
+                    <!--                        android:textSize="12sp" />-->
                 </LinearLayout>
             </LinearLayout>
 
@@ -184,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="1"/>
+                tools:itemCount="1" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

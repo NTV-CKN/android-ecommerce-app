@@ -10,6 +10,8 @@ import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.cart.ICartRepository;
 import com.infix.phukiencongnghe.data.repository.common.category.CategoryRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.common.category.ICategoryRepository;
+import com.infix.phukiencongnghe.data.repository.common.product.FeatureProductRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.common.product.IProductRepository;
 import com.infix.phukiencongnghe.data.repository.ship_fee.IShipFeeByAddressRepository;
 import com.infix.phukiencongnghe.data.repository.ship_fee.ShipFeeByAddressRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
@@ -51,6 +53,10 @@ public class InjectUtils {
     public static ICartRepository createCartRepository() {
         return new CartRepositoryImpl(
                 RetrofitHelper.getCartService()
+        );
+    }
+    public static IProductRepository createProductRepository() {
+        return new FeatureProductRepositoryImpl(
         );
     }
 

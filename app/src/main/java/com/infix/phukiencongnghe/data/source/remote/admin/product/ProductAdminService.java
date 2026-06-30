@@ -2,11 +2,14 @@ package com.infix.phukiencongnghe.data.source.remote.admin.product;
 
 import com.infix.phukiencongnghe.data.dto.ProductAdminPageDTO;
 import com.infix.phukiencongnghe.data.dto.response.PageResponseDTO;
+import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ProductAdminService {
@@ -27,4 +30,7 @@ public interface ProductAdminService {
             @Query("size")
             String size
     );
+
+    @POST("/api/v1/admin-product/add-product")
+    Call<SuccessBasicDTO> saveProduct(@Body ProductAdminPageDTO productAdminPageDTO);
 }
