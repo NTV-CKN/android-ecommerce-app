@@ -125,6 +125,14 @@ public class ProductAdminPageDTO {
         return stock;
     }
 
+    public String getMainImage() {
+        return mainImage;
+    }
+
+    public void setMainImage(String mainImage) {
+        this.mainImage = mainImage;
+    }
+
     public void setStock(Integer stock) {
         this.stock = stock;
     }

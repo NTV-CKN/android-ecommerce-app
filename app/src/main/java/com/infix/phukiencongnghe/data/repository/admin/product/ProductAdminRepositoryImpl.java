@@ -2,9 +2,12 @@ package com.infix.phukiencongnghe.data.repository.admin.product;
 
 import com.infix.phukiencongnghe.data.dto.ProductAdminPageDTO;
 import com.infix.phukiencongnghe.data.dto.response.PageResponseDTO;
+import com.infix.phukiencongnghe.data.model.ImageUploadWrapper;
 import com.infix.phukiencongnghe.data.source.remote.admin.product.IProductAdminRemoteDataSource;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import retrofit2.Call;
 
@@ -23,6 +26,13 @@ public class ProductAdminRepositoryImpl implements IProductAdminRepository {
     ) {
         return productAdminRemoteDataSource.loadProducts(
                 keyWord, nameCategory, page, pageSize
+        );
+    }
+
+    @Override
+    public void uploadImagesAndSaveProduct(List<ImageUploadWrapper> uploadWrappers, ProductAdminPageDTO productDTO, Consumer<String> callback) {
+        productAdminRemoteDataSource.uploadImagesAndSaveProduct(
+                uploadWrappers, productDTO, callback
         );
     }
 

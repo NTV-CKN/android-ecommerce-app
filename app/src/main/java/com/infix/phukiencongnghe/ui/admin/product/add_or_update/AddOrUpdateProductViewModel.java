@@ -9,9 +9,11 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.ProductAdminPageDTO;
+import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
 import com.infix.phukiencongnghe.data.model.ImageUploadWrapper;
 import com.infix.phukiencongnghe.data.repository.admin.product.IProductAdminRepository;
+import com.infix.phukiencongnghe.utils.AppExecutors;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -37,7 +39,9 @@ public class AddOrUpdateProductViewModel extends ViewModel {
     public LiveData<Boolean> isLoading = _isLoading;
 
     //Quản lí ảnh từ user
-    private final MutableLiveData<Uri> mainImageUri = new MutableLiveData<>();
+    private final MutableLiveData<Uri> _mainImageUri = new MutableLiveData<>();
+    public final LiveData<Uri> mainImageUri = _mainImageUri;
+
     private final MutableLiveData<List<Uri>> subImagesList = new MutableLiveData<>(new ArrayList<>());
     //key là vị trí
     private final Map<Integer, Uri> variantImagesMap = new HashMap<>();
@@ -101,9 +105,9 @@ public class AddOrUpdateProductViewModel extends ViewModel {
         List<ImageUploadWrapper> allUploads = new ArrayList<>();
         String folderId = productDTO.getFolderId();
 
-        if (mainImageUri.getValue() != null) {
+        if (_mainImageUri.getValue() != null) {
             String mainPath = "products/" + folderId + "/main_image.jpg";
-            allUploads.add(new ImageUploadWrapper(mainImageUri.getValue(), mainPath, "MAIN", null));
+            allUploads.add(new ImageUploadWrapper(_mainImageUri.getValue(), mainPath, "MAIN", null));
         }
 
         if (subImagesList.getValue() != null) {
@@ -152,13 +156,40 @@ public class AddOrUpdateProductViewModel extends ViewModel {
         }
     }
 
-    public void setMainImageUri(Uri uri) { mainImageUri.setValue(uri); }
+    public void setMainImageUri(Uri uri) { _mainImageUri.setValue(uri); }
 
     public void addSubImages(List<Uri> uris) {
         List<Uri> current = subImagesList.getValue();
         if (current == null) current = new ArrayList<>();
         current.addAll(uris);
         subImagesList.setValue(current);
+    }
+
+    public void addCategory(CategoryDTO categoryDTO) {
+        if(this.productDTO.getCategoriesDTOS()==null) this.productDTO.setCategoriesDTOS(new ArrayList<>());
+
+        this.productDTO.getCategoriesDTOS().clear();
+        this.productDTO.getCategoriesDTOS().add(categoryDTO);
+    }
+
+    public void saveProduct(ProductAdminPageDTO productAdminPageDTO, List<ImageUploadWrapper> uploadWrappers) {
+        _isLoading.setValue(true);
+        productAdminRepository.uploadImagesAndSaveProduct(
+                uploadWrappers,
+                productAdminPageDTO,
+                s -> {
+                    AppExecutors.getInstance().mainThread().execute(() -> {
+                        _notifyMsg.setValue(s);
+                        _isLoading.setValue(false);
+                    });
+                }
+        );
+    }
+
+    public void resetAllState() {
+        _isLoading.setValue(null);
+        _notifyMsg.setValue(null);
+        _mainImageUri.setValue(null);
     }
 
     public static class Factory implements ViewModelProvider.Factory {
