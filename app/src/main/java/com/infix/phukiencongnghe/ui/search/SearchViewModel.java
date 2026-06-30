@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
-import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
+import com.infix.phukiencongnghe.data.repository.common.product.IProductRepository;
 import com.infix.phukiencongnghe.data.source.local.entity.RecentSearchProductEntity;
 import com.infix.phukiencongnghe.data.source.local.entity.SearchKeywordEntity;
 import com.infix.phukiencongnghe.data.source.local.source.search.ISearchLocalRepository;

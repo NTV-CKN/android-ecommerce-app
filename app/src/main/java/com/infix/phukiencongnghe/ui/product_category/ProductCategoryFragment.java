@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.data.model.Page;
-import com.infix.phukiencongnghe.data.repository.main.category.CategoryRepositoryImpl;
-import com.infix.phukiencongnghe.data.repository.main.product.FeatureProductRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.common.category.CategoryRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.common.product.FeatureProductRepositoryImpl;
 import com.infix.phukiencongnghe.ui.adapter.categories.CategoryAdapter;
 import com.infix.phukiencongnghe.ui.adapter.feature_product.FeatureProductAdapter;
 

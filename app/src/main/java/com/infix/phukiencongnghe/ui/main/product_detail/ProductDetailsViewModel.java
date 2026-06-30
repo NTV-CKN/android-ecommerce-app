@@ -10,7 +10,7 @@ import com.infix.phukiencongnghe.data.dto.request.CartLocalDTO;
 import com.infix.phukiencongnghe.data.dto.response.BadgeCartDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductDetailsDTO;
 import com.infix.phukiencongnghe.data.repository.cart.ICartRepository;
-import com.infix.phukiencongnghe.data.repository.main.product.IProductRepository;
+import com.infix.phukiencongnghe.data.repository.common.product.IProductRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;

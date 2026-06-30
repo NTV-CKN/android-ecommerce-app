@@ -1,5 +1,6 @@
 package com.infix.phukiencongnghe.data.source.remote;
 
+import com.infix.phukiencongnghe.data.source.remote.admin.product.ProductAdminService;
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
@@ -49,6 +50,10 @@ public class RetrofitHelper {
     }
     public static PaymentMethodService getPaymentMethod(){
         return generateRetrofit().create(PaymentMethodService.class);
+    }
+
+    public static ProductAdminService getProductAdminService() {
+        return generateRetrofit().create(ProductAdminService.class);
     }
 
     private static Retrofit generateRetrofit() {
