@@ -60,6 +60,7 @@ dependencies {
 
     //ViewPager2
     implementation(libs.viewpager2)
+    implementation("androidx.cardview:cardview:1.0.0")
 
     //firebase
     implementation(platform(libs.firebase.bom))

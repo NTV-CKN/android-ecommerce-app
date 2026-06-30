@@ -69,11 +69,7 @@
             android:name=".ui.cart.CartActivity"
             android:exported="true" />
         <activity android:name=".ui.search.SearchProductActivity" /> <!-- <activity -->
-        <!-- android:name=".ui.product_category.ProductCategoryActivity" -->
-        <!-- android:exported="true"/> -->
-        <activity
-            android:name=".ui.searchadvance.SearchAdvanceActivity"
-            android:exported="true" />
+
     </application>
 
 </manifest>
