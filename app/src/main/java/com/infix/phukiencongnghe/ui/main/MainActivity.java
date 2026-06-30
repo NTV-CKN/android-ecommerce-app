@@ -15,6 +15,7 @@ import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
 import com.infix.phukiencongnghe.databinding.ActivityMainBinding;
 import com.infix.phukiencongnghe.ui.main.home.HomeFragment;
 import com.infix.phukiencongnghe.ui.product_category.ProductCategoryFragment;
+import com.infix.phukiencongnghe.ui.voucher.VoucherFragment;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -43,11 +44,19 @@ public class MainActivity extends AppCompatActivity {
             int id = menuItem.getItemId();
             if (id == R.id.nav_categories)
                 handleNavCategoryProduct();
+            if(id == R.id.nav_voucher) handleNavVoucher();
             else if (id == R.id.nav_home)
                 handleNavHome();
 
             return true;
         });
+    }
+
+    private void handleNavVoucher() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fcv_main_content, new VoucherFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     private void handleNavHome() {

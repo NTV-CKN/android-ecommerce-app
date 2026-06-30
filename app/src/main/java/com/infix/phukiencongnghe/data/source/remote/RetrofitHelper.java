@@ -9,12 +9,17 @@ import com.infix.phukiencongnghe.data.source.remote.payment.PaymentMethodService
 import com.infix.phukiencongnghe.data.source.remote.ship_fee.ShipFeeByAddressService;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManageService;
 import com.infix.phukiencongnghe.data.source.remote.user_manage.UserProfileService;
+import com.infix.phukiencongnghe.data.source.remote.voucher.VoucherService;
 import com.infix.phukiencongnghe.utils.ApiClient;
 
 import retrofit2.Retrofit;
 
 public class RetrofitHelper {
     private RetrofitHelper(){}
+
+    public static VoucherService getVoucherService() {
+        return generateRetrofit().create(VoucherService.class);
+    }
 
     public static SliderShowService getSliderShow() {
         return generateRetrofit().create(SliderShowService.class);
