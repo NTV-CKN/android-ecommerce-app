@@ -1,5 +1,7 @@
 package com.infix.phukiencongnghe.ui.admin.product.add_or_update;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -8,10 +10,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.ProductAdminPageDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
+import com.infix.phukiencongnghe.data.model.ImageUploadWrapper;
 import com.infix.phukiencongnghe.data.repository.admin.product.IProductAdminRepository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,6 +35,12 @@ public class AddOrUpdateProductViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
     public LiveData<Boolean> isLoading = _isLoading;
+
+    //Quản lí ảnh từ user
+    private final MutableLiveData<Uri> mainImageUri = new MutableLiveData<>();
+    private final MutableLiveData<List<Uri>> subImagesList = new MutableLiveData<>(new ArrayList<>());
+    //key là vị trí
+    private final Map<Integer, Uri> variantImagesMap = new HashMap<>();
 
     private final ProductAdminPageDTO productDTO = new ProductAdminPageDTO();
     private final MutableLiveData<List<ProductVariantDTO>> variantsLiveData = new MutableLiveData<>(new ArrayList<>());
@@ -87,6 +97,39 @@ public class AddOrUpdateProductViewModel extends ViewModel {
         }
     }
 
+    public List<ImageUploadWrapper> prepareAllUploadWrappers() {
+        List<ImageUploadWrapper> allUploads = new ArrayList<>();
+        String folderId = productDTO.getFolderId();
+
+        if (mainImageUri.getValue() != null) {
+            String mainPath = "products/" + folderId + "/main_image.jpg";
+            allUploads.add(new ImageUploadWrapper(mainImageUri.getValue(), mainPath, "MAIN", null));
+        }
+
+        if (subImagesList.getValue() != null) {
+            List<Uri> subs = subImagesList.getValue();
+            for (int i = 0; i < subs.size(); i++) {
+                String subPath = "products/" + folderId + "/sub_images/sub_" + i + ".jpg";
+                allUploads.add(new ImageUploadWrapper(subs.get(i), subPath, "SUB", null));
+            }
+        }
+
+        List<ProductVariantDTO> currentVariants = variantsLiveData.getValue();
+        if (currentVariants != null) {
+            for (int i = 0; i < currentVariants.size(); i++) {
+                Uri variantUri = variantImagesMap.get(i);
+                if (variantUri != null) {
+                    ProductVariantDTO variantDTO = currentVariants.get(i);
+                    String sku = variantDTO.getSku();
+                    String variantPath = "products/" + folderId + "/variants/" + sku + ".jpg";
+                    allUploads.add(new ImageUploadWrapper(variantUri, variantPath, "VARIANT", sku));
+                }
+            }
+        }
+
+        return allUploads;
+    }
+
     public ProductAdminPageDTO prepareProductDTO(String name, String subtitle, String desc, String warranty) {
         productDTO.setName(name);
         productDTO.setSubtitle(subtitle);
@@ -98,6 +141,24 @@ public class AddOrUpdateProductViewModel extends ViewModel {
         }
         productDTO.setProductVariantDTOS(variantsLiveData.getValue());
         return productDTO;
+    }
+
+    public void setVariantImageUri(int position, Uri uri) {
+        variantImagesMap.put(position, uri);
+        List<ProductVariantDTO> currentList = variantsLiveData.getValue();
+        if (currentList != null && position >= 0 && position < currentList.size()) {
+            currentList.get(position).setImageUrl(uri.toString());
+            variantsLiveData.setValue(currentList);
+        }
+    }
+
+    public void setMainImageUri(Uri uri) { mainImageUri.setValue(uri); }
+
+    public void addSubImages(List<Uri> uris) {
+        List<Uri> current = subImagesList.getValue();
+        if (current == null) current = new ArrayList<>();
+        current.addAll(uris);
+        subImagesList.setValue(current);
     }
 
     public static class Factory implements ViewModelProvider.Factory {

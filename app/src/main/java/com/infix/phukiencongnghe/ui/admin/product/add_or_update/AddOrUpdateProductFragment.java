@@ -6,20 +6,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
+import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.dto.ProductAdminPageDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
+import com.infix.phukiencongnghe.data.model.ImageUploadWrapper;
 import com.infix.phukiencongnghe.databinding.FragmentAddOrUpdateProductBinding;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class AddOrUpdateProductFragment extends Fragment {
@@ -28,6 +35,33 @@ public class AddOrUpdateProductFragment extends Fragment {
     private AddOrUpdateProductViewModel viewModel;
     private VariantInputAdapter variantAdapter;
     private LoadingDialog loadingDialog;
+
+    private int targetingVariantPosition = -1;
+
+    private final ActivityResultLauncher<PickVisualMediaRequest> pickMainImageLauncher =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri != null) {
+                    Glide.with(requireContext())
+                            .load(uri)
+                            .error(R.drawable.ic_launcher_background)
+                            .into(binding.ivMainPhoto);
+                    viewModel.setMainImageUri(uri);
+                }
+            });
+
+    private final ActivityResultLauncher<PickVisualMediaRequest> pickVariantImageLauncher =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri != null && targetingVariantPosition != -1) {
+                    viewModel.setVariantImageUri(targetingVariantPosition, uri);
+                }
+            });
+
+//    private final ActivityResultLauncher<PickVisualMediaRequest> pickSubImagesLauncher =
+//            registerForActivityResult(new ActivityResultContracts.PickMultipleVisualMedia(5), uris -> {
+//                if (uris != null && !uris.isEmpty()) {
+//                    viewModel.addSubImages(uris);
+//                }
+//            });
 
     @Nullable
     @Override
@@ -55,6 +89,7 @@ public class AddOrUpdateProductFragment extends Fragment {
         setupUIBehaviors();
         setupRecyclerView();
         observeAOUProductVM();
+        setEvent();
 
         viewModel.getVariantsLiveData().observe(getViewLifecycleOwner(), list -> {
             variantAdapter.updateList(list, viewModel.isUpdate());
@@ -63,7 +98,7 @@ public class AddOrUpdateProductFragment extends Fragment {
 
     private void observeAOUProductVM() {
         viewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
-            if(msg == null) return;
+            if (msg == null) return;
             SnackbarUtils.showBaseSnackbar(
                     binding.getRoot(),
                     msg,
@@ -83,14 +118,18 @@ public class AddOrUpdateProductFragment extends Fragment {
 
         //save total
         binding.btnSaveTotal.setOnClickListener(v -> {
-            ProductAdminPageDTO finalDTO = viewModel.prepareProductDTO(
+            //    if (validateBeforeSave()) {
+            List<ImageUploadWrapper> readyUploads = viewModel.prepareAllUploadWrappers();
+            ProductAdminPageDTO currentDto = viewModel.prepareProductDTO(
                     binding.edtNameInfo.getText().toString(),
                     binding.edtSubtitleInfo.getText().toString(),
                     binding.edtDescInfo.getText().toString(),
                     binding.edtWarrantyInfo.getText().toString()
             );
+            //   }
 
         });
+
     }
 
     private void setupRecyclerView() {
@@ -126,11 +165,28 @@ public class AddOrUpdateProductFragment extends Fragment {
 
             @Override
             public void onSelectImage(int position, ProductVariantDTO item) {
+                if (item.getSku() == null || item.getSku().trim().isEmpty()) {
+                    Toast.makeText(requireContext(), "Vui lòng nhấn nút sinh mã SKU cho biến thể này trước khi chọn ảnh!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                targetingVariantPosition = position;
+
+                pickVariantImageLauncher.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
             }
         });
 
         binding.rvInputVariants.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvInputVariants.setAdapter(variantAdapter);
+    }
+
+    private void setEvent() {
+        binding.ivMainPhoto.setOnClickListener(v -> {
+            pickMainImageLauncher.launch(new PickVisualMediaRequest.Builder()
+                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .build());
+        });
     }
 
     @Override
