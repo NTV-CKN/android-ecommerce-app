@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    style="@style/Base.Theme.PhuKienCongNghe"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/edtSearchCode"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_edt_active"
+        android:hint="Nhập mã voucher..."
+        android:paddingHorizontal="16dp"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="8dp"
+        android:textSize="14sp"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
+        android:inputType="text"
+        android:maxLines="1"
+        android:elevation="2dp"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            app:checkedChip="@+id/chipAll">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAll"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tất cả"
+                android:checked="true"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFixed"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giảm tiền mặt"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPercentage"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giảm theo %"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipShipping"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giảm phí ship"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipOrder"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Giảm theo đơn hàng"/>
+
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvVouchers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+</LinearLayout>

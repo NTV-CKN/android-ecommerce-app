@@ -102,5 +102,7 @@
     <string name="txt_search_product_by_id_or_name">Tìm kiếm tên sản phẩm.</string>
     <string name="txt_order_history">Lịch sử đơn hàng</string>
     <string name="text_code_prefix">Mã: %s</string>
+    <string name="order_detail_list">Danh sách sản phẩm</string>
+    <string name="order_details_title">Chi tiết đơn hàng</string>
 
 </resources>
