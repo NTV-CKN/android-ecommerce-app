@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
 import com.infix.phukiencongnghe.databinding.ActivityMainBinding;
+import com.infix.phukiencongnghe.ui.infoshop.InfoShopFragment;
 import com.infix.phukiencongnghe.ui.main.home.HomeFragment;
 import com.infix.phukiencongnghe.ui.product_category.ProductCategoryFragment;
 import com.infix.phukiencongnghe.ui.voucher.VoucherFragment;
@@ -47,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
             if(id == R.id.nav_voucher) handleNavVoucher();
             else if (id == R.id.nav_home)
                 handleNavHome();
-
+            else if (id == R.id.nav_info) {
+                handleNavInfo();
+            }
             return true;
         });
     }
@@ -70,6 +73,17 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fcv_main_content, new ProductCategoryFragment())
                 .addToBackStack(null)
+                .commit();
+    }
+
+    private void handleNavInfo() {
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(
+                        R.id.fcv_main_content,
+                        new InfoShopFragment()
+                )
                 .commit();
     }
 }

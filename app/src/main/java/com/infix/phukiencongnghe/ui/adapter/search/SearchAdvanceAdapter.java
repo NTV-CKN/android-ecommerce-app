@@ -73,13 +73,17 @@ public class SearchAdvanceAdapter extends
         FeatureProductDTO item =
                 list.get(position);
 
+        // PRODUCT NAME
+
         holder.binding.txtName
-                .setText(item.getName());
+                .setText(
+                        item.getName()
+                );
 
 
         // PRICE
 
-        if(item.getMinPrice() != null){
+        if (item.getMinPrice() != null) {
 
             NumberFormat formatter =
                     NumberFormat.getInstance(
@@ -97,41 +101,51 @@ public class SearchAdvanceAdapter extends
         } else {
 
             holder.binding.txtPrice
-                    .setText("0");
+                    .setText("0 ₫");
         }
 
 
         // RATING
 
-        if(item.getAvgStar() != null){
+        if (item.getAvgStar() != null) {
 
             holder.binding.txtRating
                     .setText(
-                            "★ " +
-                                    String.format(
-                                            "%.1f",
-                                            item.getAvgStar()
-                                    )
+                            String.format(
+                                    "%.1f",
+                                    item.getAvgStar()
+                            )
                     );
 
         } else {
 
             holder.binding.txtRating
-                    .setText(
-                            "★ 0.0"
-                    );
+                    .setText("0.0");
         }
 
 
         // IMAGE
 
-        Glide.with(holder.itemView.getContext())
-                .load(item.getMainImage())
-                .into(holder.binding.imgProduct);
+        Glide.with(
+                        holder.itemView.getContext()
+                )
+                .load(
+                        item.getMainImage()
+                )
+                .into(
+                        holder.binding.imgProduct
+                );
 
+
+        // CLICK
 
         holder.itemView.setOnClickListener(
-                v -> listener.onClick(item)
+                v -> {
+
+                    if (listener != null) {
+                        listener.onClick(item);
+                    }
+                }
         );
     }
 

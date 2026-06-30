@@ -7,67 +7,64 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 
-    android:layout_margin="1dp"
+    android:layout_margin="6dp"
 
-    app:cardCornerRadius="10dp"
-    app:cardElevation="1dp">
-
+    app:cardCornerRadius="12dp"
+    app:cardBackgroundColor="@color/tech_surface"
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:orientation="vertical"
-
-        android:padding="5dp">
-
+        android:orientation="vertical">
 
         <!-- IMAGE -->
 
         <ImageView
             android:id="@+id/img_product"
-
             android:layout_width="match_parent"
-            android:layout_height="95dp"
-
-            android:scaleType="fitCenter"/>
+            android:layout_height="140dp"
+            android:scaleType="centerCrop"
+            android:background="@color/tech_background"/>
 
 
         <!-- PRODUCT NAME -->
 
         <TextView
             android:id="@+id/txt_name"
-
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
 
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
 
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textStyle="bold"
 
+            android:textColor="@color/tech_text_main"
+
             android:maxLines="2"
-            android:minLines="2"
-
-            android:ellipsize="end"
-
-            android:textColor="#222222"/>
+            android:ellipsize="end"/>
 
 
-        <!-- BOTTOM ROW -->
+        <!-- PRICE + STAR -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:layout_marginTop="4dp"
-
             android:orientation="horizontal"
+
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
 
             android:gravity="center_vertical">
 
 
-            <!-- PRICE LEFT -->
+            <!-- PRICE -->
 
             <TextView
                 android:id="@+id/txt_price"
@@ -80,12 +77,12 @@
                 android:textSize="14sp"
                 android:textStyle="bold"
 
-                android:textColor="#FFC107"
+                android:textColor="@color/tech_text_main"
 
                 android:maxLines="1"/>
 
 
-            <!-- RATING RIGHT -->
+            <!-- STAR -->
 
             <TextView
                 android:id="@+id/txt_rating"
@@ -93,12 +90,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:text="★ 4.5"
+                android:textSize="13sp"
 
-                android:textSize="12sp"
                 android:textStyle="bold"
 
-                android:textColor="#FFA000"/>
+                android:textColor="@color/tech_text_main"
+
+                android:drawableStart="@drawable/ic_product_star"
+
+                android:drawablePadding="4dp"
+
+                android:gravity="center_vertical"
+
+                android:text="0.0"/>
 
         </LinearLayout>
 

@@ -230,7 +230,7 @@ public class SearchAdvanceFragment extends Fragment {
             rvProduct.addItemDecoration(
                     new GridSpacingItemDecoration(
                             2,
-                            2
+                            12
                     )
             );
         }
@@ -249,13 +249,9 @@ public class SearchAdvanceFragment extends Fragment {
                     rvProduct.setAdapter(
                             new SearchAdvanceAdapter(
                                     products,
-
                                     product -> {
 
-                                        // lưu recent viewed giống SearchFragment
-                                        viewModel.saveRecentProduct(
-                                                product
-                                        );
+                                        viewModel.saveRecentProduct(product);
 
                                         ProductDetailsFragment fragment =
                                                 ProductDetailsFragment
@@ -263,13 +259,13 @@ public class SearchAdvanceFragment extends Fragment {
                                                                 product.getId()
                                                         );
 
-                                        if(isAdded()) {
+                                        if (isAdded()) {
 
                                             requireActivity()
                                                     .getSupportFragmentManager()
                                                     .beginTransaction()
                                                     .replace(
-                                                            R.id.search_advance_container,
+                                                            R.id.fcv_main_content,
                                                             fragment
                                                     )
                                                     .addToBackStack(null)
@@ -278,38 +274,52 @@ public class SearchAdvanceFragment extends Fragment {
                                     }
                             )
                     );
-
-                    Integer current = 1;
-
-                    if (viewModel.getPaginationManager()
-                            .currentPage.getValue() != null) {
-
-                        current =
-                                viewModel
-                                        .getPaginationManager()
-                                        .currentPage
-                                        .getValue()
-                                        .getPage();
-                    }
-
-                    Integer total = 1;
-
-                    if (viewModel.getPaginationManager()
-                            .totalPages.getValue() != null) {
-
-                        total =
-                                viewModel
-                                        .getPaginationManager()
-                                        .totalPages
-                                        .getValue();
-                    }
-
-                    paginationBar.updatePagination(
-                            current,
-                            total
-                    );
                 }
         );
+
+
+        viewModel.getPaginationManager()
+                .totalPages
+                .observe(
+                        getViewLifecycleOwner(),
+
+                        total -> {
+
+                            if (total == null)
+                                return;
+
+                            Integer current = 1;
+
+                            if (viewModel.getPaginationManager()
+                                    .currentPage.getValue() != null) {
+
+                                current =
+                                        viewModel
+                                                .getPaginationManager()
+                                                .currentPage
+                                                .getValue()
+                                                .getPage();
+                            }
+
+                            if (total <= 1) {
+
+                                paginationBar.setVisibility(
+                                        View.GONE
+                                );
+
+                            } else {
+
+                                paginationBar.setVisibility(
+                                        View.VISIBLE
+                                );
+
+                                paginationBar.updatePagination(
+                                        current,
+                                        total
+                                );
+                            }
+                        }
+                );
     }
 
 
@@ -734,7 +744,9 @@ public class SearchAdvanceFragment extends Fragment {
 
         edtSearch.setOnClickListener(v -> {
 
-            requireActivity().finish();
+            requireActivity()
+                    .getSupportFragmentManager()
+                    .popBackStack();
         });
     }
 }

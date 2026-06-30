@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import com.infix.phukiencongnghe.ui.search.SearchFragment;
 
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
@@ -124,6 +125,11 @@ public class HeaderFragment extends Fragment {
     private void setEvents() {
         //imgAvatar
         imgView_user_header_fragment.setOnClickListener(v -> handleImageAvatarClick());
+
+        imgView_search_header_fragment
+                .setOnClickListener(
+                        v -> handleSearchClick()
+                );
     }
 
     private void handleImageAvatarClick() {
@@ -141,6 +147,19 @@ public class HeaderFragment extends Fragment {
             intent = new Intent(requireContext(), AuthActivity.class);
         }
         startActivity(intent);
+    }
+
+    private void handleSearchClick() {
+
+        requireActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(
+                        R.id.fcv_main_content,
+                        new SearchFragment()
+                )
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

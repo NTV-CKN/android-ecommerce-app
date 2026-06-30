@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="13dp"
     android:background="#F8F8F8">
 
     <!-- SEARCH BOX -->
@@ -100,8 +100,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_recent_product"
         android:layout_width="match_parent"
-        android:layout_height="340dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:nestedScrollingEnabled="false"/>
 
 
     <!-- SEARCH RESULT -->

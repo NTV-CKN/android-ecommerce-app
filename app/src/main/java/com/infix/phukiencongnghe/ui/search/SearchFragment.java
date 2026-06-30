@@ -8,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.content.Intent;
 import android.view.inputmethod.EditorInfo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +23,7 @@ import com.infix.phukiencongnghe.ui.adapter.search.RecentSearchProductAdapter;
 import com.infix.phukiencongnghe.ui.adapter.search.SearchKeywordAdapter;
 import com.infix.phukiencongnghe.ui.adapter.search.SearchResultAdapter;
 import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
-import com.infix.phukiencongnghe.ui.searchadvance.SearchAdvanceActivity;
+import com.infix.phukiencongnghe.ui.searchadvance.SearchAdvanceFragment;
 
 
 public class SearchFragment extends Fragment {
@@ -67,6 +66,7 @@ public class SearchFragment extends Fragment {
         observeData();
         setupSearchListener();
         setupKeyboardSearch();
+        loadInitialKeyword();
         showHistoryLayout();
 
         return binding.getRoot();
@@ -149,7 +149,7 @@ public class SearchFragment extends Fragment {
                                                             .getSupportFragmentManager()
                                                             .beginTransaction()
                                                             .replace(
-                                                                    R.id.search_fragment_container,
+                                                                    R.id.fcv_main_content,
                                                                     fragment
                                                             )
                                                             .addToBackStack(null)
@@ -220,7 +220,7 @@ public class SearchFragment extends Fragment {
                                                             .getSupportFragmentManager()
                                                             .beginTransaction()
                                                             .replace(
-                                                                    R.id.search_fragment_container,
+                                                                    R.id.fcv_main_content,
                                                                     fragment
                                                             )
                                                             .addToBackStack(null)
@@ -309,18 +309,19 @@ public class SearchFragment extends Fragment {
 
                         if (!keyword.isEmpty()) {
 
-                            Intent intent =
-                                    new Intent(
-                                            requireContext(),
-                                            SearchAdvanceActivity.class
-                                    );
+                            SearchAdvanceFragment fragment =
+                                    SearchAdvanceFragment
+                                            .newInstance(keyword);
 
-                            intent.putExtra(
-                                    "keyword",
-                                    keyword
-                            );
-
-                            startActivity(intent);
+                            requireActivity()
+                                    .getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(
+                                            R.id.fcv_main_content,
+                                            fragment
+                                    )
+                                    .addToBackStack(null)
+                                    .commit();
                         }
 
                         return true;
@@ -403,4 +404,5 @@ public class SearchFragment extends Fragment {
         binding.rvSearchResult
                 .setVisibility(View.VISIBLE);
     }
+
 }
