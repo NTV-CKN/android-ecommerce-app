@@ -17,19 +17,25 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.dto.response.CheckoutProductDTO;
 import com.infix.phukiencongnghe.data.dto.response.PaymentMethodDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
+import com.infix.phukiencongnghe.data.dto.response.VoucherDTO;
 import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.payment.PaymentMethodRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.ship_fee.ShipFeeByAddressRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
+import com.infix.phukiencongnghe.data.source.remote.ship_fee.ShipFeeByAddressService;
 import com.infix.phukiencongnghe.databinding.FragmentPaymentBinding;
 import com.infix.phukiencongnghe.databinding.FragmentProductDetailsBinding;
 import com.infix.phukiencongnghe.ui.adapter.payment.PaymentProductAdapter;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
+import com.infix.phukiencongnghe.ui.payment.shipfee.ShippingViewModel;
 import com.infix.phukiencongnghe.ui.user_manage.UserManagerActivity;
 import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageFragment;
 import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageViewModel;
+import com.infix.phukiencongnghe.ui.voucher.VoucherFragment;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
@@ -43,6 +49,9 @@ public class PaymentFragment extends Fragment {
     private FragmentPaymentBinding binding;
     private UserAddressManageViewModel userAddressManageViewModel;
     private PaymentMethodViewModel paymentMethodViewModel;
+    private ShippingViewModel shippingViewModel;
+    private double currentShippingFee = 0.0;
+    private double totalPrice = 0.0;
     private UserAddressDTO selectedAddress;
     private ActivityResultLauncher<Intent> selectAddressLauncher;
     private LoadingDialog loadingDialog;
@@ -50,7 +59,11 @@ public class PaymentFragment extends Fragment {
     private boolean isBuyNow = false;
     private Integer buyNowProductId = 0;
     private Integer buyNowVariantId = 0;
+    private final DecimalFormat format = new DecimalFormat("#,###đ");
     private Integer buyNowQuantity = 1;
+    private VoucherDTO selectedShippingVoucher = null;
+    private VoucherDTO selectedOrderVoucher = null;
+    private VoucherDTO appliedVoucher = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,9 +105,110 @@ public class PaymentFragment extends Fragment {
                 showProductCheckout(productName, productPrice,productImage,productImage, buyNowQuantity);
             }
         }
+
+        getParentFragmentManager().setFragmentResultListener("REQUEST_KEY_SHIPPING", getViewLifecycleOwner(), (requestKey, result) -> {
+            VoucherDTO voucher = (VoucherDTO) result.getSerializable("SELECTED_VOUCHER");
+            if (voucher != null) {
+                this.selectedShippingVoucher = voucher;
+                binding.paymentTvVoucherStatus.setText("Mã vận chuyển: " + voucher.getCode());
+                binding.paymentTvVoucherStatus.setTextColor(Color.parseColor("#2E7D32"));
+                calculatePayment();
+            }
+        });
+
+
+        getParentFragmentManager().setFragmentResultListener("REQUEST_KEY_ORDER", getViewLifecycleOwner(), (requestKey, result) -> {
+            VoucherDTO voucher = (VoucherDTO) result.getSerializable("SELECTED_VOUCHER");
+            if (voucher != null) {
+                this.selectedOrderVoucher = voucher;
+                binding.paymentTvVoucherOrderStatus.setText("Voucher đơn hàng: " + voucher.getCode());
+                binding.paymentTvVoucherOrderStatus.setTextColor(Color.parseColor("#2E7D32"));
+                calculatePayment();
+            }
+        });
         initPaymentMethods();
         initUserAddressManage();
+        initShippingFee();
         setEvent();
+        restoreVouchersUI();
+    }
+
+    private void restoreVouchersUI() {
+        if (selectedShippingVoucher != null) {
+            binding.paymentTvVoucherStatus.setText("Mã vận chuyển: " + selectedShippingVoucher.getCode());
+            binding.paymentTvVoucherStatus.setTextColor(Color.parseColor("#2E7D32"));
+        }
+        if (selectedOrderVoucher != null) {
+            binding.paymentTvVoucherOrderStatus.setText("Voucher đơn hàng: " + selectedOrderVoucher.getCode());
+            binding.paymentTvVoucherOrderStatus.setTextColor(Color.parseColor("#2E7D32"));
+        }
+        calculatePayment();
+    }
+
+    private void initShippingFee() {
+        ShippingViewModel.Factory factory = new ShippingViewModel.Factory(InjectUtils.createShipFeeByAddressRepository());
+        shippingViewModel = new ViewModelProvider(this,factory).get(ShippingViewModel.class);
+        shippingViewModel.shipFeeData.observe(getViewLifecycleOwner(), shipfeeDTO->{
+            if(shipfeeDTO!=null&&shipfeeDTO.getPrice()!=null){
+                this.currentShippingFee = shipfeeDTO.getPrice();
+                binding.tvShippingFeeValue.setText(currentShippingFee == 0 ? "Miễn phí" : format.format(currentShippingFee));
+                calculatePayment();
+            }
+        });
+        shippingViewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
+            if (msg != null) {
+                SnackbarUtils.showBaseSnackbar(binding.getRoot(), "Lỗi tính ship: " + msg, Snackbar.LENGTH_SHORT);
+            }
+        });
+    }
+    private double getVoucherDiscountAmount(VoucherDTO voucher, double baseAmount) {
+        if (voucher == null) return 0.0;
+
+        if (voucher.getDiscountType() != null && "PERCENTAGE".equals(voucher.getDiscountType().name())) {
+            double calculatedDiscount = baseAmount * (voucher.getDiscountValue() / 100.0);
+            return calculatedDiscount;
+        } else {
+            return voucher.getDiscountValue();
+        }
+    }
+    private void calculatePayment() {
+        double discountOrderValue = 0.0;
+        double discountShippingValue = 0.0;
+
+        // 1. Tính toán giảm giá đơn hàng sản phẩm
+        if (selectedOrderVoucher != null) {
+            discountOrderValue = getVoucherDiscountAmount(selectedOrderVoucher, this.totalPrice);
+        }
+
+        // 2. Tính toán giảm giá tiền vận chuyển
+        if (selectedShippingVoucher != null) {
+            discountShippingValue = getVoucherDiscountAmount(selectedShippingVoucher, this.currentShippingFee);
+            if (discountShippingValue > this.currentShippingFee) {
+                discountShippingValue = this.currentShippingFee; // Không giảm vượt quá tiền ship gốc
+            }
+        }
+
+        // 3. Cập nhật hiển thị tiền ship sau giảm giá
+        double finalShippingFee = this.currentShippingFee - discountShippingValue;
+//        binding.tvShippingFeeValue.setText(finalShippingFee == 0 ? "Miễn phí" : format.format(finalShippingFee));
+
+        if (discountOrderValue > 0 && discountShippingValue > 0) {
+            String detailDiscount = "-" + format.format(discountShippingValue) + " (Ship) + -" + format.format(discountOrderValue) + " (Đơn)";
+            binding.tvDiscountValue.setText(detailDiscount);
+        } else if (discountShippingValue > 0) {
+            binding.tvDiscountValue.setText("-" + format.format(discountShippingValue) + " (Ship)");
+        } else if (discountOrderValue > 0) {
+            binding.tvDiscountValue.setText("-" + format.format(discountOrderValue) + " (Đơn)");
+        } else {
+            binding.tvDiscountValue.setText("0đ");
+        }
+
+        // 4. Tính tổng hóa đơn cuối cùng cần thanh toán
+        double finalProductPrice = this.totalPrice - discountOrderValue;
+        if (finalProductPrice < 0) finalProductPrice = 0;
+
+        double totalPayment = finalProductPrice + finalShippingFee;
+        binding.paymentTvTotalValue.setText(format.format(totalPayment));
     }
 
     private void initPaymentMethods() {
@@ -131,14 +245,9 @@ public class PaymentFragment extends Fragment {
         binding.rvPaymentItems.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvPaymentItems.setAdapter(adapter);
 
-        long totalPrice = productPrice * buyNowQuantity;
-        long shipfee = 0; // chua lam
-        long totalPayment = totalPrice + shipfee;// tam thoi
+        this.totalPrice = productPrice * buyNowQuantity;
         binding.paymentTvSubtotalValue.setText(format.format(totalPrice));
-        binding.tvShippingFeeValue.setText(shipfee == 0 ? "Miễn phí" : format.format(shipfee));
-        binding.paymentTvTotalValue.setText(format.format(totalPayment));
-
-
+        calculatePayment();
     }
 
     private void setEvent() {
@@ -149,6 +258,34 @@ public class PaymentFragment extends Fragment {
                 SnackbarUtils.showBaseSnackbar(binding.getRoot(),"Đang chuyển đến trang tạo địa chỉ...",Snackbar.LENGTH_SHORT);
             }
             selectAddressLauncher.launch(intent);
+        });
+        binding.paymentCardVoucher.setOnClickListener(v->{
+            VoucherFragment voucherFragment = new VoucherFragment();
+            Bundle args =  new Bundle();
+            args.putString("PAYMENT_TARGET_TYPE", "SHIPPING");
+            args.putDouble("CURRENT_TOTAL_PRICE", this.totalPrice);
+            voucherFragment.setArguments(args);
+
+            if (getParentFragmentManager() != null) {
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fcv_main_content, voucherFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+        binding.paymentCardVoucherOrder.setOnClickListener(v->{
+            VoucherFragment voucherFragment = new VoucherFragment();
+            Bundle args = new Bundle();
+            args.putString("PAYMENT_TARGET_TYPE", "MAIN_ORDER");
+            args.putDouble("CURRENT_TOTAL_PRICE", this.totalPrice);
+            voucherFragment.setArguments(args);
+
+            if (getParentFragmentManager() != null) {
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fcv_main_content, voucherFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
         });
         binding.btnPlaceOrder.setOnClickListener(v ->{
             if(selectedAddress==null){
@@ -210,5 +347,8 @@ public class PaymentFragment extends Fragment {
         binding.paymentTvReceiverNamePhone.setText(addressDTO.getReceiverName() + " · " + addressDTO.getPhoneNumber());
         binding.paymentTvAddressDetail.setText(addressDTO.getAddressDetail());
         binding.paymentTvAddressDetail.setTextColor(Color.GRAY);
+        if (addressDTO.getProvinceCity() != null && !addressDTO.getProvinceCity().isEmpty()) {
+            shippingViewModel.calculateShippingFee(addressDTO.getProvinceCity());
+        }
     }
 }
