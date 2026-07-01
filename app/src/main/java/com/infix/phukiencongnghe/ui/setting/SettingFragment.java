@@ -17,6 +17,7 @@ import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.fragment.app.Fragment;
 
 import com.infix.phukiencongnghe.R;
@@ -86,24 +87,10 @@ public class SettingFragment extends Fragment {
     }
 
     private void setLocale(String langCode) {
-        Locale locale = new Locale(langCode);
-        Locale.setDefault(locale);
-
-        Resources resources = requireContext().getResources();
-        Configuration config = resources.getConfiguration();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            config.setLocale(locale);
-            requireContext().createConfigurationContext(config);
-        } else {
-            config.locale = locale;
-        }
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
         SharedPreferences.Editor editor = pre.edit();
         editor.putString("lang_code", langCode);
         editor.apply();
-        if (getActivity() != null) {
-            getActivity().recreate();
-        }
+        LocaleListCompat appLocale = LocaleListCompat.forLanguageTags(langCode);
+        AppCompatDelegate.setApplicationLocales(appLocale);
     }
 }
