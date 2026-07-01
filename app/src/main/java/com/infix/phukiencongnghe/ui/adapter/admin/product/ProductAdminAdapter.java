@@ -95,7 +95,7 @@ public class ProductAdminAdapter extends RecyclerView.Adapter<ProductAdminAdapte
             binding.tvWarrantyMonthsIap.setText(String.format("Bảo hành: %d tháng", warranty));
 
             Glide.with(binding.ivMainImageIap.getContext())
-                    .load(product.getImages() != null && !product.getImages().isEmpty() ? product.getImages().get(0) : null)
+                    .load(product.getMainImage())
                     .error(R.drawable.ic_launcher_background)
                     .into(binding.ivMainImageIap);
 
