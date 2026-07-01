@@ -158,9 +158,6 @@ public class CartFragment extends Fragment {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra("OPEN_PAYMENT", true);
                 intent.putExtra("CHECKOUT_PRODUCTS_LIST", checkoutProductDTOS);
-                if (viewModel != null) {
-                    viewModel.clearCartLocal();
-                }
                 startActivity(intent);
                 getActivity().finish();
             }

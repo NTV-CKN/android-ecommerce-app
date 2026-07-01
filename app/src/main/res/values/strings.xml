@@ -111,5 +111,21 @@
     <string name="txt_subtitle">Tiêu đề phụ (Subtitle)</string>
     <string name="txt_name_general_product">Tên sản phẩm chung</string>
     <string name="txt_add_new_product_variant">THÊM BIẾN THỂ MỚI</string>
+    <string name="hint_voucher_search">Nhập mã voucher...</string>
+    <string name="chip_voucher_all">Tất cả</string>
+    <string name="chip_voucher_fixed_amount">Giảm tiền mặt</string>
+    <string name="chip_voucher_percentage">Giảm theo %</string>
+    <string name="chip_voucher_shipping">Giảm phí ship</string>
+    <string name="chip_voucher_main_order">Giảm theo đơn hàng</string>
+    <string name="chip_admin_voucher_all">Tất cả</string>
+    <string name="chip_admin_voucher_fixed_amount">Giảm tiền mặt</string>
+    <string name="chip_admin_voucher_percentage">Giảm theo %</string>
+    <string name="chip_admin_voucher_ship">Giảm phí ship</string>
+    <string name="chip_admin_voucher_order">Giảm theo đơn hàng</string>
+    <string name="home_bottom_navbar">Trang chủ</string>
+    <string name="category_bottom_navbar">Danh mục</string>
+    <string name="voucher_bottom_navbar">Voucher</string>
+    <string name="info_bottom_navbar">Thông tin</string>
+    <string name="setting_bottom_navbar">Cài đặt</string>
 
 </resources>

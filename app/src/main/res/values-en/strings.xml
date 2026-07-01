@@ -110,4 +110,20 @@
     <string name="txt_subtitle">Subtitle</string>
     <string name="txt_name_general_product">General product name</string>
     <string name="txt_add_new_product_variant">ADD NEW VARIANT</string>
+    <string name="hint_voucher_search">Search voucher code...</string>
+    <string name="chip_voucher_all">All voucher</string>
+    <string name="chip_voucher_fixed_amount">Fixed voucher</string>
+    <string name="chip_voucher_percentage">Percentage voucher</string>
+    <string name="chip_voucher_shipping">Ship voucher</string>
+    <string name="chip_voucher_main_order">Order voucher</string>
+    <string name="chip_admin_voucher_all">All</string>
+    <string name="chip_admin_voucher_fixed_amount">Fixed voucher</string>
+    <string name="chip_admin_voucher_percentage">Percentage voucher</string>
+    <string name="chip_admin_voucher_ship">Ship voucher</string>
+    <string name="chip_admin_voucher_order">Order voucher</string>
+    <string name="home_bottom_navbar">Home</string>
+    <string name="category_bottom_navbar">Categories</string>
+    <string name="voucher_bottom_navbar">Voucher</string>
+    <string name="info_bottom_navbar">Information</string>
+    <string name="setting_bottom_navbar">Settings</string>
 </resources>
