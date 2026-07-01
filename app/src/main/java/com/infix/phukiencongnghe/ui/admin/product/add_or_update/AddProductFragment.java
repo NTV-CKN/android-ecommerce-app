@@ -21,8 +21,6 @@ import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.dto.ProductAdminPageDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
 import com.infix.phukiencongnghe.data.model.ImageUploadWrapper;
-import com.infix.phukiencongnghe.data.repository.common.category.CategoryRepositoryImpl;
-import com.infix.phukiencongnghe.data.repository.common.product.FeatureProductRepositoryImpl;
 import com.infix.phukiencongnghe.databinding.FragmentAddOrUpdateProductBinding;
 import com.infix.phukiencongnghe.ui.adapter.categories.CategoryAdapter;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
@@ -32,13 +30,12 @@ import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
-public class AddOrUpdateProductFragment extends Fragment {
+public class AddProductFragment extends Fragment {
 
     private FragmentAddOrUpdateProductBinding binding;
 
-    private AddOrUpdateProductViewModel viewModel;
+    private AddProductViewModel viewModel;
     private ProductCategoryViewModel productCategoryViewModel;
 
     private VariantInputAdapter variantAdapter;
@@ -76,12 +73,12 @@ public class AddOrUpdateProductFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AddOrUpdateProductViewModel.Factory factory =
-                new AddOrUpdateProductViewModel.Factory(
+        AddProductViewModel.Factory factory =
+                new AddProductViewModel.Factory(
                         InjectUtils.createProductAdminRepository()
                 );
         loadingDialog = new LoadingDialog();
-        viewModel = new ViewModelProvider(this, factory).get(AddOrUpdateProductViewModel.class);
+        viewModel = new ViewModelProvider(this, factory).get(AddProductViewModel.class);
 
         if (getArguments() != null) {
             boolean isEdit = getArguments().getBoolean("IS_UPDATE_MODE", false);

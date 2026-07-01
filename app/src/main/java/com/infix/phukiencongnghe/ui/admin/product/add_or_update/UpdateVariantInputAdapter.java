@@ -1,12 +1,13 @@
 package com.infix.phukiencongnghe.ui.admin.product.add_or_update;
 
+import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -16,36 +17,47 @@ import com.infix.phukiencongnghe.databinding.ItemInputVariantsBinding;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapter.ViewHolder> {
+/**
+ * Adapter dành RIÊNG cho màn hình Update sản phẩm.
+ * Khác với VariantInputAdapter (dùng cho Add):
+ *  - Luôn ẩn nút xoá biến thể (không cho xoá biến thể khi update)
+ *  - Luôn khoá field SKU (không cho sửa / sinh lại SKU)
+ *  - Ưu tiên hiển thị ảnh local (mới chọn qua PhotoPicker) thay vì ảnh server,
+ *    thông qua LocalImageResolver
+ *  - Fix lỗi alias list ở updateList() (list truyền vào bị chính nó làm rỗng)
+ */
+public class UpdateVariantInputAdapter extends RecyclerView.Adapter<UpdateVariantInputAdapter.ViewHolder> {
 
     private final List<ProductVariantDTO> variants = new ArrayList<>();
     private final OnVariantActionListener listener;
-    private boolean isUpdateMode = false;
+    private LocalImageResolver localImageResolver;
 
     public interface OnVariantActionListener {
-        void onDelete(int position);
         void onSelectImage(int position, ProductVariantDTO item);
-        void onGenerateSkuRequested(int position, ProductVariantDTO item);
     }
 
-    public VariantInputAdapter(OnVariantActionListener listener) {
+    public interface LocalImageResolver {
+        @Nullable Uri resolve(String sku);
+    }
+
+    public UpdateVariantInputAdapter(OnVariantActionListener listener) {
         this.listener = listener;
+    }
+
+    public void setLocalImageResolver(LocalImageResolver resolver) {
+        this.localImageResolver = resolver;
     }
 
     public void triggerNotifyItemChanged(int pos) {
         notifyItemChanged(pos);
     }
 
-    public void updateList(List<ProductVariantDTO> newList, boolean isUpdateMode) {
-        this.isUpdateMode = isUpdateMode;
+    public void updateList(List<ProductVariantDTO> newList) {
+        List<ProductVariantDTO> safeCopy = newList != null ? new ArrayList<>(newList) : new ArrayList<>();
         variants.clear();
-        if (newList != null) {
-            variants.addAll(newList);
-            Log.d("VariantInputAdapter",""+ newList.size());
-        }
+        variants.addAll(safeCopy);
         notifyDataSetChanged();
     }
 
@@ -68,9 +80,13 @@ public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapte
         return variants.size();
     }
 
+    public List<ProductVariantDTO> getVariants() {
+        return variants;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ItemInputVariantsBinding binding;
-        private CustomTextWatcher skuWatcher, nameWatcher, priceWatcher, stockWatcher, colorWatcher, sizeWatcher, gramWatcher;
+        private CustomTextWatcher nameWatcher, priceWatcher, stockWatcher, colorWatcher, sizeWatcher, gramWatcher;
 
         public ViewHolder(@NonNull ItemInputVariantsBinding binding) {
             super(binding.getRoot());
@@ -88,16 +104,26 @@ public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapte
             binding.edtSize.setText(item.getSize());
             binding.edtGram.setText(item.getGram() != null ? String.valueOf(item.getGram()) : "0");
 
-            if (isUpdateMode) {
-                binding.btnDeleteVariant.setVisibility(View.GONE);
-            } else {
-                binding.btnDeleteVariant.setVisibility(View.VISIBLE);
-            }
+            // Update mode: khoá cứng SKU và luôn ẩn nút xoá
+            binding.edtSku.setEnabled(false);
+            binding.edtSku.setFocusable(false);
+            binding.tlSku.setEndIconVisible(false);
+            binding.btnDeleteVariant.setVisibility(View.GONE);
 
-            Glide.with(binding.ivVariantPhoto.getContext())
-                    .load(item.getImageUrl())
-                    .placeholder(R.drawable.ic_add_24px)
-                    .into(binding.ivVariantPhoto);
+            Uri localUri = localImageResolver != null ? localImageResolver.resolve(item.getSku()) : null;
+            if (localUri != null) {
+                // Ưu tiên ảnh vừa chọn từ PhotoPicker (chưa upload)
+                Glide.with(binding.ivVariantPhoto.getContext())
+                        .load(localUri)
+                        .placeholder(R.drawable.ic_add_24px)
+                        .into(binding.ivVariantPhoto);
+            } else {
+                Glide.with(binding.ivVariantPhoto.getContext())
+                        .load(item.getImageUrl())
+                        .placeholder(R.drawable.ic_add_24px)
+                        .error(R.drawable.ic_add_24px)
+                        .into(binding.ivVariantPhoto);
+            }
 
             initTextWatchers(item);
 
@@ -107,24 +133,9 @@ public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapte
                     listener.onSelectImage(pos, variants.get(pos));
                 }
             });
-
-            binding.tlSku.setEndIconOnClickListener(v -> {
-                int pos = getBindingAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onGenerateSkuRequested(pos, variants.get(pos));
-                }
-            });
-
-            binding.btnDeleteVariant.setOnClickListener(v -> {
-                int pos = getBindingAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onDelete(pos);
-                }
-            });
         }
 
         private void initTextWatchers(ProductVariantDTO item) {
-            skuWatcher = new CustomTextWatcher(s -> item.setSku(s.trim()));
             nameWatcher = new CustomTextWatcher(s -> item.setName(s.trim()));
             priceWatcher = new CustomTextWatcher(s -> {
                 try { item.setPrice(new BigDecimal(s)); } catch (Exception e) { item.setPrice(BigDecimal.ZERO); }
@@ -155,11 +166,6 @@ public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapte
             if (gramWatcher != null) binding.edtGram.removeTextChangedListener(gramWatcher);
         }
     }
-
-    public List<ProductVariantDTO> getVariants() {
-        return variants;
-    }
-
 
     private static class CustomTextWatcher implements TextWatcher {
         private final OnTextChangedListener listener;
