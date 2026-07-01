@@ -18,31 +18,31 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.data.dto.request.OrderRequestDTO;
 import com.infix.phukiencongnghe.data.dto.response.CheckoutProductDTO;
 import com.infix.phukiencongnghe.data.dto.response.PaymentMethodDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.data.dto.response.VoucherDTO;
-import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.payment.PaymentMethodRepositoryImpl;
-import com.infix.phukiencongnghe.data.repository.ship_fee.ShipFeeByAddressRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
-import com.infix.phukiencongnghe.data.source.remote.ship_fee.ShipFeeByAddressService;
 import com.infix.phukiencongnghe.databinding.FragmentPaymentBinding;
-import com.infix.phukiencongnghe.databinding.FragmentProductDetailsBinding;
 import com.infix.phukiencongnghe.ui.adapter.payment.PaymentProductAdapter;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.payment.shipfee.ShippingViewModel;
 import com.infix.phukiencongnghe.ui.user_manage.UserManagerActivity;
-import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageFragment;
 import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageViewModel;
 import com.infix.phukiencongnghe.ui.voucher.VoucherFragment;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
+import okhttp3.ResponseBody;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class PaymentFragment extends Fragment {
@@ -64,6 +64,7 @@ public class PaymentFragment extends Fragment {
     private VoucherDTO selectedShippingVoucher = null;
     private VoucherDTO selectedOrderVoucher = null;
     private VoucherDTO appliedVoucher = null;
+    private List<CheckoutProductDTO> paymentProductList = new ArrayList<>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,14 +96,23 @@ public class PaymentFragment extends Fragment {
         if (getArguments() != null) {
             boolean isBuyNow = getArguments().getBoolean("IS_BUY_NOW", false);
             if (isBuyNow) {
-                 this.buyNowProductId = getArguments().getInt("BUY_NOW_PRODUCT_ID");
-                 this.buyNowVariantId = getArguments().getInt("BUY_NOW_VARIANT_ID");
-                 this.buyNowQuantity = getArguments().getInt("BUY_NOW_QUANTITY", 1);
+                // mua ngay
+                this.buyNowProductId = getArguments().getInt("BUY_NOW_PRODUCT_ID");
+                this.buyNowVariantId = getArguments().getInt("BUY_NOW_VARIANT_ID");
+                this.buyNowQuantity = getArguments().getInt("BUY_NOW_QUANTITY", 1);
                 String productName =  getArguments().getString("BUY_NOW_PRODUCT_NAME","");
                 Long productPrice = getArguments().getLong("BUY_NOW_PRODUCT_PRICE", 0);
                 String productImage = getArguments().getString("BUY_NOW_PRODUCT_IMAGE", "");
 
                 showProductCheckout(productName, productPrice,productImage,productImage, buyNowQuantity);
+            }else{
+                // lay tu gio hang
+                if(getArguments().containsKey("CHECKOUT_PRODUCTS_LIST")){
+                    ArrayList<CheckoutProductDTO> list = (ArrayList<CheckoutProductDTO>) getArguments().getSerializable("CHECKOUT_PRODUCTS_LIST");
+                    if(list !=null){
+                        showSomeProductCheckout(list);
+                    }
+                }
             }
         }
 
@@ -131,6 +141,23 @@ public class PaymentFragment extends Fragment {
         initShippingFee();
         setEvent();
         restoreVouchersUI();
+    }
+
+    private void showSomeProductCheckout(ArrayList<CheckoutProductDTO> list) {
+        this.paymentProductList.clear();
+        this.paymentProductList.addAll(list);
+        PaymentProductAdapter adapter = new PaymentProductAdapter(this.paymentProductList);
+        binding.rvPaymentItems.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvPaymentItems.setAdapter(adapter);
+        this.totalPrice = 0.0;
+        for (CheckoutProductDTO item : paymentProductList) {
+            if (item.getPrice() != null) {
+                double itemPrice = item.getPrice().doubleValue();
+                this.totalPrice += (itemPrice * item.getQuantity());
+            }
+        }
+        binding.paymentTvSubtotalValue.setText(format.format(totalPrice));
+        calculatePayment();
     }
 
     private void restoreVouchersUI() {
@@ -290,8 +317,89 @@ public class PaymentFragment extends Fragment {
         binding.btnPlaceOrder.setOnClickListener(v ->{
             if(selectedAddress==null){
                 SnackbarUtils.showBaseSnackbar(binding.getRoot(), "Vui lòng chọn địa chỉ giao hàng trước khi đặt hàng!", Snackbar.LENGTH_LONG);
+                return;
             }
+            Integer selectedPaymentMethodId = null;
+            if (binding.rbCod.isChecked()) {
+                selectedPaymentMethodId = (Integer) binding.rbCod.getTag();
+            } else if (binding.rbBankTransfer.isChecked()) {
+                selectedPaymentMethodId = (Integer) binding.rbBankTransfer.getTag();
+            }
+
+            if (selectedPaymentMethodId == null) {
+                SnackbarUtils.showBaseSnackbar(binding.getRoot(), "Vui lòng chọn phương thức thanh toán!", Snackbar.LENGTH_LONG);
+                return;
+            }
+            List<OrderRequestDTO.OrderProductItem> products = new ArrayList<>();
+            if (buyNowVariantId != null && buyNowVariantId != 0) {
+                products.add(new OrderRequestDTO.OrderProductItem(buyNowVariantId, buyNowQuantity));
+            }else {
+                for (CheckoutProductDTO dto : paymentProductList) {
+                    products.add(new OrderRequestDTO.OrderProductItem(dto.getProductVariantId(), dto.getQuantity()));
+                }
+            }
+            List<String> vouchers = new ArrayList<>();
+            if(selectedOrderVoucher!=null){
+                vouchers.add(selectedOrderVoucher.getCode());
+            }
+            if(selectedShippingVoucher!=null){
+                vouchers.add(selectedShippingVoucher.getCode());
+            }
+            String note = "";
+            OrderRequestDTO orderRequest = new OrderRequestDTO(selectedAddress.getId(),selectedPaymentMethodId,note.isEmpty()?null:note,vouchers,products);
+            binding.btnPlaceOrder.setEnabled(false);
+            if (!loadingDialog.isAdded()) {
+                loadingDialog.show(getParentFragmentManager(), "PlacingOrder");
+            }
+            android.content.SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", android.content.Context.MODE_PRIVATE);
+            String tokenSaved = sharedPreferences.getString("access_token", "");
+            String authToken = "Bearer " + tokenSaved;
+
+            com.infix.phukiencongnghe.data.repository.order.IOrderRepository orderRepository =
+                    new com.infix.phukiencongnghe.data.repository.order.OrderRepositoryImpl(RetrofitHelper.getOrderService());
+            orderRepository.createOrder(authToken, orderRequest).enqueue(new retrofit2.Callback<ResponseBody>() {
+
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (loadingDialog.isAdded()) {
+                        loadingDialog.dismiss();
+                    }
+                    binding.btnPlaceOrder.setEnabled(true);
+                    if(response.isSuccessful()){
+                        SnackbarUtils.showBaseSnackbar(binding.getRoot(),"Đặt hàng thành công!",Snackbar.LENGTH_SHORT);
+                        if (getActivity() != null) {
+                            getActivity().getOnBackPressedDispatcher().onBackPressed();
+                        }
+                    } else {
+                        try {
+                            if (response.errorBody() != null) {
+                                String errorStr = response.errorBody().string();
+                                // Log ra Logcat để bạn xem chi tiết lỗi JSON từ Spring Boot trả về
+                                android.util.Log.e("API_ERROR", "Backend trả về lỗi (" + response.code() + "): " + errorStr);
+
+                                // Hiển thị Toast trực tiếp lên màn hình
+                                android.widget.Toast.makeText(getContext(), "Thất bại: " + errorStr, android.widget.Toast.LENGTH_LONG).show();
+                            } else {
+                                android.util.Log.e("API_ERROR", "Backend trả về lỗi " + response.code() + " nhưng không có errorBody");
+                                SnackbarUtils.showBaseSnackbar(binding.getRoot(), "Đặt hàng thất bại (mã lỗi " + response.code() + ")", Snackbar.LENGTH_LONG);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                    if (loadingDialog.isAdded()) {
+                        loadingDialog.dismiss();
+                    }
+                    binding.btnPlaceOrder.setEnabled(true);
+                    SnackbarUtils.showBaseSnackbar(binding.getRoot(), "Không thể kết nối tới máy chủ: " + throwable.getMessage(), Snackbar.LENGTH_LONG);
+                }
+            });
         });
+
     }
 
     private void initUserAddressManage() {

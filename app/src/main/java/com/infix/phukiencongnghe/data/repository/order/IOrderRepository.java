@@ -1,8 +1,10 @@
 package com.infix.phukiencongnghe.data.repository.order;
 
+import com.infix.phukiencongnghe.data.dto.request.OrderRequestDTO;
 import com.infix.phukiencongnghe.data.dto.response.OrderDetailsHistoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.OrderHistoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.PageResponseDTO;
+import okhttp3.ResponseBody;
 
 import java.util.List;
 
@@ -14,4 +16,5 @@ public interface IOrderRepository {
     Call<Void> cancelOrder(Integer orderId);
 
     Call<List<OrderDetailsHistoryDTO>> getOrderDetailsHistory(Integer orderId);
+    Call<ResponseBody> createOrder(String token, OrderRequestDTO orderRequest);
 }

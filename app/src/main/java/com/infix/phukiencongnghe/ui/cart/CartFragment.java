@@ -21,14 +21,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.data.dto.response.CartItemDTO;
+import com.infix.phukiencongnghe.data.dto.response.CheckoutProductDTO;
 import com.infix.phukiencongnghe.databinding.FragmentCartBinding;
 import com.infix.phukiencongnghe.ui.adapter.cart.CartAdapter;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
+import com.infix.phukiencongnghe.ui.payment.PaymentFragment;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class CartFragment extends Fragment {
 
@@ -136,7 +142,25 @@ public class CartFragment extends Fragment {
         });
 
         binding.btnCheckout.setOnClickListener(v -> {
+            if(cartAdapter==null||cartAdapter.getItemCount() ==0){
+                SnackbarUtils.showBaseSnackbar(binding.getRoot(), "Giỏ hàng của bạn đang trống!", Snackbar.LENGTH_SHORT);
+                return;
+            }
+            ArrayList<CheckoutProductDTO> checkoutProductDTOS =new ArrayList<>();
+            for(CartItemDTO itemDTO : cartAdapter.getCurrentList()){
+                BigDecimal productPrice = BigDecimal.valueOf(itemDTO.getUnitPrice() != null ? itemDTO.getUnitPrice() : 0.0);
+                CheckoutProductDTO dto = new CheckoutProductDTO(itemDTO.getId(),itemDTO.getProductVariantId(),itemDTO.getProductName(),itemDTO.getQuantity(),productPrice,itemDTO.getProductImage());
+                checkoutProductDTOS.add(dto);
+            }
             //CheckoutActivity tại đây
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), com.infix.phukiencongnghe.ui.main.MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("OPEN_PAYMENT", true);
+                intent.putExtra("CHECKOUT_PRODUCTS_LIST", checkoutProductDTOS);
+                startActivity(intent);
+                getActivity().finish();
+            }
         });
     }
 
