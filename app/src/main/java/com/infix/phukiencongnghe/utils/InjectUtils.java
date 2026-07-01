@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.infix.phukiencongnghe.data.repository.admin.product.IProductAdminRepository;
 import com.infix.phukiencongnghe.data.repository.admin.product.ProductAdminRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.admin.voucher.AdminVoucherRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.admin.voucher.IAdminVoucherRepository;
 import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.auth.IAuthRepository;
 import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
@@ -25,6 +27,10 @@ import com.infix.phukiencongnghe.data.source.remote.admin.product.ProductAdminRe
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthRemoteDataSourceImpl;
 
 public class InjectUtils {
+
+    public static IAdminVoucherRepository createAdminVoucherRepository() {
+        return new AdminVoucherRepositoryImpl(RetrofitHelper.getAdminVoucherService());
+    }
 
     public static IVoucherRepository createVoucherRepository() {
         return new VoucherRepositoryImpl(
