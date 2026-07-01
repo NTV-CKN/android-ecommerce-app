@@ -273,8 +273,8 @@ public class ProductDetailsFragment extends Fragment {
                 sliderAdapter.setImages(new ArrayList<>());
             }
 
-//            ProductReviewAdapter reviewAdapter = new ProductReviewAdapter(details.getReviews());
-//            binding.rvProductComments.setAdapter(reviewAdapter);
+             ProductReviewAdapter reviewAdapter = new ProductReviewAdapter(details.getReviews());
+            binding.rvProductComments.setAdapter(reviewAdapter);
             binding.rvProductComments.setLayoutManager(new LinearLayoutManager(getContext()));
             RelatedProductAdapter relatedAdapter = new RelatedProductAdapter(details.getRelateProducts());
             binding.rvRelatedProducts.setAdapter(relatedAdapter);
