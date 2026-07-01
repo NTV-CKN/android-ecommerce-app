@@ -141,6 +141,11 @@ public class CartViewModel extends ViewModel {
         });
     }
 
+    public void clearCartLocal() {
+        _cartLiveData.setValue(null);
+        _badgeCountLiveData.setValue(0);
+    }
+
     public static class Factory implements ViewModelProvider.Factory {
         private final ICartRepository cartRepository;
 
