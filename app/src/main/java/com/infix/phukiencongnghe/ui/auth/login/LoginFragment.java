@@ -88,10 +88,14 @@ public class LoginFragment extends Fragment {
         //observe is loading
         authViewModel.isLoading.observe(getViewLifecycleOwner(), bool -> {
             if(bool == null) return;
-            if(bool)
-                loadingDialog.show(requireActivity().getSupportFragmentManager(), null);
-            else
-                loadingDialog.dismiss();
+            try {
+                if(bool)
+                    loadingDialog.show(requireActivity().getSupportFragmentManager(), null);
+                else
+                    loadingDialog.dismiss();
+            } catch (Exception e) {
+                Log.d("LoginFragment", e.getMessage());
+            }
         });
     }
 
@@ -179,6 +183,7 @@ public class LoginFragment extends Fragment {
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
                         try {
                             GoogleSignInAccount account = task.getResult(ApiException.class);
+
                             if (account != null) {
                                 String idToken = account.getIdToken();
                                 Log.d("GoogleAuth", "ID Token thu được thành công: " + idToken);
