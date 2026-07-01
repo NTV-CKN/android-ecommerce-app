@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.gson.Gson;
 import com.infix.phukiencongnghe.data.dto.response.ExceptionResponseDTO;
+import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddressManageRepository;
 
@@ -49,6 +50,48 @@ public class UserAddressManageViewModel extends ViewModel {
                 return (T) new UserAddressManageViewModel(userAddressManageRepository);
             throw new IllegalArgumentException("Model class illegal");
         }
+    }
+
+    public void removeUserAddress(UserAddressDTO userAddressDTO) {
+        _isLoading.setValue(true);
+        userAddressManageRepository.removeUserAddress(userAddressDTO).enqueue(new Callback<SuccessBasicDTO>() {
+            @Override
+            public void onResponse(Call<SuccessBasicDTO> call, Response<SuccessBasicDTO> response) {
+                if (response.isSuccessful()) {
+                    SuccessBasicDTO succ = response.body();
+                    if(succ != null){
+                        _isLoading.setValue(false);
+                        _notifyMsg.setValue(succ.getMessage());
+                        getUserAddresses();
+                        return;
+                    }else {
+                        _notifyMsg.setValue("Body null");
+                    }
+                } else {
+                    Gson gson = new Gson();
+                    ResponseBody responseBody = response.errorBody();
+                    if (responseBody == null) {
+                        _notifyMsg.setValue("Không thể hiểu lỗi");
+                        return;
+                    }
+                    ExceptionResponseDTO exc = null;
+                    try {
+                        exc = gson.fromJson(responseBody.string(), ExceptionResponseDTO.class);
+                        if(exc == null) return;
+                        _notifyMsg.setValue(exc.getMessage());
+                    } catch (IOException e) {
+                        _notifyMsg.setValue(e.getMessage());
+                    }
+                }
+                _isLoading.setValue(false);
+            }
+
+            @Override
+            public void onFailure(Call<SuccessBasicDTO> call, Throwable throwable) {
+                _isLoading.setValue(false);
+                _notifyMsg.setValue(throwable.getMessage());
+            }
+        });
     }
 
     public void getUserAddresses() {

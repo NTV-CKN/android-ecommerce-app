@@ -21,4 +21,7 @@ public interface UserAddressManageService {
 
     @POST("/api/v1/user-manage-address/update-address")
     Call<SuccessBasicDTO> updateUserAddress(@Body UpdateUserAddressDTO updateUserAddressDTO);
+
+    @POST("/api/v1/user-manage-address/remove-address")
+    Call<SuccessBasicDTO> removeUserAddress(@Body UserAddressDTO userAddressDTO);
 }

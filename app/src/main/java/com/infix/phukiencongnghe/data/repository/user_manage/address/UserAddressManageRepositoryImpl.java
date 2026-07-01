@@ -31,4 +31,9 @@ public class UserAddressManageRepositoryImpl  implements IUserAddressManageRepos
     public Call<SuccessBasicDTO> updateUserAddress(UpdateUserAddressDTO updateUserAddressDTO) {
         return userAddressManageService.updateUserAddress(updateUserAddressDTO);
     }
+
+    @Override
+    public Call<SuccessBasicDTO> removeUserAddress(UserAddressDTO userAddressDTO) {
+        return userAddressManageService.removeUserAddress(userAddressDTO);
+    }
 }

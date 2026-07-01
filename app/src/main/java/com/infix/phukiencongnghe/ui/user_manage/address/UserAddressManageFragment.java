@@ -35,7 +35,7 @@ public class UserAddressManageFragment extends Fragment {
 
     private UserAddressAdapter userAddressAdapter;
     private LoadingDialog loadingDialog;
-    private static final  String ARG_IS_SELECT_MODE = "UserAddressManageFragment.ARG_IS_SELECT_MODE";
+    private static final String ARG_IS_SELECT_MODE = "UserAddressManageFragment.ARG_IS_SELECT_MODE";
     private boolean isSelectMode = false;
 
     public static UserAddressManageFragment newInstance(boolean b) {
@@ -45,6 +45,7 @@ public class UserAddressManageFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +53,7 @@ public class UserAddressManageFragment extends Fragment {
             isSelectMode = getArguments().getBoolean(ARG_IS_SELECT_MODE, false);
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,23 +78,40 @@ public class UserAddressManageFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        userAddressManageViewModel.resetStates();
+        userAddressManageViewModel.resetStates();
         binding = null;
         userAddressAdapter = null;
     }
 
     private void initRecyclerView() {
         userAddressAdapter = new UserAddressAdapter((userAddressDTO) -> {
-        if(isSelectMode){
-            Intent intent = new Intent();
-            intent.putExtra(UserManagerActivity.EXTRA_SELECTED_ADDRESS, userAddressDTO);
-            requireActivity().setResult(Activity.RESULT_OK,intent);
-            requireActivity().finish();
-        }else {
-            addOrUpdateUserAddressViewModel.setUserAddressState(userAddressDTO);
-            goToAddOrUpdateUserAddressFragment(true);
-        }
-        });
+            if (isSelectMode) {
+                Intent intent = new Intent();
+                intent.putExtra(UserManagerActivity.EXTRA_SELECTED_ADDRESS, userAddressDTO);
+                requireActivity().setResult(Activity.RESULT_OK, intent);
+                requireActivity().finish();
+            } else {
+                addOrUpdateUserAddressViewModel.setUserAddressState(userAddressDTO);
+                goToAddOrUpdateUserAddressFragment(true);
+            }
+        },
+                userAddressDTO -> {
+                    if(userAddressDTO.getDefault()) {
+                        SnackbarUtils.showBaseSnackbar(
+                                binding.getRoot(),
+                                "Bạn không thể xóa địa chỉ mặc định, vui lòng đổi sang địa chỉ khác trước khi xóa địa chỉ này",
+                                Snackbar.LENGTH_LONG
+                        );
+                        return;
+                    }
+
+                SnackbarUtils.showSnackbarWithAction(
+                        binding.getRoot(),
+                        "Bạn có chắc muốn xóa địa chỉ này không?",
+                        Snackbar.LENGTH_LONG,
+                        () -> userAddressManageViewModel.removeUserAddress(userAddressDTO)
+                );
+                });
 
         binding.rvUserAddressManage.setAdapter(userAddressAdapter);
     }
@@ -120,7 +139,7 @@ public class UserAddressManageFragment extends Fragment {
         //observe user address list
         userAddressManageViewModel.getUserAddresses();
         userAddressManageViewModel.userAddresses.observe(getViewLifecycleOwner(), lst -> {
-            if(lst == null) return;
+            if (lst == null) return;
             userAddressAdapter.updateList(lst);
         });
 
@@ -136,8 +155,8 @@ public class UserAddressManageFragment extends Fragment {
 
         //observe is loading
         userAddressManageViewModel.isLoading.observe(getViewLifecycleOwner(), bool -> {
-            if(bool == null) return;
-            if(bool)
+            if (bool == null) return;
+            if (bool)
                 loadingDialog.show(requireActivity().getSupportFragmentManager(), null);
             else
                 loadingDialog.dismiss();
