@@ -18,14 +18,16 @@ import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.databinding.FragmentUserAddressManageBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
+import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 public class UserProfileFragment extends Fragment {
     private UserProfileViewModel viewModel;
+    private AuthViewModel authViewModel;
     private EditText edtFullname, edtEmail, edtAccountType;
-    private Button btnSaveProfile;
+    private Button btnSaveProfile, btnChangePass;
     private String userToken;
 
     private ImageView imgAvatar;
@@ -44,12 +46,17 @@ public class UserProfileFragment extends Fragment {
         edtEmail = view.findViewById(R.id.edtEmail);
         edtAccountType = view.findViewById(R.id.edtAccountType);
         btnSaveProfile = view.findViewById(R.id.btnSaveProfile);
+        btnChangePass = view.findViewById(R.id.btnChangePassword);
         imgAvatar = view.findViewById(R.id.imgAvatarProfile);
+
+        AuthViewModel.Factory authFac = new AuthViewModel.Factory(InjectUtils.createAuthRepository(requireContext()));
+        authViewModel = new ViewModelProvider(requireActivity(), authFac).get(AuthViewModel.class);
 
         UserProfileViewModel.Factory factory = new UserProfileViewModel.Factory(
                 InjectUtils.createUserProfileRepository()
         );
         viewModel = new ViewModelProvider(requireActivity(), factory).get(UserProfileViewModel.class);
+
         String[] tokens = SharePrefUtils.getAccessRefreshTokenFromPrefFile(
                 AuthActivity.USER_AUTH_FILE,
                 AuthActivity.KEY_ACCESS_TOKEN,
@@ -92,9 +99,22 @@ public class UserProfileFragment extends Fragment {
                 );
             }
         });
+
+        btnChangePass.setOnClickListener(v -> {
+            authViewModel.requireResetPassword(edtEmail.getText().toString().trim());
+        });
+
     }
 
     private void observeViewModel() {
+
+        authViewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
+            if (msg != null && !msg.isEmpty()) {
+                SnackbarUtils.showBaseSnackbar(requireView(), msg, com.google.android.material.snackbar.Snackbar.LENGTH_LONG);
+                authViewModel.resetStates();
+            }
+        });
+
         viewModel.userProfile.observe(getViewLifecycleOwner(), profile -> {
             if (profile != null) {
                 edtFullname.setText(profile.getFullName());

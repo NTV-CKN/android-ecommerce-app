@@ -215,6 +215,7 @@ public class VoucherManageAdminFragment extends Fragment implements OnVoucherIte
         TextInputEditText edtCode = dialogView.findViewById(R.id.edtCode);
         TextInputEditText edtTitle = dialogView.findViewById(R.id.edtTitle);
         AutoCompleteTextView spinnerDiscountType = dialogView.findViewById(R.id.spinnerDiscountType);
+        AutoCompleteTextView spinnerVoucherType = dialogView.findViewById(R.id.spinnerVoucherType);
         TextInputEditText edtDiscountValue = dialogView.findViewById(R.id.edtDiscountValue);
         TextInputEditText edtMinPrice = dialogView.findViewById(R.id.edtMinPrice);
         TextInputEditText edtStartDate = dialogView.findViewById(R.id.edtStartDate);
@@ -228,6 +229,10 @@ public class VoucherManageAdminFragment extends Fragment implements OnVoucherIte
         String[] discountTypes = {"Giảm tiền mặt (FIXED_AMOUNT)", "Giảm phần trăm (PERCENTAGE)"};
         spinnerDiscountType.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, discountTypes));
         spinnerDiscountType.setText(discountTypes[0], false);
+
+        String[] voucherTypes = {"Đơn hàng (MAIN_ORDER)", "Vận chuyển (SHIPPING)"};
+        spinnerVoucherType.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, voucherTypes));
+        spinnerVoucherType.setText(voucherTypes[0], false); // Mặc định là Đơn hàng
 
         String[] statusOptions = {"Hoạt động", "Ngừng hoạt động"};
         spinnerStatus.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, statusOptions));
@@ -245,6 +250,12 @@ public class VoucherManageAdminFragment extends Fragment implements OnVoucherIte
             edtTitle.setText(oldVoucher.getTitle());
 
             spinnerDiscountType.setText(oldVoucher.getDiscountType() == DiscountType.PERCENTAGE ? discountTypes[1] : discountTypes[0], false);
+
+            if (oldVoucher.getVoucherType() != null && "SHIPPING".equalsIgnoreCase(oldVoucher.getVoucherType().getCode())) {
+                spinnerVoucherType.setText(voucherTypes[1], false);
+            } else {
+                spinnerVoucherType.setText(voucherTypes[0], false);
+            }
 
             if (oldVoucher.getDiscountValue() != 0) edtDiscountValue.setText(String.valueOf(oldVoucher.getDiscountValue()));
             if (oldVoucher.getMinPriceAllow() != 0) edtMinPrice.setText(String.valueOf(oldVoucher.getMinPriceAllow()));
@@ -276,6 +287,8 @@ public class VoucherManageAdminFragment extends Fragment implements OnVoucherIte
                 return;
             }
 
+            int voucherTypeId = spinnerVoucherType.getText().toString().contains("SHIPPING") ? 2 : 1;
+
             DiscountType discountType = spinnerDiscountType.getText().toString().contains("PERCENTAGE") ? DiscountType.PERCENTAGE : DiscountType.FIXED_AMOUNT;
             BigDecimal discountValue = discountValStr.isEmpty() ? BigDecimal.ZERO : new BigDecimal(discountValStr);
             BigDecimal minPrice = minPriceStr.isEmpty() ? BigDecimal.ZERO : new BigDecimal(minPriceStr);
@@ -292,7 +305,7 @@ public class VoucherManageAdminFragment extends Fragment implements OnVoucherIte
             request.setEndDate(endDateStr);
             request.setUsageLimit(limit);
             request.setStatus(status);
-            request.setVoucherTypeId(1); // Type ID mặc định
+            request.setVoucherTypeId(voucherTypeId);
 
             if (isEditMode) {
                 viewModel.updateVoucher(oldVoucher.getId(), request);
