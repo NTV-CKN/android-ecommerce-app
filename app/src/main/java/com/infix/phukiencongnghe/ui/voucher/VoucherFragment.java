@@ -123,7 +123,7 @@ public class VoucherFragment extends Fragment {
             }
         }else{
             if(chipGroupFilters!=null){
-                chipGroupFilters.setVisibility(View.GONE);
+                chipGroupFilters.setVisibility(View.VISIBLE);
             }
             setupChipFilters();
         }
@@ -227,7 +227,7 @@ public class VoucherFragment extends Fragment {
                 } else if (checkedId == R.id.chipShipping) {
                     currentTypeCode = "SHIPPING";
                 } else if (checkedId == R.id.chipOrder) {
-                    currentTypeCode = "MAIN_ORDER"; // sửa từ "ORDER" -> đúng với backend
+                    currentTypeCode = "MAIN_ORDER";
                 }
                 // checkedId == R.id.chipAll -> giữ nguyên null/null (tất cả)
             }

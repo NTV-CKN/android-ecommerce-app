@@ -126,4 +126,6 @@
     <string name="voucher_bottom_navbar">Voucher</string>
     <string name="info_bottom_navbar">Information</string>
     <string name="setting_bottom_navbar">Settings</string>
+    <string name="lang_vi">Vietnamese</string>
+    <string name="lang_en">English</string>
 </resources>

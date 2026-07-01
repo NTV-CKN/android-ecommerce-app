@@ -127,5 +127,7 @@
     <string name="voucher_bottom_navbar">Voucher</string>
     <string name="info_bottom_navbar">Thông tin</string>
     <string name="setting_bottom_navbar">Cài đặt</string>
+    <string name="lang_vi" >Tiếng Việt</string>
+    <string name="lang_en" >Tiếng Anh</string>
 
 </resources>
