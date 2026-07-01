@@ -39,7 +39,7 @@
             android:id="@+id/txt_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#FFB300"
+            android:textColor="@color/tech_text_main"
             android:textStyle="bold"
             android:textSize="14sp"/>
 

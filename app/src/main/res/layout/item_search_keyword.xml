@@ -10,4 +10,4 @@
     android:paddingEnd="14dp"
     android:gravity="center"
     android:background="#EAEAEA"
-    android:textColor="#333333"/>
+    android:textColor="@color/tech_text_main"/>

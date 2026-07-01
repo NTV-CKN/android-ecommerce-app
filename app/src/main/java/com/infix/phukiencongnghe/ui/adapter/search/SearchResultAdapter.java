@@ -89,7 +89,7 @@ public class SearchResultAdapter extends
             String price =
                     formatter.format(
                             item.getMinPrice()
-                    ) + " ₫";
+                    ) + " VNĐ";
 
             holder.binding.txtPrice
                     .setText(price);

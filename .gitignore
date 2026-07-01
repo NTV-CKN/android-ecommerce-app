@@ -18,3 +18,5 @@ local.properties
 src/main/java/com/infix/phukiencongnghe/EvnUtils.java
 app/google-services.json
 .idea/
+.gradle/
+build/
