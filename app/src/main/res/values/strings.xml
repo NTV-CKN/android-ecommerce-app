@@ -111,5 +111,7 @@
     <string name="txt_subtitle">Tiêu đề phụ (Subtitle)</string>
     <string name="txt_name_general_product">Tên sản phẩm chung</string>
     <string name="txt_add_new_product_variant">THÊM BIẾN THỂ MỚI</string>
+    <string name="lang_vi" >Tiếng Việt</string>
+    <string name="lang_en" >Tiếng Anh</string>
 
 </resources>

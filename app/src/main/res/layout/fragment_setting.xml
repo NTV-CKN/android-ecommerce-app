@@ -61,7 +61,7 @@
                 android:textSize="15sp"/>
             <Spinner
                 android:id="@+id/spinnerLanguage"
-                android:layout_width="120dp"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
