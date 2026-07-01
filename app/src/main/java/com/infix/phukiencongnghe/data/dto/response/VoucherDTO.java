@@ -3,9 +3,10 @@ package com.infix.phukiencongnghe.data.dto.response;
 import com.google.gson.annotations.SerializedName;
 import com.infix.phukiencongnghe.common.DiscountType;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class VoucherDTO {
+public class VoucherDTO implements Serializable {
     @SerializedName("id")
     private long id;
 

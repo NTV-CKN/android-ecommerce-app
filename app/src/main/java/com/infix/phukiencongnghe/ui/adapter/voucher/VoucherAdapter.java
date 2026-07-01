@@ -30,7 +30,18 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.VoucherV
     private List<VoucherDTO> voucherList = new ArrayList<>();
     private final DecimalFormat currencyFormat = new DecimalFormat("#,###đ");
     private final DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+    private OnItemClickListener onItemClickListener;
+    private boolean isApplyMode = false;
+    public interface OnItemClickListener {
+        void onItemClick(VoucherDTO voucher);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
+    public void setApplyMode(boolean isApplyMode) {
+        this.isApplyMode = isApplyMode;
+        notifyDataSetChanged();
+    }
     @SuppressLint("NotifyDataSetChanged")
     public void setVoucherList(List<VoucherDTO> newList) {
         this.voucherList = newList;
@@ -69,16 +80,24 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.VoucherV
         } else {
             holder.tvEndDate.setText("HSD: Không giới hạn");
         }
-
+        if (isApplyMode) {
+            holder.btnCopy.setText("Áp dụng");
+        } else {
+            holder.btnCopy.setText("Sao chép");
+        }
         holder.btnCopy.setOnClickListener(v -> {
-            Context context = v.getContext();
+            if (isApplyMode) {
+                if (onItemClickListener != null) onItemClickListener.onItemClick(voucherDTO);
+            }else {
+                Context context = v.getContext();
 
-            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("Voucher Code", voucherDTO.getCode());
+                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Voucher Code", voucherDTO.getCode());
 
-            if (clipboard != null) {
-                clipboard.setPrimaryClip(clip);
-                SnackbarUtils.showBaseSnackbar(v, "Đã sao chép mã: " + voucherDTO.getCode(), Snackbar.LENGTH_SHORT);
+                if (clipboard != null) {
+                    clipboard.setPrimaryClip(clip);
+                    SnackbarUtils.showBaseSnackbar(v, "Đã sao chép mã: " + voucherDTO.getCode(), Snackbar.LENGTH_SHORT);
+                }
             }
         });
     }

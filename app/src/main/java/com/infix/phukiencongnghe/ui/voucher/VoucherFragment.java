@@ -22,6 +22,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.common.DiscountType;
+import com.infix.phukiencongnghe.data.dto.response.VoucherDTO;
 import com.infix.phukiencongnghe.data.repository.voucher.IVoucherRepository;
 import com.infix.phukiencongnghe.ui.adapter.voucher.VoucherAdapter;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
@@ -30,6 +31,8 @@ import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
+
+import java.text.DecimalFormat;
 
 public class VoucherFragment extends Fragment {
 
@@ -53,7 +56,15 @@ public class VoucherFragment extends Fragment {
 
     // Đánh dấu request hiện tại để bỏ qua kết quả của request cũ trả về trễ
     private long requestToken = 0;
+    private final DecimalFormat formatPrice = new DecimalFormat("#,###đ");
+    public interface OnVoucherSelectedListener {
+        void onVoucherSelected(VoucherDTO voucher);
+    }
+    private OnVoucherSelectedListener onVoucherSelectedListener;
 
+    public void setOnVoucherSelectedListener(OnVoucherSelectedListener listener) {
+        this.onVoucherSelectedListener = listener;
+    }
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,13 +91,44 @@ public class VoucherFragment extends Fragment {
         initViews(view);
         setupRecyclerView();
         setupViewModel();
-
         setupSearchFilter();
-        setupChipFilters();
+        if(getArguments()!=null && getArguments().containsKey("PAYMENT_TARGET_TYPE")){
+            String typeTaget = getArguments().getString("PAYMENT_TARGET_TYPE");
+            double currentTotalPrice =  getArguments().getDouble("CURRENT_TOTAL_PRICE", 0.0);
+            this.currentTypeCode = typeTaget;
+            if(chipGroupFilters!=null){
+                chipGroupFilters.setVisibility(View.GONE);
+            }
+            if(adapter!=null){
+                adapter.setApplyMode(true);
+                adapter.setOnItemClickListener(voucher -> {
+                    double minAllow = voucher.getMinPriceAllow();
+                    if(currentTotalPrice<minAllow){
+                        SnackbarUtils.showBaseSnackbar(
+                                view,
+                                "Đơn hàng chưa đạt giá trị tối thiểu " + formatPrice.format(voucher.getMinPriceAllow()) + " để sử dụng mã này!",
+                                Snackbar.LENGTH_LONG
+                        );
+                        return;
+                    }
+                    Bundle result = new Bundle();
+                    result.putSerializable("SELECTED_VOUCHER", voucher);
 
+                    String requestKey = "SHIPPING".equals(typeTaget) ? "REQUEST_KEY_SHIPPING" : "REQUEST_KEY_ORDER";
+                    getParentFragmentManager().setFragmentResult(requestKey, result);
+                    if (getParentFragmentManager() != null) {
+                        getParentFragmentManager().popBackStack();
+                    }
+                });
+            }
+        }else{
+            if(chipGroupFilters!=null){
+                chipGroupFilters.setVisibility(View.GONE);
+            }
+            setupChipFilters();
+        }
         fetchVouchers();
     }
-
     private void initViews(View view) {
         edtSearchCode = view.findViewById(R.id.edtSearchCode);
         chipGroupFilters = view.findViewById(R.id.chipGroupFilter);
