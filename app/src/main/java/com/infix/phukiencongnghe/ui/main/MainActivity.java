@@ -2,6 +2,7 @@ package com.infix.phukiencongnghe.ui.main;
 
 import static com.infix.phukiencongnghe.R.id.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -11,12 +12,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.infix.phukiencongnghe.R;
+import com.infix.phukiencongnghe.data.dto.response.CheckoutProductDTO;
 import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
 import com.infix.phukiencongnghe.databinding.ActivityMainBinding;
 import com.infix.phukiencongnghe.ui.infoshop.InfoShopFragment;
 import com.infix.phukiencongnghe.ui.main.home.HomeFragment;
+import com.infix.phukiencongnghe.ui.payment.PaymentFragment;
 import com.infix.phukiencongnghe.ui.product_category.ProductCategoryFragment;
 import com.infix.phukiencongnghe.ui.voucher.VoucherFragment;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -85,5 +90,24 @@ public class MainActivity extends AppCompatActivity {
                         new InfoShopFragment()
                 )
                 .commit();
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (intent != null && intent.getBooleanExtra("OPEN_PAYMENT", false)) {
+            ArrayList<CheckoutProductDTO> list = (ArrayList<CheckoutProductDTO>) intent.getSerializableExtra("CHECKOUT_PRODUCTS_LIST");
+
+            PaymentFragment paymentFragment = new PaymentFragment();
+            Bundle args = new Bundle();
+            args.putBoolean("IS_BUY_NOW", false);
+            args.putSerializable("CHECKOUT_PRODUCTS_LIST", list);
+            paymentFragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fcv_main_content, paymentFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 }

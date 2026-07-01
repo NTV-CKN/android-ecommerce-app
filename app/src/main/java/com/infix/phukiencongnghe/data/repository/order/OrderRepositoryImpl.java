@@ -1,9 +1,11 @@
 package com.infix.phukiencongnghe.data.repository.order;
 
+import com.infix.phukiencongnghe.data.dto.request.OrderRequestDTO;
 import com.infix.phukiencongnghe.data.dto.response.OrderDetailsHistoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.OrderHistoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.PageResponseDTO;
 import com.infix.phukiencongnghe.data.source.remote.order.OrderSerivce;
+import okhttp3.ResponseBody;
 
 import java.util.List;
 
@@ -30,4 +32,8 @@ public class OrderRepositoryImpl implements IOrderRepository {
         return orderSerivce.getOrderDetails(orderId);
     }
 
+    @Override
+    public Call<ResponseBody> createOrder(String token, OrderRequestDTO orderRequest) {
+        return orderSerivce.createOrder(token, orderRequest);
+    }
 }
