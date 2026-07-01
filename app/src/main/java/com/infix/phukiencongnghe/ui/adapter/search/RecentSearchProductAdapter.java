@@ -88,7 +88,7 @@ public class RecentSearchProductAdapter extends
                 );
 
         String price =
-                formatter.format(item.getPrice()) + " ₫";
+                formatter.format(item.getPrice()) + " VNĐ";
 
         holder.binding.txtPrice
                 .setText(price);

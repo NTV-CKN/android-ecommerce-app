@@ -13,12 +13,12 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- ORDER INFO -->
+        <!-- THÔNG TIN ĐƠN HÀNG -->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Order Information"
+            android:text="Thông Tin Đơn Hàng"
             android:textStyle="bold"
             android:textSize="20sp"/>
 
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Order #1"
+            android:text="Đơn hàng #1"
             android:textSize="16sp"/>
 
         <TextView
@@ -35,23 +35,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Status: Pending"/>
+            android:text="Trạng thái: Chờ xử lý"/>
 
         <TextView
             android:id="@+id/tvOrderDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Date: 30/06/2026"/>
+            android:text="Ngày đặt: 30/06/2026"/>
 
 
-        <!-- CUSTOMER -->
+        <!-- THÔNG TIN KHÁCH HÀNG -->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:text="Customer Information"
+            android:text="Thông Tin Khách Hàng"
             android:textStyle="bold"
             android:textSize="20sp"/>
 
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Nguyen Van A"/>
+            android:text="Nguyễn Văn A"/>
 
         <TextView
             android:id="@+id/tvEmail"
@@ -70,13 +70,13 @@
             android:text="abc@gmail.com"/>
 
 
-        <!-- PAYMENT -->
+        <!-- THÔNG TIN THANH TOÁN -->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:text="Payment Information"
+            android:text="Thông Tin Thanh Toán"
             android:textStyle="bold"
             android:textSize="20sp"/>
 
@@ -85,37 +85,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Total Price"/>
+            android:text="Tổng tiền"/>
 
         <TextView
             android:id="@+id/tvShippingFee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Shipping Fee"/>
+            android:text="Phí vận chuyển"/>
 
         <TextView
             android:id="@+id/tvPaymentMethod"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Payment Method"/>
+            android:text="Phương thức thanh toán"/>
 
         <TextView
             android:id="@+id/tvNote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Note"/>
+            android:text="Ghi chú"/>
 
 
-        <!-- APPLIED VOUCHER -->
+        <!-- VOUCHER ĐÃ ÁP DỤNG -->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:text="Applied Vouchers"
+            android:text="Voucher Đã Áp Dụng"
             android:textStyle="bold"
             android:textSize="20sp"/>
 
@@ -124,21 +124,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="No voucher"/>
+            android:text="Không có voucher"/>
 
 
-        <!-- PRODUCTS -->
+        <!-- SẢN PHẨM -->
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            android:text="Products"
+            android:text="Sản Phẩm"
             android:textStyle="bold"
             android:textSize="20sp"/>
 
 
-        <!-- ONLY PRODUCT USE CARD -->
+        <!-- DANH SÁCH SẢN PHẨM -->
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -157,14 +157,15 @@
         </androidx.cardview.widget.CardView>
 
 
-        <!-- BUTTON -->
+        <!-- NÚT CẬP NHẬT -->
 
         <Button
             android:id="@+id/btnChangeStatus"
+            style="@style/ButtonPositive"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="24dp"
-            android:text="Update Order Status"
+            android:text="Thay Đổi Trạng Thái"
             android:textStyle="bold"/>
 
     </LinearLayout>

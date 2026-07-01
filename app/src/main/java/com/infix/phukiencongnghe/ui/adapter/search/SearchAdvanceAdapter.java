@@ -93,7 +93,7 @@ public class SearchAdvanceAdapter extends
             String price =
                     formatter.format(
                             item.getMinPrice()
-                    ) + " ₫";
+                    ) + " VNĐ";
 
             holder.binding.txtPrice
                     .setText(price);
@@ -101,7 +101,7 @@ public class SearchAdvanceAdapter extends
         } else {
 
             holder.binding.txtPrice
-                    .setText("0 ₫");
+                    .setText("0 VNĐ");
         }
 
 
