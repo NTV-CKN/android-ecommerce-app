@@ -14,19 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.databinding.FragmentProductManageAdminBinding;
 import com.infix.phukiencongnghe.ui.adapter.admin.product.ProductAdminAdapter;
-import com.infix.phukiencongnghe.ui.adapter.categories.CategoryAdapter;
-import com.infix.phukiencongnghe.ui.admin.product.add_or_update.AddOrUpdateProductFragment;
+import com.infix.phukiencongnghe.ui.admin.product.add_or_update.AddProductFragment;
+import com.infix.phukiencongnghe.ui.admin.product.add_or_update.UpdateProductFragment;
+import com.infix.phukiencongnghe.ui.admin.product.add_or_update.UpdateProductViewModel;
 import com.infix.phukiencongnghe.utils.InjectUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProductManageAdminFragment extends Fragment {
     private FragmentProductManageAdminBinding binding;
 
+    private UpdateProductViewModel updateProductViewModel;
     private ProductManageAdminViewModel productManageAdminViewModel;
     private ProductAdminAdapter productAdminAdapter;
 
@@ -46,17 +44,27 @@ public class ProductManageAdminFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initRvProductsAdmin();
         initAndObserveProductManageAdminVM();
+        initUpdateProductVM();
         observeCurrentPageAndPageSize();
         setEventForViewPaginationBar();
         setSearchViewChange();
         setEvents();
     }
 
+    private void initUpdateProductVM() {
+        UpdateProductViewModel.Factory factory = new UpdateProductViewModel.Factory(
+                InjectUtils.createProductAdminRepository()
+        );
+
+        updateProductViewModel = new ViewModelProvider(requireActivity(), factory)
+                .get(UpdateProductViewModel.class);
+    }
+
     private void setEvents() {
         binding.imgAddProductAdmin.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fcv_admin_manage, new AddOrUpdateProductFragment())
+                    .replace(R.id.fcv_admin_manage, new AddProductFragment())
                     .addToBackStack(null)
                     .commit();
         });
@@ -75,7 +83,12 @@ public class ProductManageAdminFragment extends Fragment {
 
     private void initRvProductsAdmin() {
         productAdminAdapter = new ProductAdminAdapter(product -> {
-
+                updateProductViewModel.setProductAdminPageDTOState(product);
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fcv_admin_manage, new UpdateProductFragment())
+                        .addToBackStack(null)
+                        .commit();
         });
 
         binding.rvAdminProducts.setAdapter(productAdminAdapter);

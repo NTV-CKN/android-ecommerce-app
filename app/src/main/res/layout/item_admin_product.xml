@@ -45,7 +45,7 @@
             android:layout_height="32dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Options"
-            android:src="@drawable/ic_more_horiz_24px"
+            android:src="@drawable/ic_edit_24px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck" />

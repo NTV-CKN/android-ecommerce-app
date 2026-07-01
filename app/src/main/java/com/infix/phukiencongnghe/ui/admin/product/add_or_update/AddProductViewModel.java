@@ -27,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddOrUpdateProductViewModel extends ViewModel {
+public class AddProductViewModel extends ViewModel {
     private final IProductAdminRepository productAdminRepository;
 
     private boolean isUpdate = false;
@@ -49,7 +49,7 @@ public class AddOrUpdateProductViewModel extends ViewModel {
     private final ProductAdminPageDTO productDTO = new ProductAdminPageDTO();
     private final MutableLiveData<List<ProductVariantDTO>> variantsLiveData = new MutableLiveData<>(new ArrayList<>());
 
-    public AddOrUpdateProductViewModel(IProductAdminRepository productAdminRepository
+    public AddProductViewModel(IProductAdminRepository productAdminRepository
 ) {
         this.productAdminRepository = productAdminRepository;
         productDTO.setFolderId(UUID.randomUUID().toString());
@@ -204,8 +204,8 @@ public class AddOrUpdateProductViewModel extends ViewModel {
         @Override
         @SuppressWarnings("unchecked")
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(AddOrUpdateProductViewModel.class)) {
-                return (T) new AddOrUpdateProductViewModel(productAdminRepository);
+            if (modelClass.isAssignableFrom(AddProductViewModel.class)) {
+                return (T) new AddProductViewModel(productAdminRepository);
             }
             throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
         }
