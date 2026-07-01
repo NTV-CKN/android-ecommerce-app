@@ -74,6 +74,7 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.VoucherV
         } else {
             holder.tvMinPrice.setText("Đơn tối thiểu: 0đ");
         }
+
         if (voucherDTO.getEndDate() != null) {
             String formattedDate = formatVoucherDate(voucherDTO.getEndDate());
             holder.tvEndDate.setText("HSD: " + formattedDate);

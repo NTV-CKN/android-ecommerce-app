@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.infix.phukiencongnghe.data.source.remote.admin.AdminOrderService;
 import com.infix.phukiencongnghe.data.source.remote.admin.product.ProductAdminService;
 
+import com.infix.phukiencongnghe.data.source.remote.admin.voucher.AdminVoucherService;
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
@@ -23,6 +24,10 @@ import retrofit2.Retrofit;
 
 public class RetrofitHelper {
     private RetrofitHelper(){}
+
+    public static AdminVoucherService getAdminVoucherService() {
+        return generateRetrofit().create(AdminVoucherService.class);
+    }
 
     public static VoucherService getVoucherService() {
         return generateRetrofit().create(VoucherService.class);
