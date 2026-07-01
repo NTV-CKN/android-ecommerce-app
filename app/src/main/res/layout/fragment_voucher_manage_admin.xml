@@ -46,7 +46,7 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tất cả"
+                    android:text="@string/chip_admin_voucher_all"
                     android:checked="true"/>
 
                 <com.google.android.material.chip.Chip
@@ -54,28 +54,28 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Giảm tiền mặt"/>
+                    android:text="@string/chip_admin_voucher_fixed_amount"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipPercentage"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Giảm theo %"/>
+                    android:text="@string/chip_admin_voucher_percentage"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipShipping"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Giảm phí ship"/>
+                    android:text="@string/chip_admin_voucher_ship"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipOrder"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Giảm theo đơn hàng"/>
+                    android:text="@string/chip_admin_voucher_order"/>
 
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
