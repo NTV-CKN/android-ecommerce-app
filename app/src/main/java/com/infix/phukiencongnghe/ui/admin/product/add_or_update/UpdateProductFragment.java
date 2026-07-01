@@ -85,6 +85,7 @@ public class UpdateProductFragment extends Fragment {
         initViewModels();
         setupUI();
         observeViewModel();
+        binding.btnSaveTotal.setText("CẬP NHẬT");
     }
 
     private void initViewModels() {
@@ -234,7 +235,7 @@ public class UpdateProductFragment extends Fragment {
         currentProduct.setWarrantyPeriod(Integer.parseInt(binding.edtWarrantyInfo.getText().toString().trim()));
         currentProduct.setDescription(binding.edtDescInfo.getText().toString().trim());
         currentProduct.setCategoriesDTOS(viewModel.getSelectedCategories());
-        currentProduct.setImages(new ArrayList<>()); // Loại bỏ danh sách ảnh phụ
+        currentProduct.setImages(new ArrayList<>());
 
         List<ImageUploadWrapper> wrappers = new ArrayList<>();
         String folderId = currentProduct.getFolderId();

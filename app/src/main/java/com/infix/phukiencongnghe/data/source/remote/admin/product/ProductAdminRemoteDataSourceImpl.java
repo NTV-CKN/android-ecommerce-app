@@ -36,78 +36,80 @@ public class ProductAdminRemoteDataSourceImpl implements IProductAdminRemoteData
 
     @Override
     public void uploadImagesAndSaveProduct(List<ImageUploadWrapper> uploadWrappers, ProductAdminPageDTO productDTO, Consumer<String> callback) {
-        List<Task<Uri>> uploadTasks = new ArrayList<>();
-
         if (productDTO.getImages() == null) {
             productDTO.setImages(new ArrayList<>());
         } else {
             productDTO.getImages().clear();
         }
 
+        List<Task<Uri>> uploadTasks = new ArrayList<>();
+
         for (ImageUploadWrapper item : uploadWrappers) {
-            if (item.getLocalUri() == null) continue;
+            if (item == null || item.getLocalUri() == null) continue;
 
             StorageReference storageRef = firebaseStorage.getReference().child(item.getStoragePath());
 
             Task<Uri> pipelineTask = storageRef.putFile(item.getLocalUri())
                     .continueWithTask(task -> {
-                        if (!task.isSuccessful() && task.getException() != null) {
-                            callback.accept("Lỗi: " + task.getException().getMessage());
-                            return null;
+                        if (!task.isSuccessful()) {
+                            Exception e = task.getException();
+                            throw (e != null) ? e : new IllegalStateException("Tải ảnh lên thất bại: " + item.getStoragePath());
                         }
                         return storageRef.getDownloadUrl();
                     })
-                    .addOnSuccessListener(downloadUrl -> {
-                        String firebaseUrl = downloadUrl.toString();
-                        switch (item.getType()) {
-                            case "MAIN":
-                                productDTO.setMainImage(firebaseUrl);
-                                break;
-                            case "SUB":
-                                productDTO.getImages().add(firebaseUrl);
-                                break;
-                            case "VARIANT":
-                                if (productDTO.getProductVariantDTOS() != null) {
-                                    for (ProductVariantDTO variantDTO : productDTO.getProductVariantDTOS()) {
-                                        if (variantDTO.getSku() != null && variantDTO.getSku().equals(item.getVariantSku())) {
-                                            variantDTO.setImageUrl(firebaseUrl);
-                                            break;
-                                        }
-                                    }
-                                }
-                                break;
-                        }
-                    });
+                    .addOnSuccessListener(downloadUrl -> applyUploadedUrl(productDTO, item, downloadUrl.toString()));
 
             uploadTasks.add(pipelineTask);
         }
 
         if (uploadTasks.isEmpty()) {
-            callback.accept("Ảnh không có");
+            callSaveProductApi(productDTO, callback);
             return;
         }
 
         Tasks.whenAllSuccess(uploadTasks)
-                .addOnSuccessListener(results -> {
-                    productAdminService.saveProduct(productDTO).enqueue(new Callback<SuccessBasicDTO>() {
-                        @Override
-                        public void onResponse(Call<SuccessBasicDTO> call, Response<SuccessBasicDTO> response) {
-                            if (response.isSuccessful()) {
-                                SuccessBasicDTO succ = response.body();
-                                if (succ != null)
-                                    callback.accept(succ.getMessage());
-                            }
-                        }
+                .addOnSuccessListener(results -> callSaveProductApi(productDTO, callback))
+                .addOnFailureListener(e -> callback.accept("Lỗi tải ảnh lên: " + e.getMessage()));
+    }
 
-                        @Override
-                        public void onFailure(Call<SuccessBasicDTO> call, Throwable throwable) {
-                            callback.accept(throwable.getMessage());
+    private void applyUploadedUrl(ProductAdminPageDTO productDTO, ImageUploadWrapper item, String firebaseUrl) {
+        switch (item.getType()) {
+            case "MAIN":
+                productDTO.setMainImage(firebaseUrl);
+                break;
+            case "SUB":
+                productDTO.getImages().add(firebaseUrl);
+                break;
+            case "VARIANT":
+                if (productDTO.getProductVariantDTOS() != null) {
+                    for (ProductVariantDTO variantDTO : productDTO.getProductVariantDTOS()) {
+                        if (variantDTO.getSku() != null && variantDTO.getSku().equals(item.getVariantSku())) {
+                            variantDTO.setImageUrl(firebaseUrl);
+                            break;
                         }
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    callback.accept(e.getMessage());
-                });
+                    }
+                }
+                break;
+        }
+    }
+
+    private void callSaveProductApi(ProductAdminPageDTO productDTO, Consumer<String> callback) {
+        productAdminService.saveProduct(productDTO).enqueue(new Callback<SuccessBasicDTO>() {
+            @Override
+            public void onResponse(Call<SuccessBasicDTO> call, Response<SuccessBasicDTO> response) {
+                if (response.isSuccessful()) {
+                    SuccessBasicDTO succ = response.body();
+                    callback.accept(succ != null ? succ.getMessage() : "Cập nhật sản phẩm thành công");
+                } else {
+                    callback.accept("Lỗi máy chủ (" + response.code() + "), vui lòng thử lại!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SuccessBasicDTO> call, Throwable throwable) {
+                callback.accept("Lỗi kết nối: " + throwable.getMessage());
+            }
+        });
     }
 
     @Override
