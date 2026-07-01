@@ -13,4 +13,5 @@ public interface IUserAddressManageRepository {
     Call<List<UserAddressDTO>> getUserAddresses();
     Call<SuccessBasicDTO> addUserAddress(AddUserAddressDTO addUserAddressDTO);
     Call<SuccessBasicDTO> updateUserAddress(UpdateUserAddressDTO updateUserAddressDTO);
+    Call<SuccessBasicDTO> removeUserAddress(UserAddressDTO userAddressDTO);
 }

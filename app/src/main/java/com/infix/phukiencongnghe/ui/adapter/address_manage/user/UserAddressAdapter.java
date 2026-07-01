@@ -18,9 +18,14 @@ import java.util.List;
 public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.ViewHolder> {
     private final List<UserAddressDTO> userAddressDTOS = new ArrayList<>();
     private final OnItemClick onItemClick;
+    private final OnRemoveClick onRemoveClick;
 
-    public UserAddressAdapter(OnItemClick onItemClick) {
+    public UserAddressAdapter(
+            OnItemClick onItemClick,
+            OnRemoveClick onRemoveClick
+    ) {
         this.onItemClick = onItemClick;
+        this.onRemoveClick = onRemoveClick;
     }
 
     @NonNull
@@ -60,6 +65,12 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
         }
 
         private void setEventClick() {
+            //remove
+            binding.btnRemoveItemUserAddress.setOnClickListener(v -> {
+                onRemoveClick.onRemove(userAddressDTOS.get(getBindingAdapterPosition()));
+            });
+
+            //update
             binding.getRoot().setOnClickListener(v -> {
                 onItemClick.onItemClick(userAddressDTOS.get(getBindingAdapterPosition()));
             });
@@ -68,6 +79,9 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
         public void bind(UserAddressDTO userAddressDTO) {
             Context context = binding.getRoot().getContext();
             int isVisible = userAddressDTO.getDefault() ? View.VISIBLE : View.GONE;
+
+            if(userAddressDTO.getDefault())
+                binding.btnRemoveItemUserAddress.setVisibility(View.GONE);
 
             binding.txtItemAddressDefault.setVisibility(isVisible);
             binding.txtItemAddressDetail.setText(context.getString(R.string.txt_address_detail_args, userAddressDTO.getAddressDetail()));
@@ -80,5 +94,9 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
 
    public interface OnItemClick {
         void onItemClick(UserAddressDTO userAddressDTO);
+    }
+
+    public interface OnRemoveClick {
+        void onRemove(UserAddressDTO userAddressDTO);
     }
 }
