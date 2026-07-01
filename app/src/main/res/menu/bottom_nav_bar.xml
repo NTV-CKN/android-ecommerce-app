@@ -17,7 +17,7 @@
         android:icon="@drawable/ic_info"
         android:title="Thông tin" />
     <item
-        android:id="@+id/nav_profile"
+        android:id="@+id/nav_setting"
         android:icon="@drawable/ic_settings"
         android:title="Cài đặt" />
 </menu>

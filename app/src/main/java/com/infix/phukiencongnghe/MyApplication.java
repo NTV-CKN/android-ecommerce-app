@@ -15,10 +15,10 @@ public class MyApplication extends Application {
         Log.d("MyApplication", "AccessToken: " + ApiClient.getAccessToken() +
                 "\n" + "RefreshToken: " + ApiClient.getRefreshToken());
         if (!Places.isInitialized()) {
-//            Places.initialize(
-//                   getApplicationContext(),
-//                    BuildConfig.MAPS_KEY
-//            );
+            Places.initialize(
+                   getApplicationContext(),
+                    BuildConfig.MAPS_KEY
+            );
         }
     }
 }
