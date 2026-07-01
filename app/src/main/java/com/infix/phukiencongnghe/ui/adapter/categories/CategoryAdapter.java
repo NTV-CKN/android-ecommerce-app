@@ -19,7 +19,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private List<CategoryDTO> categoryList;
     private OnCategoryClickListener listener;
 
-    private int selectedPosition = 0;
+    private int selectedPosition = -1;
 
 //    public CategoryAdapter(List<CategoryDTO> categoryList) {
 //        this.categoryList = categoryList;
@@ -63,20 +63,24 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                 isSelected
         );
         holder.itemView.setOnClickListener(v -> {
-            int oldPosition =
-                    selectedPosition;
-            selectedPosition =
-                    holder.getAdapterPosition();
-            notifyItemChanged(
-                    oldPosition
-            );
-            notifyItemChanged(
-                    selectedPosition
-            );
-            if(listener != null){
-                listener.onCategoryClick(
-                        item
-                );
+            int currentPos = holder.getAdapterPosition();
+            int previousItem = selectedPosition;
+
+            if (selectedPosition == currentPos) {
+                selectedPosition = -1;
+                notifyItemChanged(currentPos);
+
+                if (listener != null) {
+                    listener.onCategoryClick(null);
+                }
+            } else {
+                selectedPosition = currentPos;
+                notifyItemChanged(previousItem);
+                notifyItemChanged(selectedPosition);
+
+                if (listener != null) {
+                    listener.onCategoryClick(categoryList.get(currentPos));
+                }
             }
         });
     }

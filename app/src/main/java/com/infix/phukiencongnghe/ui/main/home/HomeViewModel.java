@@ -113,6 +113,28 @@ public class HomeViewModel extends ViewModel {
         });
     }
 
+    public void fetchFeatureProducts(Integer categoryId, int limit) {
+        _isLoading.setValue(true);
+
+        featureProductRepository.getFeatureProduct(categoryId, limit).enqueue(new Callback<List<FeatureProductDTO>>() {
+            @Override
+            public void onResponse(Call<List<FeatureProductDTO>> call, Response<List<FeatureProductDTO>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _ftProdLiveData.setValue(response.body());
+                } else {
+                    _notifyMsg.setValue("Không tải được sản phẩm nổi bật");
+                }
+                _isLoading.setValue(false);
+            }
+
+            @Override
+            public void onFailure(Call<List<FeatureProductDTO>> call, Throwable throwable) {
+                _notifyMsg.setValue(throwable.getMessage());
+                _isLoading.setValue(false);
+            }
+        });
+    }
+
     public void loadFeatureProduct(Integer categoryId, int limit, MutableLiveData<List<FeatureProductDTO>> targetLiveData) {
         _isLoading.setValue(true);
         featureProductRepository.getFeatureProduct(categoryId, limit).enqueue(new Callback<List<FeatureProductDTO>>() {
