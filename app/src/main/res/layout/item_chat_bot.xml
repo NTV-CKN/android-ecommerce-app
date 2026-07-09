@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:gravity="start"
     android:paddingVertical="6dp">
 
     <ImageView
         android:layout_width="40dp"
-        android:layout_gravity="center"
+        android:layout_gravity="start"
         android:layout_margin="4dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_chat_bot"
@@ -29,6 +30,7 @@
         android:id="@+id/recyclerViewBotProducts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
         android:visibility="gone" />

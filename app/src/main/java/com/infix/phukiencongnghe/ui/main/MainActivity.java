@@ -16,6 +16,7 @@ import com.infix.phukiencongnghe.data.dto.response.CheckoutProductDTO;
 import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
 import com.infix.phukiencongnghe.databinding.ActivityMainBinding;
 import com.infix.phukiencongnghe.ui.infoshop.InfoShopFragment;
+import com.infix.phukiencongnghe.ui.main.ai.ChatBotFragment;
 import com.infix.phukiencongnghe.ui.main.home.HomeFragment;
 import com.infix.phukiencongnghe.ui.payment.PaymentFragment;
 import com.infix.phukiencongnghe.ui.product_category.ProductCategoryFragment;
@@ -54,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
             if(id == R.id.nav_voucher) handleNavVoucher();
             else if (id == R.id.nav_home)
                 handleNavHome();
-            else if (id == R.id.nav_info) {
-                handleNavInfo();
+            else if (id == R.id.nav_chatbot) {
+                handleNavChatBot();
             }else if(id == R.id.nav_setting)
                 handleNavSetting();
             return true;
@@ -81,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
               .replace(R.id.fcv_main_content, new HomeFragment())
               .addToBackStack(null)
               .commit();
+    }
+
+    private void handleNavChatBot() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fcv_main_content, new ChatBotFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     private void handleNavCategoryProduct() {
