@@ -36,6 +36,7 @@ public class UpdateVariantInputAdapter extends RecyclerView.Adapter<UpdateVarian
 
     public interface OnVariantActionListener {
         void onSelectImage(int position, ProductVariantDTO item);
+        void onDeleteVariant(int position, ProductVariantDTO item);
     }
 
     public interface LocalImageResolver {
@@ -108,7 +109,7 @@ public class UpdateVariantInputAdapter extends RecyclerView.Adapter<UpdateVarian
             binding.edtSku.setEnabled(false);
             binding.edtSku.setFocusable(false);
             binding.tlSku.setEndIconVisible(false);
-            binding.btnDeleteVariant.setVisibility(View.GONE);
+            binding.btnDeleteVariant.setVisibility(View.VISIBLE);
 
             Uri localUri = localImageResolver != null ? localImageResolver.resolve(item.getSku()) : null;
             if (localUri != null) {

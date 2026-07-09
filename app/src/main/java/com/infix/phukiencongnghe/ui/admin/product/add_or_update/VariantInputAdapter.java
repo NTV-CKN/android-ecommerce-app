@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,8 +28,10 @@ public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapte
     private boolean isUpdateMode = false;
 
     public interface OnVariantActionListener {
-        void onDelete(int position);
+        void onDelete(int position, boolean isUpdateMode, ProductVariantDTO variantDTO);
+
         void onSelectImage(int position, ProductVariantDTO item);
+
         void onGenerateSkuRequested(int position, ProductVariantDTO item);
     }
 
@@ -44,7 +48,7 @@ public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapte
         variants.clear();
         if (newList != null) {
             variants.addAll(newList);
-            Log.d("VariantInputAdapter",""+ newList.size());
+            Log.d("VariantInputAdapter", "" + newList.size());
         }
         notifyDataSetChanged();
     }
@@ -88,11 +92,11 @@ public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapte
             binding.edtSize.setText(item.getSize());
             binding.edtGram.setText(item.getGram() != null ? String.valueOf(item.getGram()) : "0");
 
-            if (isUpdateMode) {
-                binding.btnDeleteVariant.setVisibility(View.GONE);
-            } else {
-                binding.btnDeleteVariant.setVisibility(View.VISIBLE);
-            }
+//            if (isUpdateMode) {
+//                binding.btnDeleteVariant.setVisibility(View.GONE);
+//            } else {
+//                binding.btnDeleteVariant.setVisibility(View.VISIBLE);
+//            }
 
             Glide.with(binding.ivVariantPhoto.getContext())
                     .load(item.getImageUrl())
@@ -117,9 +121,17 @@ public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapte
 
             binding.btnDeleteVariant.setOnClickListener(v -> {
                 int pos = getBindingAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION && listener != null) {
-                    listener.onDelete(pos);
-                }
+                if (!isUpdateMode)
+                    if (pos != RecyclerView.NO_POSITION && listener != null)
+                        listener.onDelete(pos, false, variants.get(pos));
+                    else if (variants.size() == 1)
+                        Toast.makeText(
+                                binding.getRoot().getContext(),
+                                "Sản phẩm phải có ít nhất 1 biến thể",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    else if (pos != RecyclerView.NO_POSITION && listener != null)
+                        listener.onDelete(pos, true, variants.get(pos));
             });
         }
 
@@ -127,15 +139,27 @@ public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapte
             skuWatcher = new CustomTextWatcher(s -> item.setSku(s.trim()));
             nameWatcher = new CustomTextWatcher(s -> item.setName(s.trim()));
             priceWatcher = new CustomTextWatcher(s -> {
-                try { item.setPrice(new BigDecimal(s)); } catch (Exception e) { item.setPrice(BigDecimal.ZERO); }
+                try {
+                    item.setPrice(new BigDecimal(s));
+                } catch (Exception e) {
+                    item.setPrice(BigDecimal.ZERO);
+                }
             });
             stockWatcher = new CustomTextWatcher(s -> {
-                try { item.setStock(Integer.parseInt(s)); } catch (Exception e) { item.setStock(0); }
+                try {
+                    item.setStock(Integer.parseInt(s));
+                } catch (Exception e) {
+                    item.setStock(0);
+                }
             });
             colorWatcher = new CustomTextWatcher(s -> item.setColor(s.trim()));
             sizeWatcher = new CustomTextWatcher(s -> item.setSize(s.trim()));
             gramWatcher = new CustomTextWatcher(s -> {
-                try { item.setGram(Integer.parseInt(s)); } catch (Exception e) { item.setGram(0); }
+                try {
+                    item.setGram(Integer.parseInt(s));
+                } catch (Exception e) {
+                    item.setGram(0);
+                }
             });
 
             binding.edtName.addTextChangedListener(nameWatcher);
@@ -163,11 +187,26 @@ public class VariantInputAdapter extends RecyclerView.Adapter<VariantInputAdapte
 
     private static class CustomTextWatcher implements TextWatcher {
         private final OnTextChangedListener listener;
-        public interface OnTextChangedListener { void onTextChanged(String s); }
 
-        public CustomTextWatcher(OnTextChangedListener listener) { this.listener = listener; }
-        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-        @Override public void afterTextChanged(Editable s) { listener.onTextChanged(s.toString()); }
+        public interface OnTextChangedListener {
+            void onTextChanged(String s);
+        }
+
+        public CustomTextWatcher(OnTextChangedListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            listener.onTextChanged(s.toString());
+        }
     }
 }

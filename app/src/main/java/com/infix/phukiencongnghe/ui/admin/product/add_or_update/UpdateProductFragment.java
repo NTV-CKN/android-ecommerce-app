@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
@@ -29,6 +31,7 @@ import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.product_category.ProductCategoryViewModel;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,12 +120,27 @@ public class UpdateProductFragment extends Fragment {
 
         // Setup RecyclerView Biến thể (dùng adapter riêng cho Update: khoá SKU, ẩn nút xoá,
         // ưu tiên hiển thị ảnh local vừa chọn qua PhotoPicker)
-        variantInputAdapter = new UpdateVariantInputAdapter((position, item) -> {
-            currentSelectingVariantPosition = position;
-            pickVariantImageLauncher.launch(new PickVisualMediaRequest.Builder()
-                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                    .build());
+        variantInputAdapter = new UpdateVariantInputAdapter(new UpdateVariantInputAdapter.OnVariantActionListener() {
+            @Override
+            public void onSelectImage(int position, ProductVariantDTO item) {
+                currentSelectingVariantPosition = position;
+                pickVariantImageLauncher.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
+            }
+
+            @Override
+            public void onDeleteVariant(int position, ProductVariantDTO item) {
+                SnackbarUtils.showSnackbarWithAction(
+                        binding.getRoot(),
+                        "Bạn có chắc muốn xóa biến thể: " + item.getName() + " này không?",
+                        Snackbar.LENGTH_LONG,
+                        () -> {
+                            //TODO: remove
+                        });
+            }
         });
+
         variantInputAdapter.setLocalImageResolver(this::getLocalVariantUri);
         variantInputAdapter.updateList(new ArrayList<>());
 
