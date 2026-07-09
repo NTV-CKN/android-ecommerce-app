@@ -11,16 +11,16 @@
 
     <!-- SEARCH -->
 
+
+    <!-- SORT BAR -->
+
     <EditText
         android:id="@+id/edt_search"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="Tìm kiếm"
         android:paddingStart="12dp"
-        android:textSize="14sp"/>
-
-
-    <!-- SORT BAR -->
+        android:textSize="14sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
