@@ -128,6 +128,14 @@ public class UpdateVariantInputAdapter extends RecyclerView.Adapter<UpdateVarian
 
             initTextWatchers(item);
 
+            binding.btnDeleteVariant.setOnClickListener(v -> {
+                if(variants.size() == 1) return;
+                int pos = getBindingAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION && listener != null) {
+                    listener.onDeleteVariant(pos, variants.get(pos));
+                }
+            });
+
             binding.ivVariantPhoto.setOnClickListener(v -> {
                 int pos = getBindingAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION && listener != null) {

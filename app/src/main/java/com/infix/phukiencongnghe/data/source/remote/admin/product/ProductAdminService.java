@@ -2,6 +2,7 @@ package com.infix.phukiencongnghe.data.source.remote.admin.product;
 
 import com.infix.phukiencongnghe.data.dto.ProductAdminPageDTO;
 import com.infix.phukiencongnghe.data.dto.response.PageResponseDTO;
+import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
 import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 
 import java.util.Map;
@@ -33,4 +34,7 @@ public interface ProductAdminService {
 
     @POST("/api/v1/admin-product/add-product")
     Call<SuccessBasicDTO> saveProduct(@Body ProductAdminPageDTO productAdminPageDTO);
+
+    @POST("/api/v1/admin-product/remove-variant")
+    Call<SuccessBasicDTO> removeVariant(@Body ProductVariantDTO variantDTO);
 }

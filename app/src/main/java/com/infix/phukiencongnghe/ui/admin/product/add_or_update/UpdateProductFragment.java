@@ -136,7 +136,12 @@ public class UpdateProductFragment extends Fragment {
                         "Bạn có chắc muốn xóa biến thể: " + item.getName() + " này không?",
                         Snackbar.LENGTH_LONG,
                         () -> {
-                            //TODO: remove
+                            viewModel.removeVariant(item, binding.getRoot().getContext(), () -> {
+                                //chi goi khi xoa thanh cong
+                                variantInputAdapter.getVariants().removeIf(variantDTO ->
+                                        variantDTO.getId().equals(item.getId()));
+                                variantInputAdapter.notifyDataSetChanged();
+                            });
                         });
             }
         });
@@ -217,15 +222,6 @@ public class UpdateProductFragment extends Fragment {
         }
     }
 
-    /**
-     * Chọn (tick) sẵn các category của sản phẩm đang update, dựa trên danh sách category ĐẦY ĐỦ
-     * (fullCategoryList) đang được hiển thị trên categoryAdapter.
-     * Bắt buộc phải add đúng instance nằm trong fullCategoryList (không phải instance riêng lấy
-     * từ currentProduct.getCategoriesDTOS()), vì CategoryAdapter xác định trạng thái "đã chọn"
-     * dựa trên việc item đó có nằm trong selectedCategories hay không — nếu equals()/hashCode()
-     * của CategoryDTO không được override theo id, so sánh theo tham chiếu object sẽ luôn sai
-     * lệch giữa 2 danh sách khác nguồn dữ liệu.
-     */
     private void trySelectCategoriesForCurrentProduct(@Nullable List<CategoryDTO> fullCategoryList) {
         if (currentProduct == null || currentProduct.getCategoriesDTOS() == null || fullCategoryList == null) {
             return;
@@ -261,7 +257,7 @@ public class UpdateProductFragment extends Fragment {
         if (viewModel.getMainImageUri().getValue() != null) {
             wrappers.add(new ImageUploadWrapper(
                     viewModel.getMainImageUri().getValue(),
-                    "products/" + folderId + "/main.jpg",
+                    "products/" + folderId + "/main_image.jpg",
                     "MAIN",
                     null
             ));
