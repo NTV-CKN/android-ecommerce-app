@@ -6,6 +6,8 @@ import com.infix.phukiencongnghe.data.repository.admin.product.IProductAdminRepo
 import com.infix.phukiencongnghe.data.repository.admin.product.ProductAdminRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.admin.voucher.AdminVoucherRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.admin.voucher.IAdminVoucherRepository;
+import com.infix.phukiencongnghe.data.repository.ai.ChatBotRepositoryImpl;
+import com.infix.phukiencongnghe.data.repository.ai.IChatBotRepository;
 import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
 import com.infix.phukiencongnghe.data.repository.auth.IAuthRepository;
 import com.infix.phukiencongnghe.data.repository.cart.CartRepositoryImpl;
@@ -88,5 +90,9 @@ public class InjectUtils {
 
     public static ICategoryRepository createCategoryRepository() {
         return new CategoryRepositoryImpl();
+    }
+
+    public static IChatBotRepository createChatBotRepository() {
+        return new ChatBotRepositoryImpl(RetrofitHelper.getChatBotService());
     }
 }

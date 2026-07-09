@@ -7,6 +7,7 @@ import com.infix.phukiencongnghe.data.source.remote.admin.AdminOrderService;
 import com.infix.phukiencongnghe.data.source.remote.admin.product.ProductAdminService;
 
 import com.infix.phukiencongnghe.data.source.remote.admin.voucher.AdminVoucherService;
+import com.infix.phukiencongnghe.data.source.remote.ai.ChatBotService;
 import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
@@ -64,15 +65,23 @@ public class RetrofitHelper {
     public static ShipFeeByAddressService getShipFeeByAddressService() {
         return generateRetrofit().create(ShipFeeByAddressService.class);
     }
+
     public static PaymentMethodService getPaymentMethod(){
         return generateRetrofit().create(PaymentMethodService.class);
     }
+
     public static OrderSerivce getOrderService() {
         return generateRetrofit().create(OrderSerivce.class);
     }
+
     public static ProductAdminService getProductAdminService() {
         return generateRetrofit().create(ProductAdminService.class);
     }
+
+    public static ChatBotService getChatBotService() {
+        return generateRetrofit().create(ChatBotService.class);
+    }
+
     private static Retrofit generateRetrofit() {
         return ApiClient.getRetrofitClient();
     }

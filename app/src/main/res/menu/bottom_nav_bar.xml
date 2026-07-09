@@ -12,10 +12,15 @@
         android:id="@+id/nav_voucher"
         android:icon="@drawable/ic_voucher"
         android:title="@string/voucher_bottom_navbar"/>
+<!--    <item-->
+<!--        android:id="@+id/nav_info"-->
+<!--        android:icon="@drawable/ic_info"-->
+<!--        android:title="@string/info_bottom_navbar"/>-->
     <item
-        android:id="@+id/nav_info"
-        android:icon="@drawable/ic_info"
-        android:title="@string/info_bottom_navbar"/>
+        android:id="@+id/nav_chatbot"
+        android:icon="@drawable/ic_chat_bot"
+        android:title="@string/txt_advice"
+        />
     <item
         android:id="@+id/nav_setting"
         android:icon="@drawable/ic_settings"
