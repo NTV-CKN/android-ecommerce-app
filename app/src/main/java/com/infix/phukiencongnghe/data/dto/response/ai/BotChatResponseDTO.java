@@ -1,13 +1,11 @@
 package com.infix.phukiencongnghe.data.dto.response.ai;
 
-import com.example.pkcn.dto.response.ai.ProductChatSummaryDTO;
-
 import java.util.List;
 
 public class BotChatResponseDTO {
     String botReply;
     boolean hasProducts;
-    List<com.example.pkcn.dto.response.ai.ProductChatSummaryDTO> suggestedProducts;
+    List<ProductChatSummaryDTO> suggestedProducts;
 
     public String getBotReply() {
         return botReply;

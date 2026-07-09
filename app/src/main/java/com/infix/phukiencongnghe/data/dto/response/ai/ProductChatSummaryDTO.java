@@ -1,4 +1,4 @@
-package com.example.pkcn.dto.response.ai;
+package com.infix.phukiencongnghe.data.dto.response.ai;
 
 import java.math.BigDecimal;
 
