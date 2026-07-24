@@ -15,6 +15,7 @@ import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.dto.response.CheckoutProductDTO;
 import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
 import com.infix.phukiencongnghe.databinding.ActivityMainBinding;
+import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.infoshop.InfoShopFragment;
 import com.infix.phukiencongnghe.ui.main.ai.ChatBotFragment;
 import com.infix.phukiencongnghe.ui.main.home.HomeFragment;
@@ -22,6 +23,9 @@ import com.infix.phukiencongnghe.ui.payment.PaymentFragment;
 import com.infix.phukiencongnghe.ui.product_category.ProductCategoryFragment;
 import com.infix.phukiencongnghe.ui.setting.SettingFragment;
 import com.infix.phukiencongnghe.ui.voucher.VoucherFragment;
+import com.infix.phukiencongnghe.utils.ApiClient;
+import com.infix.phukiencongnghe.utils.AppUtils;
+import com.infix.phukiencongnghe.utils.SharePrefUtils;
 
 import java.util.ArrayList;
 
@@ -44,7 +48,14 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        setOnLogoutForApiClient();
         setEventBottomNav();
+    }
+
+    private void setOnLogoutForApiClient() {
+        ApiClient.setOnLogoutListener(() -> {
+            AppUtils.startNewTaskWithClearStack(getBaseContext(), AuthActivity.class);
+        });
     }
 
     private void setEventBottomNav() {
