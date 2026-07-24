@@ -7,26 +7,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
-import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.databinding.FragmentRegisterBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
 import com.infix.phukiencongnghe.ui.auth.login.LoginFragment;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.AppUtils;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class RegisterFragment extends Fragment {
     private FragmentRegisterBinding binding;
     private AuthViewModel authViewModel;
@@ -60,8 +57,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void initAuthViewModel() {
-        AuthViewModel.Factory factory = new AuthViewModel.Factory(InjectUtils.createAuthRepository(requireContext()));
-        authViewModel = new ViewModelProvider(requireActivity(), factory).get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         //observe notify msg
         authViewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {

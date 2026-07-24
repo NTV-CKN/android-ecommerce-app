@@ -1,7 +1,5 @@
 package com.infix.phukiencongnghe.ui.auth;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -23,11 +21,15 @@ import com.infix.phukiencongnghe.utils.AppUtils;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class AuthViewModel extends ViewModel {
     private final IAuthRepository authRepository;
 
@@ -42,24 +44,9 @@ public class AuthViewModel extends ViewModel {
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
     public LiveData<Boolean> isLoading = _isLoading;
 
+    @Inject
     public AuthViewModel(IAuthRepository authRepository) {
         this.authRepository = authRepository;
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private IAuthRepository authRepository;
-
-        public Factory(IAuthRepository authRepository) {
-            this.authRepository = authRepository;
-        }
-
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(AuthViewModel.class))
-                return (T) new AuthViewModel(authRepository);
-            throw new IllegalArgumentException("Model class illegal");
-        }
     }
 
     /**

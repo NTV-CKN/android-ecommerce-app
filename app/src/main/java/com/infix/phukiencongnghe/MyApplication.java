@@ -6,6 +6,9 @@ import android.util.Log;
 import com.google.android.libraries.places.api.Places;
 import com.infix.phukiencongnghe.utils.ApiClient;
 
+import dagger.hilt.android.HiltAndroidApp;
+
+@HiltAndroidApp
 public class MyApplication extends Application {
 
     @Override

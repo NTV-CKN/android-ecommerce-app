@@ -12,16 +12,16 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
-import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.databinding.ActivityResetPasswordBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.AppUtils;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ResetPasswordActivity extends AppCompatActivity {
     private ActivityResetPasswordBinding binding;
     private AuthViewModel authViewModel;
@@ -57,9 +57,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     private void initAuthViewModel() {
-        AuthViewModel.Factory factory = new AuthViewModel.Factory(InjectUtils.createAuthRepository(this));
-
-        authViewModel = new ViewModelProvider(this, factory).get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         //observe notify msg
         authViewModel.notifyMsg.observe(this, msg -> {

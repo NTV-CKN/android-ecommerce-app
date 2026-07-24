@@ -22,6 +22,9 @@ import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ForgotPasswordFragment extends Fragment {
     private FragmentForgotPasswordBinding binding;
     private AuthViewModel authViewModel;
@@ -61,8 +64,7 @@ public class ForgotPasswordFragment extends Fragment {
         loadingDialog = null;
     }
     private void initAuthViewModel() {
-        AuthViewModel.Factory factory = new AuthViewModel.Factory(InjectUtils.createAuthRepository(requireContext()));
-        authViewModel = new ViewModelProvider(requireActivity(), factory).get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         //observe notify msg
         authViewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {

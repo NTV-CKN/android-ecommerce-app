@@ -13,18 +13,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.common.OnCallbackListener;
-import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
-import com.infix.phukiencongnghe.data.source.local.AppDatabase;
 import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
-import com.infix.phukiencongnghe.data.source.local.source.user.UserLocalDataSourceImpl;
-import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.databinding.ActivityAuthBinding;
 import com.infix.phukiencongnghe.ui.main.MainActivity;
 import com.infix.phukiencongnghe.ui.share_viewmodel.UserEntityViewModel;
 import com.infix.phukiencongnghe.utils.ApiClient;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AuthActivity extends AppCompatActivity {
     private ActivityAuthBinding binding;
     private AuthViewModel authViewModel;
@@ -49,17 +48,11 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void initUserEntityViewModel() {
-        UserEntityViewModel.Factory factory =
-                new UserEntityViewModel.Factory(InjectUtils.createAuthRepository(this));
-
-        userEntityViewModel = new ViewModelProvider(this, factory).get(UserEntityViewModel.class);
+        userEntityViewModel = new ViewModelProvider(this).get(UserEntityViewModel.class);
     }
 
     private void initAndObserveAuthViewModel() {
-        AuthViewModel.Factory factory =
-                new AuthViewModel.Factory(InjectUtils.createAuthRepository(this));
-
-        authViewModel =  new ViewModelProvider(this, factory).get(AuthViewModel.class);
+        authViewModel =  new ViewModelProvider(this).get(AuthViewModel.class);
 
         //jwt
         authViewModel.jwtFromLoginDTO.observe(this, jwtFromLoginDTO -> {

@@ -30,6 +30,9 @@ import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class UserManagerActivity extends AppCompatActivity {
     private ActivityUserManagerBinding binding;
     private ActionBarDrawerToggle toggle;
@@ -58,11 +61,7 @@ public class UserManagerActivity extends AppCompatActivity {
     }
 
     private void initRoleUserViewModel() {
-        RoleUserViewModel.Factory factory = new RoleUserViewModel.Factory(
-                InjectUtils.createAuthRepository(this)
-        );
-
-        roleUserViewModel = new ViewModelProvider(this, factory).get(RoleUserViewModel.class);
+        roleUserViewModel = new ViewModelProvider(this).get(RoleUserViewModel.class);
         //gọi check có phải admin hay không
         roleUserViewModel.isUserAdmin();
 

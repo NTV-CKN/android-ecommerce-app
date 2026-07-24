@@ -49,8 +49,7 @@ public class UserProfileFragment extends Fragment {
         btnChangePass = view.findViewById(R.id.btnChangePassword);
         imgAvatar = view.findViewById(R.id.imgAvatarProfile);
 
-        AuthViewModel.Factory authFac = new AuthViewModel.Factory(InjectUtils.createAuthRepository(requireContext()));
-        authViewModel = new ViewModelProvider(requireActivity(), authFac).get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
         UserProfileViewModel.Factory factory = new UserProfileViewModel.Factory(
                 InjectUtils.createUserProfileRepository()

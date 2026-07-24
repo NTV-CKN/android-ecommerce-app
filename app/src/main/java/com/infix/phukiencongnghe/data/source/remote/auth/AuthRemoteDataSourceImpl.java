@@ -7,11 +7,14 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.infix.phukiencongnghe.common.OnLoginGoogleListener;
 import com.infix.phukiencongnghe.data.dto.request.UserLoginGoogleDTO;
 
+import javax.inject.Inject;
+
 public class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     private final FirebaseAuth auth;
 
-    public AuthRemoteDataSourceImpl() {
-        this.auth = FirebaseAuth.getInstance();
+    @Inject
+    public AuthRemoteDataSourceImpl(FirebaseAuth auth) {
+        this.auth = auth;
     }
 
     @Override

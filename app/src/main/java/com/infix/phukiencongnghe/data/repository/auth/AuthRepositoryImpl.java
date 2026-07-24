@@ -14,6 +14,8 @@ import com.infix.phukiencongnghe.data.source.remote.auth.AuthService;
 import com.infix.phukiencongnghe.data.source.remote.auth.IAuthRemoteDataSource;
 import com.infix.phukiencongnghe.utils.AppExecutors;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class AuthRepositoryImpl implements IAuthRepository {
@@ -21,6 +23,7 @@ public class AuthRepositoryImpl implements IAuthRepository {
     private final IUserLocalDataSource userLocalDataSource;
     private final IAuthRemoteDataSource authRemoteDataSource;
 
+    @Inject
     public AuthRepositoryImpl(
             AuthService authService,
             IUserLocalDataSource userLocalDataSource,

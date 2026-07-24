@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -13,15 +12,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.data.repository.auth.AuthRepositoryImpl;
-import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
-import com.infix.phukiencongnghe.databinding.ActivityAuthBinding;
 import com.infix.phukiencongnghe.databinding.ActivityVerificationBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class VerificationActivity extends AppCompatActivity {
     private ActivityVerificationBinding binding;
     private AuthViewModel authViewModel;
@@ -69,9 +67,7 @@ public class VerificationActivity extends AppCompatActivity {
     }
 
     private void initAuthViewModel() {
-        AuthViewModel.Factory factory = new AuthViewModel.Factory(InjectUtils.createAuthRepository(this));
-
-        authViewModel = new ViewModelProvider(this, factory).get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         //observe notify msg
         authViewModel.notifyMsg.observe(this, msg -> {
