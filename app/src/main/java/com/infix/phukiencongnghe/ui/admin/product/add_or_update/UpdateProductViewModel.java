@@ -1,18 +1,25 @@
 package com.infix.phukiencongnghe.ui.admin.product.add_or_update;
 
+import android.content.Context;
 import android.net.Uri;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.infix.phukiencongnghe.common.OnCallbackListener;
 import com.infix.phukiencongnghe.data.dto.ProductAdminPageDTO;
 import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
+import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
 import com.infix.phukiencongnghe.data.model.ImageUploadWrapper;
 import com.infix.phukiencongnghe.data.repository.admin.product.IProductAdminRepository;
 import com.infix.phukiencongnghe.utils.AppExecutors;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class UpdateProductViewModel extends ViewModel {
     private final IProductAdminRepository productAdminRepository;
@@ -67,6 +74,20 @@ public class UpdateProductViewModel extends ViewModel {
                     _isLoading.setValue(false);
                 })
         );
+    }
+
+    public void removeVariant(ProductVariantDTO variantDTO, Context context, OnCallbackListener callbackListener) {
+        if(productAdminPageDTO.getValue() == null) return;
+        String path = "products/" + productAdminPageDTO.getValue().getFolderId() + "/variants/" + variantDTO.getSku() + ".jpg";
+        try {
+            productAdminRepository.removeVariant(path, context, variantDTO, callbackListener);
+        } catch (Exception e) {
+            Toast.makeText(
+                    context,
+                    e.getMessage(),
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
     }
 
     public void resetAllState() {

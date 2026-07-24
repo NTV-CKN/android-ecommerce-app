@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
@@ -29,6 +31,7 @@ import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.product_category.ProductCategoryViewModel;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,12 +120,32 @@ public class UpdateProductFragment extends Fragment {
 
         // Setup RecyclerView Biến thể (dùng adapter riêng cho Update: khoá SKU, ẩn nút xoá,
         // ưu tiên hiển thị ảnh local vừa chọn qua PhotoPicker)
-        variantInputAdapter = new UpdateVariantInputAdapter((position, item) -> {
-            currentSelectingVariantPosition = position;
-            pickVariantImageLauncher.launch(new PickVisualMediaRequest.Builder()
-                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                    .build());
+        variantInputAdapter = new UpdateVariantInputAdapter(new UpdateVariantInputAdapter.OnVariantActionListener() {
+            @Override
+            public void onSelectImage(int position, ProductVariantDTO item) {
+                currentSelectingVariantPosition = position;
+                pickVariantImageLauncher.launch(new PickVisualMediaRequest.Builder()
+                        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                        .build());
+            }
+
+            @Override
+            public void onDeleteVariant(int position, ProductVariantDTO item) {
+                SnackbarUtils.showSnackbarWithAction(
+                        binding.getRoot(),
+                        "Bạn có chắc muốn xóa biến thể: " + item.getName() + " này không?",
+                        Snackbar.LENGTH_LONG,
+                        () -> {
+                            viewModel.removeVariant(item, binding.getRoot().getContext(), () -> {
+                                //chi goi khi xoa thanh cong
+                                variantInputAdapter.getVariants().removeIf(variantDTO ->
+                                        variantDTO.getId().equals(item.getId()));
+                                variantInputAdapter.notifyDataSetChanged();
+                            });
+                        });
+            }
         });
+
         variantInputAdapter.setLocalImageResolver(this::getLocalVariantUri);
         variantInputAdapter.updateList(new ArrayList<>());
 
@@ -199,15 +222,6 @@ public class UpdateProductFragment extends Fragment {
         }
     }
 
-    /**
-     * Chọn (tick) sẵn các category của sản phẩm đang update, dựa trên danh sách category ĐẦY ĐỦ
-     * (fullCategoryList) đang được hiển thị trên categoryAdapter.
-     * Bắt buộc phải add đúng instance nằm trong fullCategoryList (không phải instance riêng lấy
-     * từ currentProduct.getCategoriesDTOS()), vì CategoryAdapter xác định trạng thái "đã chọn"
-     * dựa trên việc item đó có nằm trong selectedCategories hay không — nếu equals()/hashCode()
-     * của CategoryDTO không được override theo id, so sánh theo tham chiếu object sẽ luôn sai
-     * lệch giữa 2 danh sách khác nguồn dữ liệu.
-     */
     private void trySelectCategoriesForCurrentProduct(@Nullable List<CategoryDTO> fullCategoryList) {
         if (currentProduct == null || currentProduct.getCategoriesDTOS() == null || fullCategoryList == null) {
             return;
@@ -243,7 +257,7 @@ public class UpdateProductFragment extends Fragment {
         if (viewModel.getMainImageUri().getValue() != null) {
             wrappers.add(new ImageUploadWrapper(
                     viewModel.getMainImageUri().getValue(),
-                    "products/" + folderId + "/main.jpg",
+                    "products/" + folderId + "/main_image.jpg",
                     "MAIN",
                     null
             ));

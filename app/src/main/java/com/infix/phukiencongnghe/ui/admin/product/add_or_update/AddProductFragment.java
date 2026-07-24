@@ -108,7 +108,7 @@ public class AddProductFragment extends Fragment {
         //category
         productCategoryViewModel.loadCategories();
         productCategoryViewModel.categories.observe(getViewLifecycleOwner(), categoryDTOS -> {
-            if(categoryDTOS == null) return;
+            if (categoryDTOS == null) return;
             categoryAdapter.update(categoryDTOS);
         });
     }
@@ -124,9 +124,9 @@ public class AddProductFragment extends Fragment {
         });
 
         viewModel.isLoading.observe(getViewLifecycleOwner(), isLoading -> {
-            if(isLoading == null) return;
+            if (isLoading == null) return;
 
-            if(isLoading)
+            if (isLoading)
                 loadingDialog.show(requireActivity().getSupportFragmentManager(), null);
             else
                 loadingDialog.dismiss();
@@ -164,8 +164,9 @@ public class AddProductFragment extends Fragment {
         //variant
         variantAdapter = new VariantInputAdapter(new VariantInputAdapter.OnVariantActionListener() {
             @Override
-            public void onDelete(int position) {
-                viewModel.removeVariantField(position);
+            public void onDelete(int position, boolean isUpdateMode, ProductVariantDTO variantDTO) {
+                if (!isUpdateMode)
+                    viewModel.removeVariantField(position);
             }
 
             @Override
