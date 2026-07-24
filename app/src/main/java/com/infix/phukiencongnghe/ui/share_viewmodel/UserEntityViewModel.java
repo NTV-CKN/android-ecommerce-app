@@ -8,29 +8,17 @@ import com.infix.phukiencongnghe.common.OnCallbackListener;
 import com.infix.phukiencongnghe.data.repository.auth.IAuthRepository;
 import com.infix.phukiencongnghe.data.source.local.entity.UserEntity;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class UserEntityViewModel extends ViewModel {
     private final IAuthRepository authRepository;
 
+    @Inject
     public UserEntityViewModel(IAuthRepository authRepository) {
         this.authRepository = authRepository;
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private final IAuthRepository authRepository;
-
-        public Factory(IAuthRepository authRepository) {
-            this.authRepository = authRepository;
-        }
-
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(UserEntityViewModel.class)) {
-                return (T) new UserEntityViewModel(authRepository);
-            }
-            throw new IllegalArgumentException("Model class illegal or unknown");
-        }
     }
 
     public void insertUser(UserEntity user, OnCallbackListener onCallbackListener) {

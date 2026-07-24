@@ -42,15 +42,15 @@ public class InjectUtils {
         );
     }
 
-    public static IAuthRepository createAuthRepository(Context context) {
-        return new AuthRepositoryImpl(
-                RetrofitHelper.getAuthService(),
-                new UserLocalDataSourceImpl(
-                        AppDatabase.getInstance(context).userDAO()
-                ),
-                new AuthRemoteDataSourceImpl()
-        );
-    }
+//    public static IAuthRepository createAuthRepository(Context context) {
+//        return new AuthRepositoryImpl(
+//                RetrofitHelper.getAuthService(),
+//                new UserLocalDataSourceImpl(
+//                        AppDatabase.getInstance(context).userDAO()
+//                ),
+//                new AuthRemoteDataSourceImpl()
+//        );
+//    }
 
     public static IShipFeeByAddressRepository createShipFeeByAddressRepository() {
         return new ShipFeeByAddressRepositoryImpl(

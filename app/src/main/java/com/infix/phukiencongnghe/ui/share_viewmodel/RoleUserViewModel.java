@@ -9,16 +9,21 @@ import androidx.lifecycle.ViewModelProvider;
 import com.infix.phukiencongnghe.data.dto.response.SuccessBasicDTO;
 import com.infix.phukiencongnghe.data.repository.auth.IAuthRepository;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class RoleUserViewModel extends ViewModel {
     private final IAuthRepository authRepository;
 
     private MutableLiveData<Boolean> _isAdmin = new MutableLiveData<>();
     public LiveData<Boolean> isAdmin = _isAdmin;
 
+    @Inject
     public RoleUserViewModel(IAuthRepository authRepository) {
         this.authRepository = authRepository;
     }
@@ -38,23 +43,5 @@ public class RoleUserViewModel extends ViewModel {
 
             }
         });
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private final IAuthRepository authRepository;
-
-        public Factory(IAuthRepository authRepository) {
-            this.authRepository = authRepository;
-        }
-
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(RoleUserViewModel.class)) {
-                return (T) new RoleUserViewModel(authRepository);
-            }
-            throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
-        }
     }
 }
