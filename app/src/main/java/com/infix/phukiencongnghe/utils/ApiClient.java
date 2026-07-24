@@ -208,8 +208,10 @@ public class ApiClient {
             AppDatabase.getInstance(context)
                     .userDAO().clear();
         });
-        onLogoutListener.onLogout();
-        alreadyLogout = true;
+        if(onLogoutListener != null) {
+            onLogoutListener.onLogout();
+            alreadyLogout = true;
+        }
     }
 
     public interface OnLogoutListener {

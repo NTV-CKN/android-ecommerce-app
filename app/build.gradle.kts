@@ -3,7 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
-
+    id ("com.google.dagger.hilt.android")
 }
 
 android {
@@ -54,13 +54,17 @@ android {
 }
 
 dependencies {
+    //hilt
+    implementation(libs.hilt.android)
+    annotationProcessor(libs.hilt.compiler)
+
     //glide
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
 
     //ViewPager2
     implementation(libs.viewpager2)
-    implementation("androidx.cardview:cardview:1.0.0")
+    implementation(libs.cardview)
 
     //firebase
     implementation(platform(libs.firebase.bom))
