@@ -42,8 +42,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class VoucherManageAdminFragment extends Fragment implements OnVoucherItemClickListener {
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
+public class VoucherManageAdminFragment extends Fragment implements OnVoucherItemClickListener {
     private VoucherAdminViewModel viewModel;
     private VoucherAdminAdapter adapter;
     private LoadingDialog loadingDialog;
@@ -99,10 +101,7 @@ public class VoucherManageAdminFragment extends Fragment implements OnVoucherIte
     }
 
     private void setupViewModel() {
-        VoucherAdminViewModel.Factory factory = new VoucherAdminViewModel.Factory(
-                InjectUtils.createAdminVoucherRepository()
-        );
-        viewModel = new ViewModelProvider(this, factory).get(VoucherAdminViewModel.class);
+        viewModel = new ViewModelProvider(this).get(VoucherAdminViewModel.class);
 
         // 1. Lắng nghe dữ liệu danh sách
         viewModel.adminVoucher.observe(getViewLifecycleOwner(), voucherAdminDTOS -> {
