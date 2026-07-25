@@ -8,18 +8,16 @@ import com.infix.phukiencongnghe.data.source.remote.main.FeatureProductService;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class FeatureProductRepositoryImpl implements IProductRepository{
-
     FeatureProductService   featureProductService;
 
-    public FeatureProductRepositoryImpl() {
-        this.featureProductService = RetrofitHelper.getFeatureProductService();
-    }
-
-    public FeatureProductRepositoryImpl(FeatureProductService productService) {
-        this.featureProductService = productService;
+    @Inject
+    public FeatureProductRepositoryImpl(FeatureProductService featureProductService) {
+        this.featureProductService = featureProductService;
     }
 
     @Override

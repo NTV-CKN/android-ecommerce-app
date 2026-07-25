@@ -32,8 +32,10 @@ import com.infix.phukiencongnghe.ui.adapter.search.SearchAdvanceAdapter;
 import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
 import com.infix.phukiencongnghe.utils.paging.custom_view.PaginationBarView;
 
-public class SearchAdvanceFragment extends Fragment {
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
+public class SearchAdvanceFragment extends Fragment {
     private static final String KEYWORD = "keyword";
 
     private SearchAdvanceViewModel viewModel;
@@ -195,23 +197,7 @@ public class SearchAdvanceFragment extends Fragment {
     // ===== VIEW MODEL =====
 
     private void setupViewModel() {
-
-        SearchAdvanceViewModel.Factory factory =
-                new SearchAdvanceViewModel.Factory(
-                        new FeatureProductRepositoryImpl(),
-                        new CategoryRepositoryImpl(),
-                        new SearchLocalRepositoryImpl(
-                                requireContext()
-                        )
-                );
-
-        viewModel =
-                new ViewModelProvider(
-                        this,
-                        factory
-                ).get(
-                        SearchAdvanceViewModel.class
-                );
+        viewModel =  new ViewModelProvider(this).get(SearchAdvanceViewModel.class);
     }
 
 

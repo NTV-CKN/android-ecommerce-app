@@ -3,6 +3,8 @@ package com.infix.phukiencongnghe.di;
 import android.content.Context;
 
 import com.infix.phukiencongnghe.data.source.local.AppDatabase;
+import com.infix.phukiencongnghe.data.source.local.dao.RecentSearchProductDAO;
+import com.infix.phukiencongnghe.data.source.local.dao.SearchKeywordDAO;
 import com.infix.phukiencongnghe.data.source.local.dao.UserDAO;
 
 import javax.inject.Singleton;
@@ -26,5 +28,17 @@ public class MyDatabaseModule {
     @Singleton
     public static UserDAO provideUserDAO(AppDatabase appDatabase) {
         return appDatabase.userDAO();
+    }
+
+    @Provides
+    @Singleton
+    public static SearchKeywordDAO provideSearchKeywordDAO(AppDatabase appDatabase) {
+        return appDatabase.searchKeywordDAO();
+    }
+
+    @Provides
+    @Singleton
+    public static RecentSearchProductDAO provideRecentSearchProductDAO(AppDatabase appDatabase) {
+        return appDatabase.recentSearchProductDAO();
     }
 }

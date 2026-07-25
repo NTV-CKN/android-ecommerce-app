@@ -32,12 +32,17 @@ import com.infix.phukiencongnghe.utils.paging.custom_view.PaginationBarView;
 import android.os.Handler;
 import android.os.Looper;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ProductCategoryFragment extends Fragment {
     private RecyclerView rvCategory;
     private NestedScrollView nestedScrollView;
     private RecyclerView rvProduct;
     private AppCompatEditText edtSearch;
-    private ProductCategoryViewModel viewModel;
+
+    private ProductCategoryViewModel productCategoryVM;
+
     private FeatureProductAdapter productAdapter;
     private PaginationBarView paginationBar;
     private Button btnAllPrice;
@@ -77,7 +82,7 @@ public class ProductCategoryFragment extends Fragment {
         setupPagination();
 
         btnAllPrice.setSelected(true);
-        viewModel.loadCategories();
+        productCategoryVM.loadCategories();
 
         Integer categoryId = null;
         if(getArguments() != null &&
@@ -85,7 +90,7 @@ public class ProductCategoryFragment extends Fragment {
             categoryId =
                     getArguments().getInt("categoryId");
         }
-        viewModel.changeCategory(categoryId);
+        productCategoryVM.changeCategory(categoryId);
     }
 
     private void initViews(View view) {
@@ -145,22 +150,14 @@ public class ProductCategoryFragment extends Fragment {
     }
 
     private void setupViewModel() {
-        ProductCategoryViewModel.Factory factory =
-                new ProductCategoryViewModel.Factory(
-                        new CategoryRepositoryImpl(),
-                        new FeatureProductRepositoryImpl()
-                );
-        viewModel =
-                new ViewModelProvider(
-                        this,
-                        factory
-                ).get(ProductCategoryViewModel.class);
+        productCategoryVM =
+                new ViewModelProvider(this).get(ProductCategoryViewModel.class);
     }
 
     private void observeData(){
 
         // observe category
-        viewModel.categories.observe(
+        productCategoryVM.categories.observe(
                 getViewLifecycleOwner(),
                 categoryList -> {
                     if(categoryList != null){
@@ -182,7 +179,7 @@ public class ProductCategoryFragment extends Fragment {
                                             resetPriceButtons();
                                             btnAllPrice.setSelected(true);
                                             edtSearch.setText("");
-                                            viewModel.changeCategory(category.getId());
+                                            productCategoryVM.changeCategory(category.getId());
                                             rvProduct.scrollToPosition(0);
                                         }
                                 );
@@ -193,7 +190,7 @@ public class ProductCategoryFragment extends Fragment {
                 }
         );
         // observe product
-        viewModel.products.observe(
+        productCategoryVM.products.observe(
                 getViewLifecycleOwner(),
                 productList -> {
                     productAdapter.setData(
@@ -204,7 +201,7 @@ public class ProductCategoryFragment extends Fragment {
                 }
         );
         // observe notify
-        viewModel.notify.observe(
+        productCategoryVM.notify.observe(
                 getViewLifecycleOwner(),
                 msg -> {
                     if(msg != null){
@@ -214,7 +211,7 @@ public class ProductCategoryFragment extends Fragment {
                     }
                 }
         );
-        viewModel
+        productCategoryVM
                 .getPaginationManager()
                 .currentPage
                 .observe(
@@ -222,7 +219,7 @@ public class ProductCategoryFragment extends Fragment {
                         currentPage -> {
 
                             Integer totalPages =
-                                    viewModel
+                                    productCategoryVM
                                             .getPaginationManager()
                                             .totalPages
                                             .getValue();
@@ -236,7 +233,7 @@ public class ProductCategoryFragment extends Fragment {
                             }
                         }
                 );
-        viewModel
+        productCategoryVM
                 .getPaginationManager()
                 .totalPages
                 .observe(
@@ -244,7 +241,7 @@ public class ProductCategoryFragment extends Fragment {
                         totalPages -> {
 
                             Page currentPage =
-                                    viewModel
+                                    productCategoryVM
                                             .getPaginationManager()
                                             .currentPage
                                             .getValue();
@@ -263,7 +260,7 @@ public class ProductCategoryFragment extends Fragment {
     private void setupPagination(){
         paginationBar.setOnPageChangeListener(
                 page -> {
-                    viewModel
+                    productCategoryVM
                             .getPaginationManager()
                             .setCurrentPage(page);
 
@@ -282,12 +279,12 @@ public class ProductCategoryFragment extends Fragment {
         btnAllPrice.setOnClickListener(v -> {
             resetPriceButtons();
             btnAllPrice.setSelected(true);
-            viewModel.clearPriceFilter();
+            productCategoryVM.clearPriceFilter();
         });
         btnPrice1.setOnClickListener(v -> {
             resetPriceButtons();
             btnPrice1.setSelected(true);
-            viewModel.setPriceFilter(
+            productCategoryVM.setPriceFilter(
                     null,
                     100000.0
             );
@@ -296,7 +293,7 @@ public class ProductCategoryFragment extends Fragment {
         btnPrice2.setOnClickListener(v -> {
             resetPriceButtons();
             btnPrice2.setSelected(true);
-            viewModel.setPriceFilter(
+            productCategoryVM.setPriceFilter(
                     100000.0,
                     500000.0
             );
@@ -305,7 +302,7 @@ public class ProductCategoryFragment extends Fragment {
         btnPrice3.setOnClickListener(v -> {
             resetPriceButtons();
             btnPrice3.setSelected(true);
-            viewModel.setPriceFilter(
+            productCategoryVM.setPriceFilter(
                     500000.0,
                     null
             );
@@ -345,7 +342,7 @@ public class ProductCategoryFragment extends Fragment {
 
                         searchRunnable = () -> {
 
-                            viewModel.setKeyword(
+                            productCategoryVM.setKeyword(
                                     s.toString().trim()
                             );
                             nestedScrollView.smoothScrollTo(0,0);
@@ -390,7 +387,7 @@ public class ProductCategoryFragment extends Fragment {
 
                     case "Giá thấp → cao":
 
-                        viewModel.setSort(
+                        productCategoryVM.setSort(
                                 "price",
                                 "asc"
                         );
@@ -398,7 +395,7 @@ public class ProductCategoryFragment extends Fragment {
 
                     case "Giá cao → thấp":
 
-                        viewModel.setSort(
+                        productCategoryVM.setSort(
                                 "price",
                                 "desc"
                         );
@@ -406,7 +403,7 @@ public class ProductCategoryFragment extends Fragment {
 
                     case "Sao thấp → cao":
 
-                        viewModel.setSort(
+                        productCategoryVM.setSort(
                                 "star",
                                 "asc"
                         );
@@ -414,7 +411,7 @@ public class ProductCategoryFragment extends Fragment {
 
                     case "Sao cao → thấp":
 
-                        viewModel.setSort(
+                        productCategoryVM.setSort(
                                 "star",
                                 "desc"
                         );

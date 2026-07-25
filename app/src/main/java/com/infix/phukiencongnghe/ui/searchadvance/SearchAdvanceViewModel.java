@@ -19,14 +19,16 @@ import com.infix.phukiencongnghe.data.source.local.entity.RecentSearchProductEnt
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class SearchAdvanceViewModel extends ViewModel {
-
     private final IProductRepository productRepository;
-
     private final ICategoryRepository categoryRepository;
     private final ISearchLocalRepository searchLocalRepository;
 
@@ -68,6 +70,7 @@ public class SearchAdvanceViewModel extends ViewModel {
             pageObserver =
             page -> fetchProducts();
 
+    @Inject
     public SearchAdvanceViewModel(
             IProductRepository productRepository,
             ICategoryRepository categoryRepository,
@@ -249,50 +252,6 @@ public class SearchAdvanceViewModel extends ViewModel {
                 );
 
         super.onCleared();
-    }
-
-
-    // ===== FACTORY =====
-
-    public static class Factory
-            implements ViewModelProvider.Factory {
-
-        private final IProductRepository productRepository;
-        private final ICategoryRepository categoryRepository;
-        private final ISearchLocalRepository searchLocalRepository;
-
-        public Factory(
-                IProductRepository productRepository,
-                ICategoryRepository categoryRepository,
-                ISearchLocalRepository searchLocalRepository
-        ) {
-            this.productRepository = productRepository;
-            this.categoryRepository = categoryRepository;
-            this.searchLocalRepository = searchLocalRepository;
-        }
-
-        @NonNull
-        @Override
-        public <T extends ViewModel>
-        T create(
-                @NonNull Class<T> modelClass
-        ) {
-
-            if (modelClass.isAssignableFrom(
-                    SearchAdvanceViewModel.class
-            )) {
-                return (T)
-                        new SearchAdvanceViewModel(
-                                productRepository,
-                                categoryRepository,
-                                searchLocalRepository
-                        );
-            }
-
-            throw new IllegalArgumentException(
-                    "Unknown ViewModel"
-            );
-        }
     }
 
     public void loadCategories() {

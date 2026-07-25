@@ -16,14 +16,15 @@ import com.infix.phukiencongnghe.data.repository.common.slider_show.ISliderShowR
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class HomeViewModel extends ViewModel {
-
-
-
     /*
         REPOSITORY
      */
@@ -65,31 +66,11 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
     public final LiveData<Boolean> isLoading = _isLoading;
 
+    @Inject
     public HomeViewModel(ICategoryRepository categoryRepository, IProductRepository featureProductRepository, ISliderShowRepository sliderShowRepository) {
         this.featureProductRepository = featureProductRepository;
         this.categoryRepository = categoryRepository;
         this.sliderShowRepository = sliderShowRepository;
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private final ICategoryRepository categoryRepository;
-        private final IProductRepository productRepository;
-        private final ISliderShowRepository sliderShowRepository;
-
-        public Factory(ICategoryRepository categoryRepository,
-                       IProductRepository productRepository, ISliderShowRepository sliderShowRepository) {
-            this.categoryRepository = categoryRepository;
-            this.productRepository = productRepository;
-            this.sliderShowRepository = sliderShowRepository;
-        }
-
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(HomeViewModel.class))
-                return (T) new HomeViewModel(categoryRepository, productRepository, sliderShowRepository);
-            throw new IllegalArgumentException("Model class illegal");
-        }
     }
 
     public void loadSliderShow() {

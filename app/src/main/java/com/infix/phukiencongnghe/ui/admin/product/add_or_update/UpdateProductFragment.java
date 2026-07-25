@@ -39,9 +39,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class UpdateProductFragment extends Fragment {
     private FragmentAddOrUpdateProductBinding binding;
-    private UpdateProductViewModel viewModel;
+    private UpdateProductViewModel updateProductVM;
     private ProductCategoryViewModel productCategoryViewModel;
 
     private CategoryAdapter categoryAdapter;
@@ -55,7 +58,7 @@ public class UpdateProductFragment extends Fragment {
     private final ActivityResultLauncher<PickVisualMediaRequest> pickMainImageLauncher =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                 if (uri != null) {
-                    viewModel.setMainImageUri(uri);
+                    updateProductVM.setMainImageUri(uri);
                     binding.ivMainPhoto.setImageURI(uri);
                 }
             });
@@ -92,14 +95,8 @@ public class UpdateProductFragment extends Fragment {
     }
 
     private void initViewModels() {
-        viewModel = new ViewModelProvider(requireActivity(), new UpdateProductViewModel.Factory(
-                InjectUtils.createProductAdminRepository()
-        )).get(UpdateProductViewModel.class);
-
-        productCategoryViewModel = new ViewModelProvider(this, new ProductCategoryViewModel.Factory(
-                new CategoryRepositoryImpl(),
-                InjectUtils.createProductRepository()
-        )).get(ProductCategoryViewModel.class);
+        updateProductVM = new ViewModelProvider(requireActivity()).get(UpdateProductViewModel.class);
+        productCategoryViewModel = new ViewModelProvider(this).get(ProductCategoryViewModel.class);
     }
 
     private void setupUI() {
@@ -107,10 +104,10 @@ public class UpdateProductFragment extends Fragment {
         binding.btnAddVariantField.setVisibility(View.GONE);
 
         categoryAdapter = new CategoryAdapter(new ArrayList<>(), item -> {
-            if (viewModel.getSelectedCategories().contains(item)) {
-                viewModel.removeCategory(item);
+            if (updateProductVM.getSelectedCategories().contains(item)) {
+                updateProductVM.removeCategory(item);
             } else {
-                viewModel.addCategory(item);
+                updateProductVM.addCategory(item);
             }
             categoryAdapter.notifyDataSetChanged();
         });
@@ -129,6 +126,7 @@ public class UpdateProductFragment extends Fragment {
                         .build());
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDeleteVariant(int position, ProductVariantDTO item) {
                 SnackbarUtils.showSnackbarWithAction(
@@ -136,7 +134,7 @@ public class UpdateProductFragment extends Fragment {
                         "Bạn có chắc muốn xóa biến thể: " + item.getName() + " này không?",
                         Snackbar.LENGTH_LONG,
                         () -> {
-                            viewModel.removeVariant(item, binding.getRoot().getContext(), () -> {
+                            updateProductVM.removeVariant(item, binding.getRoot().getContext(), () -> {
                                 //chi goi khi xoa thanh cong
                                 variantInputAdapter.getVariants().removeIf(variantDTO ->
                                         variantDTO.getId().equals(item.getId()));
@@ -161,7 +159,7 @@ public class UpdateProductFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void observeViewModel() {
-        viewModel.isLoading.observe(getViewLifecycleOwner(), loading -> {
+        updateProductVM.isLoading.observe(getViewLifecycleOwner(), loading -> {
             if (loading != null && loading) {
                 loadingDialog.show(requireActivity().getSupportFragmentManager(), null);
             } else if (loading != null) {
@@ -169,7 +167,7 @@ public class UpdateProductFragment extends Fragment {
             }
         });
 
-        viewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
+        updateProductVM.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
             if (msg != null) {
                 SnackbarUtils.showBaseSnackbar(binding.getRoot(), msg, Snackbar.LENGTH_LONG);
                 if (msg.contains("thành công")) {
@@ -186,7 +184,7 @@ public class UpdateProductFragment extends Fragment {
         });
         productCategoryViewModel.loadCategories();
 
-        viewModel.productAdminPageDTO.observe(getViewLifecycleOwner(), productAdminPageDTO -> {
+        updateProductVM.productAdminPageDTO.observe(getViewLifecycleOwner(), productAdminPageDTO -> {
             if (productAdminPageDTO == null) return;
 
             currentProduct = productAdminPageDTO;
@@ -227,11 +225,11 @@ public class UpdateProductFragment extends Fragment {
             return;
         }
 
-        viewModel.getSelectedCategories().clear();
+        updateProductVM.getSelectedCategories().clear();
         for (CategoryDTO productCat : currentProduct.getCategoriesDTOS()) {
             for (CategoryDTO fullCat : fullCategoryList) {
                 if (Objects.equals(fullCat.getId(), productCat.getId())) {
-                    viewModel.addCategory(fullCat);
+                    updateProductVM.addCategory(fullCat);
                     break;
                 }
             }
@@ -248,15 +246,15 @@ public class UpdateProductFragment extends Fragment {
         currentProduct.setSubtitle(binding.edtSubtitleInfo.getText().toString().trim());
         currentProduct.setWarrantyPeriod(Integer.parseInt(binding.edtWarrantyInfo.getText().toString().trim()));
         currentProduct.setDescription(binding.edtDescInfo.getText().toString().trim());
-        currentProduct.setCategoriesDTOS(viewModel.getSelectedCategories());
+        currentProduct.setCategoriesDTOS(updateProductVM.getSelectedCategories());
         currentProduct.setImages(new ArrayList<>());
 
         List<ImageUploadWrapper> wrappers = new ArrayList<>();
         String folderId = currentProduct.getFolderId();
 
-        if (viewModel.getMainImageUri().getValue() != null) {
+        if (updateProductVM.getMainImageUri().getValue() != null) {
             wrappers.add(new ImageUploadWrapper(
-                    viewModel.getMainImageUri().getValue(),
+                    updateProductVM.getMainImageUri().getValue(),
                     "products/" + folderId + "/main_image.jpg",
                     "MAIN",
                     null
@@ -279,7 +277,7 @@ public class UpdateProductFragment extends Fragment {
             }
         }
 
-        viewModel.updateProduct(currentProduct, wrappers);
+        updateProductVM.updateProduct(currentProduct, wrappers);
     }
 
     private boolean validateData() {
@@ -291,7 +289,7 @@ public class UpdateProductFragment extends Fragment {
             return false;
         }
 
-        if (viewModel.getSelectedCategories().isEmpty()) {
+        if (updateProductVM.getSelectedCategories().isEmpty()) {
             Toast.makeText(requireContext(), "Vui lòng chọn ít nhất 1 danh mục!", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -338,6 +336,6 @@ public class UpdateProductFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        viewModel.resetAllState();
+        updateProductVM.resetAllState();
     }
 }

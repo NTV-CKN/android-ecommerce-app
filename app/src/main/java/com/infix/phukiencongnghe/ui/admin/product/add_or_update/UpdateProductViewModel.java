@@ -21,6 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class UpdateProductViewModel extends ViewModel {
     private final IProductAdminRepository productAdminRepository;
 
@@ -38,6 +43,7 @@ public class UpdateProductViewModel extends ViewModel {
     private final MutableLiveData<ProductAdminPageDTO> _productAdminPageDTO = new MutableLiveData<>();
     public LiveData<ProductAdminPageDTO> productAdminPageDTO = _productAdminPageDTO;
 
+    @Inject
     public UpdateProductViewModel(IProductAdminRepository productAdminRepository) {
         this.productAdminRepository = productAdminRepository;
     }
@@ -100,23 +106,5 @@ public class UpdateProductViewModel extends ViewModel {
 
     public void setProductAdminPageDTOState(ProductAdminPageDTO productAdminPageDTO) {
         _productAdminPageDTO.setValue(productAdminPageDTO);
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private final IProductAdminRepository productAdminRepository;
-
-        public Factory(IProductAdminRepository productAdminRepository) {
-            this.productAdminRepository = productAdminRepository;
-        }
-
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(UpdateProductViewModel.class)) {
-                return (T) new UpdateProductViewModel(productAdminRepository);
-            }
-            throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
-        }
     }
 }

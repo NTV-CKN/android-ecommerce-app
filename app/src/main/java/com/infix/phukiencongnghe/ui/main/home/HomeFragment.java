@@ -30,6 +30,9 @@ import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
 
 import java.util.ArrayList;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class HomeFragment extends Fragment {
 
     private ViewPager2 viewPagerBanner;
@@ -40,7 +43,9 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerViewProduct;
     private RecyclerView recyclerViewMouse;
     private RecyclerView recyclerViewKeyboard;
+
     private HomeViewModel homeViewModel;
+
     private FeatureProductAdapter featureProductAdapter;
     private FeatureProductAdapter mouseAdapter;
     private FeatureProductAdapter keyboardAdapter;
@@ -132,12 +137,7 @@ public class HomeFragment extends Fragment {
         });
         
         // 5. Cấu hình ViewModel (Gắn với 'this' tức là Vòng đời của chính Fragment này)
-        HomeViewModel.Factory factory = new HomeViewModel.Factory(
-                new CategoryRepositoryImpl(),
-                new FeatureProductRepositoryImpl(),
-                new SliderShowRepositoryImpl()
-        );
-        homeViewModel = new ViewModelProvider(this, factory).get(HomeViewModel.class);
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         // 6. Quan sát (Observe) các nguồn dữ liệu LiveData
         observeViewModel();

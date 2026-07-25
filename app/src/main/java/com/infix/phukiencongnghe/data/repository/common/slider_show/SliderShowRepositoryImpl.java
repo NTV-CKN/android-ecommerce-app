@@ -6,14 +6,16 @@ import com.infix.phukiencongnghe.data.source.remote.main.SliderShowService;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class SliderShowRepositoryImpl implements ISliderShowRepository {
-
     SliderShowService sliderShowService;
 
-    public SliderShowRepositoryImpl() {
-        this.sliderShowService = RetrofitHelper.getSliderShow();
+    @Inject
+    public SliderShowRepositoryImpl(SliderShowService sliderShowService) {
+        this.sliderShowService = sliderShowService;
     }
 
     @Override

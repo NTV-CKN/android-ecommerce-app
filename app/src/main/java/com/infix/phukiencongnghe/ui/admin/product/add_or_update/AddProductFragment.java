@@ -31,11 +31,13 @@ import com.infix.phukiencongnghe.utils.SnackbarUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddProductFragment extends Fragment {
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
+public class AddProductFragment extends Fragment {
     private FragmentAddOrUpdateProductBinding binding;
 
-    private AddProductViewModel viewModel;
+    private AddProductViewModel addProductVM;
     private ProductCategoryViewModel productCategoryViewModel;
 
     private VariantInputAdapter variantAdapter;
@@ -52,14 +54,14 @@ public class AddProductFragment extends Fragment {
                             .load(uri)
                             .error(R.drawable.ic_launcher_background)
                             .into(binding.ivMainPhoto);
-                    viewModel.setMainImageUri(uri);
+                    addProductVM.setMainImageUri(uri);
                 }
             });
 
     private final ActivityResultLauncher<PickVisualMediaRequest> pickVariantImageLauncher =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                 if (uri != null && targetingVariantPosition != -1) {
-                    viewModel.setVariantImageUri(targetingVariantPosition, uri);
+                    addProductVM.setVariantImageUri(targetingVariantPosition, uri);
                 }
             });
 
@@ -73,16 +75,12 @@ public class AddProductFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AddProductViewModel.Factory factory =
-                new AddProductViewModel.Factory(
-                        InjectUtils.createProductAdminRepository()
-                );
         loadingDialog = new LoadingDialog();
-        viewModel = new ViewModelProvider(this, factory).get(AddProductViewModel.class);
+        addProductVM = new ViewModelProvider(this).get(AddProductViewModel.class);
 
         if (getArguments() != null) {
             boolean isEdit = getArguments().getBoolean("IS_UPDATE_MODE", false);
-            viewModel.setUpdateMode(isEdit);
+            addProductVM.setUpdateMode(isEdit);
 
         }
 
@@ -92,18 +90,13 @@ public class AddProductFragment extends Fragment {
         setEvent();
         initProductCategoryVM();
 
-        viewModel.getVariantsLiveData().observe(getViewLifecycleOwner(), list -> {
-            variantAdapter.updateList(list, viewModel.isUpdate());
+        addProductVM.getVariantsLiveData().observe(getViewLifecycleOwner(), list -> {
+            variantAdapter.updateList(list, addProductVM.isUpdate());
         });
     }
 
     private void initProductCategoryVM() {
-        ProductCategoryViewModel.Factory factory =
-                new ProductCategoryViewModel.Factory(
-                        InjectUtils.createCategoryRepository(),
-                        InjectUtils.createProductRepository()
-                );
-        productCategoryViewModel = new ViewModelProvider(this, factory).get(ProductCategoryViewModel.class);
+        productCategoryViewModel = new ViewModelProvider(this).get(ProductCategoryViewModel.class);
 
         //category
         productCategoryViewModel.loadCategories();
@@ -114,7 +107,7 @@ public class AddProductFragment extends Fragment {
     }
 
     private void observeAOUProductVM() {
-        viewModel.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
+        addProductVM.notifyMsg.observe(getViewLifecycleOwner(), msg -> {
             if (msg == null) return;
             SnackbarUtils.showBaseSnackbar(
                     binding.getRoot(),
@@ -123,7 +116,7 @@ public class AddProductFragment extends Fragment {
             );
         });
 
-        viewModel.isLoading.observe(getViewLifecycleOwner(), isLoading -> {
+        addProductVM.isLoading.observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading == null) return;
 
             if (isLoading)
@@ -134,26 +127,26 @@ public class AddProductFragment extends Fragment {
     }
 
     private void setupUIBehaviors() {
-        if (viewModel.isUpdate()) {
+        if (addProductVM.isUpdate()) {
             binding.btnAddVariantField.setVisibility(View.GONE);
         } else {
             binding.btnAddVariantField.setVisibility(View.VISIBLE);
         }
 
-        binding.btnAddVariantField.setOnClickListener(v -> viewModel.addNewVariantField());
+        binding.btnAddVariantField.setOnClickListener(v -> addProductVM.addNewVariantField());
 
         //save total
         binding.btnSaveTotal.setOnClickListener(v -> {
             if (validateBeforeSave()) {
-                List<ImageUploadWrapper> readyUploads = viewModel.prepareAllUploadWrappers();
-                ProductAdminPageDTO currentDto = viewModel.prepareProductDTO(
+                List<ImageUploadWrapper> readyUploads = addProductVM.prepareAllUploadWrappers();
+                ProductAdminPageDTO currentDto = addProductVM.prepareProductDTO(
                         binding.edtNameInfo.getText().toString(),
                         binding.edtSubtitleInfo.getText().toString(),
                         binding.edtDescInfo.getText().toString(),
                         binding.edtWarrantyInfo.getText().toString()
                 );
 
-                viewModel.saveProduct(currentDto, readyUploads);
+                addProductVM.saveProduct(currentDto, readyUploads);
             }
 
         });
@@ -166,7 +159,7 @@ public class AddProductFragment extends Fragment {
             @Override
             public void onDelete(int position, boolean isUpdateMode, ProductVariantDTO variantDTO) {
                 if (!isUpdateMode)
-                    viewModel.removeVariantField(position);
+                    addProductVM.removeVariantField(position);
             }
 
             @Override
@@ -186,7 +179,7 @@ public class AddProductFragment extends Fragment {
                     return;
                 }
 
-                viewModel.generateUniqueSku(mainProductName, color, size, s -> {
+                addProductVM.generateUniqueSku(mainProductName, color, size, s -> {
                     item.setSku(s);
                     variantAdapter.triggerNotifyItemChanged(position);
                 });
@@ -212,7 +205,7 @@ public class AddProductFragment extends Fragment {
 
         //category
         categoryAdapter = new CategoryAdapter(new ArrayList<>(), category -> {
-            viewModel.addCategory(category);
+            addProductVM.addCategory(category);
         });
 
         binding.rvCategory.setAdapter(categoryAdapter);
@@ -267,13 +260,13 @@ public class AddProductFragment extends Fragment {
             return false;
         }
 
-        if (!viewModel.isUpdate() && viewModel.mainImageUri.getValue() == null) {
+        if (!addProductVM.isUpdate() && addProductVM.mainImageUri.getValue() == null) {
             Toast.makeText(requireContext(), "Vui lòng chọn Ảnh chính cho sản phẩm!", Toast.LENGTH_LONG).show();
             binding.getRoot().findViewById(R.id.iv_main_photo).requestFocus();
             return false;
         }
 
-        List<ProductVariantDTO> variants = viewModel.getVariantsLiveData().getValue();
+        List<ProductVariantDTO> variants = addProductVM.getVariantsLiveData().getValue();
         if (variants == null || variants.isEmpty()) {
             Toast.makeText(requireContext(), "Sản phẩm phải có ít nhất 1 biến thể!", Toast.LENGTH_LONG).show();
             return false;
@@ -312,7 +305,7 @@ public class AddProductFragment extends Fragment {
                 return false;
             }
 
-            if (!viewModel.isUpdate() && (variant.getImageUrl() == null || variant.getImageUrl().trim().isEmpty())) {
+            if (!addProductVM.isUpdate() && (variant.getImageUrl() == null || variant.getImageUrl().trim().isEmpty())) {
                 Toast.makeText(requireContext(), "Vui lòng chọn hình ảnh minh họa cho biến thể dòng số " + itemIndex, Toast.LENGTH_LONG).show();
                 binding.rvInputVariants.scrollToPosition(i);
                 return false;
@@ -326,6 +319,6 @@ public class AddProductFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        viewModel.resetAllState();
+        addProductVM.resetAllState();
     }
 }

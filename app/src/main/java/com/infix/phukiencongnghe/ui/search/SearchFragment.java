@@ -25,11 +25,12 @@ import com.infix.phukiencongnghe.ui.adapter.search.SearchResultAdapter;
 import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
 import com.infix.phukiencongnghe.ui.searchadvance.SearchAdvanceFragment;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class SearchFragment extends Fragment {
-
     private FragmentSearchBinding binding;
-    private SearchViewModel viewModel;
+    private SearchViewModel searchViewModel;
 
     private Handler handler =
             new Handler(Looper.getMainLooper());
@@ -54,12 +55,12 @@ public class SearchFragment extends Fragment {
 
         binding.btnClearKeyword
                 .setOnClickListener(v ->
-                        viewModel.clearKeywordHistory()
+                        searchViewModel.clearKeywordHistory()
                 );
 
         binding.btnClearRecent
                 .setOnClickListener(v ->
-                        viewModel.clearRecentProducts()
+                        searchViewModel.clearRecentProducts()
                 );
 
         setupRecyclerView();
@@ -73,20 +74,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void setupViewModel() {
-
-        SearchViewModel.Factory factory =
-                new SearchViewModel.Factory(
-                        new FeatureProductRepositoryImpl(),
-                        new SearchLocalRepositoryImpl(
-                                requireContext()
-                        )
-                );
-
-        viewModel =
-                new ViewModelProvider(
-                        this,
-                        factory
-                ).get(SearchViewModel.class);
+        searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
     }
 
     private void setupRecyclerView() {
@@ -119,7 +107,7 @@ public class SearchFragment extends Fragment {
 
         // SEARCH RESULT
 
-        viewModel.products.observe(
+        searchViewModel.products.observe(
                 getViewLifecycleOwner(),
 
                 products -> {
@@ -132,7 +120,7 @@ public class SearchFragment extends Fragment {
                                             product -> {
 
                                                 // lưu recent
-                                                viewModel
+                                                searchViewModel
                                                         .saveRecentProduct(
                                                                 product
                                                         );
@@ -164,7 +152,7 @@ public class SearchFragment extends Fragment {
 
         // KEYWORD HISTORY
 
-        viewModel.searchKeywords.observe(
+        searchViewModel.searchKeywords.observe(
                 getViewLifecycleOwner(),
 
                 keywords -> {
@@ -195,7 +183,7 @@ public class SearchFragment extends Fragment {
 
         // RECENT PRODUCT
 
-        viewModel.recentProducts.observe(
+        searchViewModel.recentProducts.observe(
                 getViewLifecycleOwner(),
 
                 products -> {
@@ -274,7 +262,7 @@ public class SearchFragment extends Fragment {
                             showSearchResult();
 
                             searchRunnable = () ->
-                                    viewModel.searchProduct(
+                                    searchViewModel.searchProduct(
                                             keyword
                                     );
 
