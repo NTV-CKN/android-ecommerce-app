@@ -21,11 +21,15 @@ import com.infix.phukiencongnghe.ui.admin.product.add_or_update.UpdateProductFra
 import com.infix.phukiencongnghe.ui.admin.product.add_or_update.UpdateProductViewModel;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ProductManageAdminFragment extends Fragment {
     private FragmentProductManageAdminBinding binding;
 
     private UpdateProductViewModel updateProductViewModel;
     private ProductManageAdminViewModel productManageAdminViewModel;
+
     private ProductAdminAdapter productAdminAdapter;
 
     @Override
@@ -52,11 +56,7 @@ public class ProductManageAdminFragment extends Fragment {
     }
 
     private void initUpdateProductVM() {
-        UpdateProductViewModel.Factory factory = new UpdateProductViewModel.Factory(
-                InjectUtils.createProductAdminRepository()
-        );
-
-        updateProductViewModel = new ViewModelProvider(requireActivity(), factory)
+        updateProductViewModel = new ViewModelProvider(requireActivity())
                 .get(UpdateProductViewModel.class);
     }
 
@@ -96,13 +96,7 @@ public class ProductManageAdminFragment extends Fragment {
 
     private void initAndObserveProductManageAdminVM() {
         //init view model
-        ProductManageAdminViewModel.Factory factory =
-                new ProductManageAdminViewModel.Factory(
-                        InjectUtils.createCategoryRepository(),
-                        InjectUtils.createProductAdminRepository()
-                );
-
-        productManageAdminViewModel = new ViewModelProvider(requireActivity(), factory)
+        productManageAdminViewModel = new ViewModelProvider(requireActivity())
                 .get(ProductManageAdminViewModel.class);
 
         loadProducts(

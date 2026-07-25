@@ -6,13 +6,16 @@ import com.infix.phukiencongnghe.data.source.remote.main.CategoryService;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class CategoryRepositoryImpl implements ICategoryRepository {
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
-    public CategoryRepositoryImpl() {
-        this.categoryService = RetrofitHelper.getCategoryService();
+    @Inject
+    public CategoryRepositoryImpl(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
     @Override
     public Call<List<CategoryDTO>> getParentCategory() {

@@ -16,10 +16,14 @@ import com.infix.phukiencongnghe.ui.voucher.VoucherViewModel;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class VoucherAdminViewModel extends ViewModel {
     private final IAdminVoucherRepository adminVoucherRepository;
 
@@ -37,26 +41,9 @@ public class VoucherAdminViewModel extends ViewModel {
 
     private long latestRequestToken = 0;
 
+    @Inject
     public VoucherAdminViewModel(IAdminVoucherRepository adminVoucherRepository) {
         this.adminVoucherRepository = adminVoucherRepository;
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private final IAdminVoucherRepository adminVoucherRepository;
-
-        public Factory(IAdminVoucherRepository adminVoucherRepository) {
-            this.adminVoucherRepository = adminVoucherRepository;
-        }
-
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass, @NonNull CreationExtras extras) {
-            if(modelClass.isAssignableFrom(VoucherAdminViewModel.class)) {
-                //noinspection unchecked
-                return (T) new VoucherAdminViewModel(adminVoucherRepository);
-            }
-            throw new IllegalArgumentException("Model class illegal");
-        }
     }
 
     public void getVoucher(String typeCode, DiscountType discountType, String keyword, long reqToken) {

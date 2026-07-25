@@ -29,6 +29,9 @@ import com.infix.phukiencongnghe.utils.SharePrefUtils;
 
 import java.util.ArrayList;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     //AuthActivity sẽ gửi đối tượng User sang MainActivity khi login thành công

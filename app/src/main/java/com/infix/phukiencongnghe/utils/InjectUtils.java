@@ -63,10 +63,6 @@ public class InjectUtils {
                 RetrofitHelper.getCartService()
         );
     }
-    public static IProductRepository createProductRepository() {
-        return new FeatureProductRepositoryImpl(
-        );
-    }
 
     public static IUserAddressManageRepository createUserAddressManageRepository(Context context) {
         return new UserAddressManageRepositoryImpl(
@@ -78,18 +74,6 @@ public class InjectUtils {
         return new UserProfileRepositoryImpl(
                 RetrofitHelper.getProfileService()
         );
-    }
-
-    public static IProductAdminRepository createProductAdminRepository() {
-        return new ProductAdminRepositoryImpl(
-                new ProductAdminRemoteDataSourceImpl(
-                        RetrofitHelper.getProductAdminService()
-                )
-        );
-    }
-
-    public static ICategoryRepository createCategoryRepository() {
-        return new CategoryRepositoryImpl();
     }
 
     public static IChatBotRepository createChatBotRepository() {

@@ -1,10 +1,8 @@
 package com.infix.phukiencongnghe.data.source.local.source.search;
 
-import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
-import com.infix.phukiencongnghe.data.source.local.AppDatabase;
 import com.infix.phukiencongnghe.data.source.local.dao.RecentSearchProductDAO;
 import com.infix.phukiencongnghe.data.source.local.dao.SearchKeywordDAO;
 import com.infix.phukiencongnghe.data.source.local.entity.RecentSearchProductEntity;
@@ -14,20 +12,20 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SearchLocalRepositoryImpl
-        implements ISearchLocalRepository {
+import javax.inject.Inject;
 
+public class SearchLocalRepositoryImpl implements ISearchLocalRepository {
     private final SearchKeywordDAO keywordDAO;
     private final RecentSearchProductDAO productDAO;
     private final ExecutorService executors;
 
-    public SearchLocalRepositoryImpl(Context context) {
-
-        AppDatabase db =
-                AppDatabase.getInstance(context);
-
-        this.keywordDAO = db.searchKeywordDAO();
-        this.productDAO = db.recentSearchProductDAO();
+    @Inject
+    public SearchLocalRepositoryImpl(
+            SearchKeywordDAO keywordDAO,
+            RecentSearchProductDAO recentSearchProductDAO
+    ) {
+        this.keywordDAO = keywordDAO;
+        this.productDAO = recentSearchProductDAO;
 
         this.executors =
                 Executors.newSingleThreadExecutor();

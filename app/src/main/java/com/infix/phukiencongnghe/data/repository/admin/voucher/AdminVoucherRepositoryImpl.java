@@ -7,12 +7,15 @@ import com.infix.phukiencongnghe.data.source.remote.admin.voucher.AdminVoucherSe
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class AdminVoucherRepositoryImpl implements IAdminVoucherRepository {
 
     AdminVoucherService adminVoucherService;
 
+    @Inject
     public AdminVoucherRepositoryImpl(AdminVoucherService adminVoucherService) {
         this.adminVoucherService = adminVoucherService;
     }

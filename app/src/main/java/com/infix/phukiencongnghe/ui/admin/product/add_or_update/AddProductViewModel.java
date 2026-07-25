@@ -23,10 +23,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class AddProductViewModel extends ViewModel {
     private final IProductAdminRepository productAdminRepository;
 
@@ -49,17 +53,28 @@ public class AddProductViewModel extends ViewModel {
     private final ProductAdminPageDTO productDTO = new ProductAdminPageDTO();
     private final MutableLiveData<List<ProductVariantDTO>> variantsLiveData = new MutableLiveData<>(new ArrayList<>());
 
+    @Inject
     public AddProductViewModel(IProductAdminRepository productAdminRepository
-) {
+    ) {
         this.productAdminRepository = productAdminRepository;
         productDTO.setFolderId(UUID.randomUUID().toString());
     }
 
-    public boolean isUpdate() { return isUpdate; }
-    public void setUpdateMode(boolean isUpdate) { this.isUpdate = isUpdate; }
+    public boolean isUpdate() {
+        return isUpdate;
+    }
 
-    public ProductAdminPageDTO getProductDTO() { return productDTO; }
-    public LiveData<List<ProductVariantDTO>> getVariantsLiveData() { return variantsLiveData; }
+    public void setUpdateMode(boolean isUpdate) {
+        this.isUpdate = isUpdate;
+    }
+
+    public ProductAdminPageDTO getProductDTO() {
+        return productDTO;
+    }
+
+    public LiveData<List<ProductVariantDTO>> getVariantsLiveData() {
+        return variantsLiveData;
+    }
 
     public void addNewVariantField() {
         if (isUpdate) return;
@@ -75,13 +90,13 @@ public class AddProductViewModel extends ViewModel {
         productAdminRepository.generateUniqueSku(productName, color, size).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     Map<String, String> map = response.body();
-                    if(map != null)
+                    if (map != null)
                         onSkuCompleted.accept(map.get("sku"));
                     else
                         _notifyMsg.setValue("Body is null");
-                }else
+                } else
                     _notifyMsg.setValue("Lỗi không thể sinh sku");
             }
 
@@ -156,7 +171,9 @@ public class AddProductViewModel extends ViewModel {
         }
     }
 
-    public void setMainImageUri(Uri uri) { _mainImageUri.setValue(uri); }
+    public void setMainImageUri(Uri uri) {
+        _mainImageUri.setValue(uri);
+    }
 
     public void addSubImages(List<Uri> uris) {
         List<Uri> current = subImagesList.getValue();
@@ -166,7 +183,8 @@ public class AddProductViewModel extends ViewModel {
     }
 
     public void addCategory(CategoryDTO categoryDTO) {
-        if(this.productDTO.getCategoriesDTOS()==null) this.productDTO.setCategoriesDTOS(new ArrayList<>());
+        if (this.productDTO.getCategoriesDTOS() == null)
+            this.productDTO.setCategoriesDTOS(new ArrayList<>());
 
         this.productDTO.getCategoriesDTOS().clear();
         this.productDTO.getCategoriesDTOS().add(categoryDTO);
@@ -191,24 +209,4 @@ public class AddProductViewModel extends ViewModel {
         _notifyMsg.setValue(null);
         _mainImageUri.setValue(null);
     }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private final IProductAdminRepository productAdminRepository;
-
-        public Factory(
-                       IProductAdminRepository productAdminRepository) {
-            this.productAdminRepository = productAdminRepository;
-        }
-
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(AddProductViewModel.class)) {
-                return (T) new AddProductViewModel(productAdminRepository);
-            }
-            throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
-        }
-    }
-
 }

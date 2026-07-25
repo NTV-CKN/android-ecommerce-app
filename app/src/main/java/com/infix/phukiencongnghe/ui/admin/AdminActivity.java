@@ -19,8 +19,10 @@ import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.main.MainActivity;
 import com.infix.phukiencongnghe.utils.ApiClient;
 import com.infix.phukiencongnghe.utils.AppUtils;
-import com.infix.phukiencongnghe.utils.SharePrefUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AdminActivity extends AppCompatActivity {
     private ActivityAdminBinding binding;
     private ActionBarDrawerToggle toggle;

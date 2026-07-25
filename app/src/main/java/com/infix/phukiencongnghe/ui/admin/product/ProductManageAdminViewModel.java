@@ -17,10 +17,14 @@ import com.infix.phukiencongnghe.utils.paging.PaginationManager;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class ProductManageAdminViewModel extends ViewModel {
     private final ICategoryRepository categoryRepository;
     private final IProductAdminRepository productAdminRepository;
@@ -31,6 +35,7 @@ public class ProductManageAdminViewModel extends ViewModel {
     //pagination
     private PaginationManager paginationManager;
 
+    @Inject
     public ProductManageAdminViewModel(ICategoryRepository categoryRepository,
                                        IProductAdminRepository productAdminRepository) {
         this.categoryRepository = categoryRepository;
@@ -45,9 +50,9 @@ public class ProductManageAdminViewModel extends ViewModel {
             public void onResponse(
                     @NonNull Call<PageResponseDTO<ProductAdminPageDTO>> call,
                     @NonNull Response<PageResponseDTO<ProductAdminPageDTO>> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     PageResponseDTO<ProductAdminPageDTO> body = response.body();
-                    if(body != null)
+                    if (body != null)
                         _productsAdmin.setValue(body);
                 }
             }
@@ -74,25 +79,4 @@ public class ProductManageAdminViewModel extends ViewModel {
         return paginationManager;
     }
 
-    public static class Factory implements ViewModelProvider.Factory {
-
-        private final ICategoryRepository categoryRepository;
-        private final IProductAdminRepository productAdminRepository;
-
-        public Factory(ICategoryRepository categoryRepository,
-                       IProductAdminRepository productAdminRepository) {
-            this.categoryRepository = categoryRepository;
-            this.productAdminRepository = productAdminRepository;
-        }
-
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(ProductManageAdminViewModel.class)) {
-                return (T) new ProductManageAdminViewModel(categoryRepository, productAdminRepository);
-            }
-            throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
-        }
-    }
 }

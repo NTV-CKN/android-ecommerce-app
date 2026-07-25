@@ -14,12 +14,15 @@ import com.infix.phukiencongnghe.data.source.local.source.search.ISearchLocalRep
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class SearchViewModel extends ViewModel {
-
     private final IProductRepository productRepository;
     private final ISearchLocalRepository searchLocalRepository;
 
@@ -47,6 +50,7 @@ public class SearchViewModel extends ViewModel {
     public final LiveData<List<RecentSearchProductEntity>>
             recentProducts;
 
+    @Inject
     public SearchViewModel(
             IProductRepository productRepository,
             ISearchLocalRepository searchLocalRepository
@@ -59,42 +63,6 @@ public class SearchViewModel extends ViewModel {
 
         this.recentProducts =
                 searchLocalRepository.getRecentProducts();
-    }
-
-    public static class Factory
-            implements ViewModelProvider.Factory {
-
-        private final IProductRepository productRepository;
-        private final ISearchLocalRepository searchLocalRepository;
-
-        public Factory(
-                IProductRepository productRepository,
-                ISearchLocalRepository searchLocalRepository
-        ) {
-            this.productRepository = productRepository;
-            this.searchLocalRepository = searchLocalRepository;
-        }
-
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(
-                @NonNull Class<T> modelClass
-        ) {
-
-            if(modelClass.isAssignableFrom(
-                    SearchViewModel.class
-            )) {
-
-                return (T) new SearchViewModel(
-                        productRepository,
-                        searchLocalRepository
-                );
-            }
-
-            throw new IllegalArgumentException(
-                    "Model class illegal"
-            );
-        }
     }
 
     public void searchProduct(

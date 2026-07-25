@@ -30,6 +30,7 @@ public class RetrofitModule {
     public static Retrofit generateRetrofit() {
         return ApiClient.getRetrofitClient();
     }
+
     @Provides
     public static AdminOrderService getAdminOrderService(Retrofit retrofit) {
         return retrofit.create(AdminOrderService.class);
