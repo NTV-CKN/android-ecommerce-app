@@ -1,7 +1,3 @@
-Đã tạo README bằng tiếng Việt hoàn chỉnh. Dưới đây là nội dung chi tiết:
-
----
-
 # Phu Kien Cong Nghe - Ứng Dụng Thương Mại Điện Tử Di Động
 
 👥 **Số lượng thành viên:** 4
