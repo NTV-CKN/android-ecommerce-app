@@ -36,16 +36,15 @@ import com.infix.phukiencongnghe.utils.SnackbarUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class CartFragment extends Fragment {
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
+public class CartFragment extends Fragment {
     private FragmentCartBinding binding;
     private CartViewModel viewModel;
     private CartAdapter cartAdapter;
 
     private LoadingDialog loadingDialog;
-
-    public CartFragment() {
-    }
 
     @Nullable
     @Override
@@ -73,10 +72,7 @@ public class CartFragment extends Fragment {
 
         setupRecyclerView();
 
-        CartViewModel.Factory factory= new CartViewModel.Factory(
-                InjectUtils.createCartRepository()
-        );
-        viewModel = new ViewModelProvider(requireActivity(), factory).get(CartViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(CartViewModel.class);
         observeViewModel();
 
         // 4. Cài đặt các sự kiện Click trên màn hình chính

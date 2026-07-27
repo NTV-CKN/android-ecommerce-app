@@ -1,23 +1,18 @@
 package com.infix.phukiencongnghe.data.repository.cart;
 
-import android.content.Context;
-
-import androidx.lifecycle.LiveData;
-
 import com.infix.phukiencongnghe.data.dto.request.CartLocalDTO;
 import com.infix.phukiencongnghe.data.dto.response.BadgeCartDTO;
 import com.infix.phukiencongnghe.data.dto.response.CartDTO;
-import com.infix.phukiencongnghe.data.source.local.entity.CartEntity;
-import com.infix.phukiencongnghe.data.source.local.source.cart.CartLocalDataSourceImpl;
-import com.infix.phukiencongnghe.data.source.local.source.cart.ICartLocalDataSource;
 import com.infix.phukiencongnghe.data.source.remote.cart.CartService;
 
-import java.util.List;
+import javax.inject.Inject;
 
 import retrofit2.Call;
 
 public class CartRepositoryImpl implements ICartRepository {
     private final CartService cartService;
+
+    @Inject
     public CartRepositoryImpl(CartService cartService) {
         this.cartService = cartService;
     }

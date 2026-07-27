@@ -15,10 +15,14 @@ import com.infix.phukiencongnghe.ui.user_manage.profile.UserProfileViewModel;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class CartViewModel extends ViewModel {
     private final ICartRepository cartRepository;
 
@@ -34,7 +38,7 @@ public class CartViewModel extends ViewModel {
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
     public final LiveData<Boolean> isLoading = _isLoading;
 
-
+    @Inject
     public CartViewModel(ICartRepository cartRepository) {
         this.cartRepository = cartRepository;
     }
@@ -144,24 +148,5 @@ public class CartViewModel extends ViewModel {
     public void clearCartLocal() {
         _cartLiveData.setValue(null);
         _badgeCountLiveData.setValue(0);
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private final ICartRepository cartRepository;
-
-        public Factory(ICartRepository cartRepository) {
-            this.cartRepository = cartRepository;
-        }
-
-
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(CartViewModel.class)) {
-                return (T) new CartViewModel(cartRepository);
-            }
-            throw new IllegalArgumentException("Không tìm thấy class ViewModel hợp lệ: " + modelClass.getName());
-        }
     }
 }
