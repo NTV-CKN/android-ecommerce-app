@@ -30,11 +30,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 //Lớp này chịu trách nhiệm quản lí LatLngCurrent, nhận sự thay đổi lng/lat/address detail từ người dùng
 //Đầu vào: LatLngCurrent,  isUpdate: boolean
 public class AddressDeliveryPickerViewModel extends ViewModel {
@@ -53,6 +57,7 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
     private final MutableLiveData<List<AddressSuggestion>> _addressSuggestions = new MutableLiveData<>();
     public final LiveData<List<AddressSuggestion>> addressSuggestions = _addressSuggestions;
 
+    @Inject
     public AddressDeliveryPickerViewModel(IShipFeeByAddressRepository shipFeeByAddressRepository) {
         this.shipFeeByAddressRepository = shipFeeByAddressRepository;
     }
@@ -218,24 +223,6 @@ public class AddressDeliveryPickerViewModel extends ViewModel {
                     ", curLng=" + curLng +
                     ", detailAddress='" + detailAddress + '\'' +
                     '}';
-        }
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private IShipFeeByAddressRepository shipFeeByAddressRepository;
-
-        public Factory(
-                IShipFeeByAddressRepository shipFeeByAddressRepository
-        ) {
-            this.shipFeeByAddressRepository = shipFeeByAddressRepository;
-        }
-
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(AddressDeliveryPickerViewModel.class))
-                return (T) new AddressDeliveryPickerViewModel(shipFeeByAddressRepository);
-            throw new IllegalArgumentException("Model class illegal");
         }
     }
 }

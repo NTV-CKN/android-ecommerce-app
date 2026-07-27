@@ -121,14 +121,8 @@ public class UserAddressManageFragment extends Fragment {
 
 
     private void initAddOrUpdateAddressVM() {
-        AddOrUpdateUserAddressViewModel.Factory factory =
-                new AddOrUpdateUserAddressViewModel.Factory(
-                        InjectUtils.createUserAddressManageRepository(requireContext()),
-                        InjectUtils.createShipFeeByAddressRepository()
-                );
-
         addOrUpdateUserAddressViewModel =
-                new ViewModelProvider(requireActivity(), factory).get(AddOrUpdateUserAddressViewModel.class);
+                new ViewModelProvider(requireActivity()).get(AddOrUpdateUserAddressViewModel.class);
 
     }
 

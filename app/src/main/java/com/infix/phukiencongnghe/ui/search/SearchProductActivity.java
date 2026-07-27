@@ -10,6 +10,9 @@ import com.infix.phukiencongnghe.utils.ApiClient;
 import com.infix.phukiencongnghe.utils.AppUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SearchProductActivity extends AppCompatActivity {
 
     @Override
