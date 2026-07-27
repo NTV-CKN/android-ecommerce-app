@@ -1,10 +1,8 @@
 package com.infix.phukiencongnghe.ui.auth;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.gson.Gson;
 import com.infix.phukiencongnghe.common.OnLoginGoogleListener;

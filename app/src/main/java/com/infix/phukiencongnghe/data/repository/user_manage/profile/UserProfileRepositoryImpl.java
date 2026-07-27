@@ -7,12 +7,15 @@ import com.infix.phukiencongnghe.data.source.remote.user_manage.UserProfileServi
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class UserProfileRepositoryImpl implements IUserProfileRepository {
 
     UserProfileService profileService;
 
+    @Inject
     public UserProfileRepositoryImpl(UserProfileService userProfileService) {
         this.profileService = userProfileService;
     }

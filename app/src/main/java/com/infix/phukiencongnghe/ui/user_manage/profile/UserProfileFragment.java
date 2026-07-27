@@ -23,9 +23,13 @@ import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class UserProfileFragment extends Fragment {
     private UserProfileViewModel viewModel;
     private AuthViewModel authViewModel;
+
     private EditText edtFullname, edtEmail, edtAccountType;
     private Button btnSaveProfile, btnChangePass;
     private String userToken;
@@ -51,10 +55,7 @@ public class UserProfileFragment extends Fragment {
 
         authViewModel = new ViewModelProvider(requireActivity()).get(AuthViewModel.class);
 
-        UserProfileViewModel.Factory factory = new UserProfileViewModel.Factory(
-                InjectUtils.createUserProfileRepository()
-        );
-        viewModel = new ViewModelProvider(requireActivity(), factory).get(UserProfileViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(UserProfileViewModel.class);
 
         String[] tokens = SharePrefUtils.getAccessRefreshTokenFromPrefFile(
                 AuthActivity.USER_AUTH_FILE,

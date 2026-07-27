@@ -14,10 +14,14 @@ import com.infix.phukiencongnghe.data.repository.user_manage.profile.IUserProfil
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class UserProfileViewModel extends ViewModel {
     private final IUserProfileRepository profileRepository;
 
@@ -33,6 +37,7 @@ public class UserProfileViewModel extends ViewModel {
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
     public LiveData<Boolean> isLoading = _isLoading;
 
+    @Inject
     public UserProfileViewModel(IUserProfileRepository profileRepository) {
         this.profileRepository = profileRepository;
     }
@@ -80,22 +85,5 @@ public class UserProfileViewModel extends ViewModel {
                 _notifyMsg.setValue("Lỗi kết nối mạng: " + throwable.getMessage());
             }
         });
-    }
-    public static class Factory implements ViewModelProvider.Factory {
-        private final IUserProfileRepository profileRepository;
-
-        public Factory(IUserProfileRepository profileRepository) {
-            this.profileRepository = profileRepository;
-        }
-
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(UserProfileViewModel.class)) {
-                return (T) new UserProfileViewModel(profileRepository);
-            }
-            throw new IllegalArgumentException("Không tìm thấy class ViewModel hợp lệ: " + modelClass.getName());
-        }
     }
 }
