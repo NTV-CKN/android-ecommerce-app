@@ -16,11 +16,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class ChatBotViewModel extends ViewModel {
     private final IChatBotRepository chatBotRepository;
 
@@ -34,6 +38,7 @@ public class ChatBotViewModel extends ViewModel {
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
     public LiveData<Boolean> isLoading = _isLoading;
 
+    @Inject
     public ChatBotViewModel(IChatBotRepository chatBotRepository) {
         this.chatBotRepository = chatBotRepository;
         _chatHistory.setValue(currentMessages);
@@ -95,23 +100,5 @@ public class ChatBotViewModel extends ViewModel {
     public void resetStates() {
         _notifyMsg.setValue(null);
         _isLoading.setValue(null);
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private final IChatBotRepository chatBotRepository;
-
-        public Factory(IChatBotRepository chatBotRepository) {
-            this.chatBotRepository = chatBotRepository;
-        }
-
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(ChatBotViewModel.class)) {
-                return (T) new ChatBotViewModel(chatBotRepository);
-            }
-            throw new IllegalArgumentException("Model class illegal");
-        }
     }
 }

@@ -3,11 +3,14 @@ package com.infix.phukiencongnghe.data.repository.ai;
 import com.infix.phukiencongnghe.data.dto.response.ai.BotChatResponseDTO;
 import com.infix.phukiencongnghe.data.source.remote.ai.ChatBotService;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class ChatBotRepositoryImpl implements IChatBotRepository{
     private final ChatBotService chatBotService;
 
+    @Inject
     public ChatBotRepositoryImpl(ChatBotService chatBotService) {
         this.chatBotService = chatBotService;
     }

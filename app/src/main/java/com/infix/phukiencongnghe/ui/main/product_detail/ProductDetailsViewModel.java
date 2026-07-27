@@ -12,10 +12,14 @@ import com.infix.phukiencongnghe.data.dto.response.ProductDetailsDTO;
 import com.infix.phukiencongnghe.data.repository.cart.ICartRepository;
 import com.infix.phukiencongnghe.data.repository.common.product.IProductRepository;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class ProductDetailsViewModel extends ViewModel {
     private final IProductRepository repository;
     private final ICartRepository cartRepository;
@@ -29,25 +33,13 @@ public class ProductDetailsViewModel extends ViewModel {
     public final LiveData<Boolean> isLoading = _isLoading;
     private final MutableLiveData<Long> _cartBadgeCount = new MutableLiveData<>();
     public final LiveData<Long> cartBadgeCount = _cartBadgeCount;
+
+    @Inject
     public ProductDetailsViewModel(IProductRepository repository, ICartRepository cartRepository){
         this.repository = repository;
         this.cartRepository = cartRepository;
     }
-    public static class Factory implements ViewModelProvider.Factory{
-        private IProductRepository repository;
-        private ICartRepository cartRepository;
-        public Factory(IProductRepository repository, ICartRepository cartRepository) {
-            this.repository = repository;
-            this.cartRepository = cartRepository;
-        }
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(ProductDetailsViewModel.class))
-                return (T) new ProductDetailsViewModel(repository, cartRepository);
-            throw new IllegalArgumentException("Model class illegal");
-        }
-    }
+
     public void getProductById(int productId){
         _isLoading.setValue(true);
         Call<ProductDetailsDTO> prdCall = repository.getProductDetails(productId);

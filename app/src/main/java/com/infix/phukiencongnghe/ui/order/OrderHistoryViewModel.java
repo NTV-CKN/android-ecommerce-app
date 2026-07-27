@@ -13,10 +13,14 @@ import com.infix.phukiencongnghe.data.repository.order.IOrderRepository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class OrderHistoryViewModel extends ViewModel {
 
     private final IOrderRepository repository;
@@ -34,25 +38,12 @@ public class OrderHistoryViewModel extends ViewModel {
     private final MutableLiveData<List<OrderDetailsHistoryDTO>> _orderDetails = new MutableLiveData<>();
     public final LiveData<List<OrderDetailsHistoryDTO>> orderDetails = _orderDetails;
     private OrderHistoryDTO currentOrder;
+
+    @Inject
     public OrderHistoryViewModel(IOrderRepository repository) {
         this.repository = repository;
     }
 
-    public static class Factory implements ViewModelProvider.Factory {
-        private final IOrderRepository repository;
-        public Factory(IOrderRepository repository) {
-            this.repository = repository;
-        }
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(OrderHistoryViewModel.class)) {
-                return (T) new OrderHistoryViewModel(repository);
-            }
-            throw new IllegalArgumentException("Model class illegal");
-        }
-    }
     public void fetchOrderHistory(String status, Integer page, Integer pageSize) {
         _isLoading.setValue(true);
         Call<PageResponseDTO<OrderHistoryDTO>> call = repository.getOrderHistory(status, page, pageSize);

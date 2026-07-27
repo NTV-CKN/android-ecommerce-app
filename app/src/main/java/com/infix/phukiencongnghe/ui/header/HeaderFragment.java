@@ -29,11 +29,14 @@ import com.infix.phukiencongnghe.ui.share_viewmodel.MainViewModel;
 import com.infix.phukiencongnghe.ui.user_manage.UserManagerActivity;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class HeaderFragment extends Fragment {
     private ImageView imgView_user_header_fragment, imgView_search_header_fragment, imgView_cart_header_fragment, imgAvatar;
     private TextView txtView_user_header_fragment, txtView_cart_badge_header_fragment;
-    private MainViewModel mainViewModel;
 
+    private MainViewModel mainViewModel;
     CartViewModel cartViewModel;
 
     public HeaderFragment() {}
@@ -49,10 +52,7 @@ public class HeaderFragment extends Fragment {
         imgView_cart_header_fragment = view.findViewById(R.id.btnCart);
         txtView_cart_badge_header_fragment = view.findViewById(R.id.tvCartBadge);
 
-        CartService cartService = RetrofitHelper.getCartService();
-        ICartRepository cartRepository = new CartRepositoryImpl(cartService);
-        CartViewModel.Factory factory = new CartViewModel.Factory(cartRepository);
-        cartViewModel = new ViewModelProvider(this, factory).get(CartViewModel.class);
+        cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         mainViewModel.cartBadgetCount.observe(getViewLifecycleOwner(), totalCount -> {

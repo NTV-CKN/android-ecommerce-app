@@ -1,7 +1,5 @@
 package com.infix.phukiencongnghe.ui.order;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,22 +17,21 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.common.StatusOrder;
-import com.infix.phukiencongnghe.data.dto.response.OrderDetailsHistoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.OrderHistoryDTO;
 import com.infix.phukiencongnghe.data.repository.order.OrderRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper; // Hoặc class chứa client của dự án bạn
 import com.infix.phukiencongnghe.data.source.remote.order.OrderSerivce;
 import com.infix.phukiencongnghe.databinding.FragmentOrderHistoryBinding;
 import com.infix.phukiencongnghe.ui.adapter.order.OrderHistoryAdapter;
-import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
-import java.util.List;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class OrderHistoryFragment extends Fragment {
-
     private FragmentOrderHistoryBinding binding;
+
     private OrderHistoryViewModel orderHistoryViewModel;
     private OrderHistoryAdapter adapter;
     private LoadingDialog loadingDialog;
@@ -114,8 +111,8 @@ public class OrderHistoryFragment extends Fragment {
 
     private void initOrderHistoryViewModel() {
         OrderSerivce orderSerivce = RetrofitHelper.getOrderService();
-        OrderHistoryViewModel.Factory factory = new OrderHistoryViewModel.Factory(new OrderRepositoryImpl(orderSerivce));
-        orderHistoryViewModel = new ViewModelProvider(this, factory).get(OrderHistoryViewModel.class);
+
+        orderHistoryViewModel = new ViewModelProvider(this).get(OrderHistoryViewModel.class);
 
         loadOrderHistoryData();
 

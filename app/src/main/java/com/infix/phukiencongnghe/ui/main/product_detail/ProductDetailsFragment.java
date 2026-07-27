@@ -38,6 +38,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ProductDetailsFragment extends Fragment {
     private FragmentProductDetailsBinding binding;
     private ProductDetailsViewModel productDetailsViewModel;
@@ -219,9 +222,7 @@ public class ProductDetailsFragment extends Fragment {
                 RetrofitHelper.getCartService();
         ICartRepository cartRepo = new CartRepositoryImpl(cartService);
         // Factory
-        ProductDetailsViewModel.Factory factory = new ProductDetailsViewModel.Factory(repository, cartRepo);
-
-        productDetailsViewModel = new ViewModelProvider(this,factory).get(ProductDetailsViewModel.class);
+        productDetailsViewModel = new ViewModelProvider(this).get(ProductDetailsViewModel.class);
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         productDetailsViewModel.productDetails.observe(getViewLifecycleOwner(), details ->{
             if(details == null) return;

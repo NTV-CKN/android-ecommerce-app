@@ -18,6 +18,9 @@ import com.infix.phukiencongnghe.ui.adapter.order.OrderDetailAdapter;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class OrderDetailFragment extends Fragment {
     private FragmentOrderDetailBinding binding;
     private OrderDetailAdapter adapter;
