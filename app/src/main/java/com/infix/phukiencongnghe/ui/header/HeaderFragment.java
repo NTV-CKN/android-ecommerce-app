@@ -35,8 +35,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class HeaderFragment extends Fragment {
     private ImageView imgView_user_header_fragment, imgView_search_header_fragment, imgView_cart_header_fragment, imgAvatar;
     private TextView txtView_user_header_fragment, txtView_cart_badge_header_fragment;
-    private MainViewModel mainViewModel;
 
+    private MainViewModel mainViewModel;
     CartViewModel cartViewModel;
 
     public HeaderFragment() {}
