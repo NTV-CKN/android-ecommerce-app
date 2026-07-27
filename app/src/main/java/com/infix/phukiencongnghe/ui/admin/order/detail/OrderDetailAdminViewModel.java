@@ -8,15 +8,18 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.response.OrderDetailAdminDTO;
-import com.infix.phukiencongnghe.data.repository.admin.order.IOrderRepository;
+import com.infix.phukiencongnghe.data.repository.admin.order.IAdminOrderRepository;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class OrderDetailAdminViewModel extends ViewModel {
-
-    private final IOrderRepository repository;
+    private final IAdminOrderRepository repository;
 
     private final MutableLiveData<OrderDetailAdminDTO> _order =
             new MutableLiveData<>();
@@ -30,8 +33,9 @@ public class OrderDetailAdminViewModel extends ViewModel {
     public final LiveData<String> updateResult =
             _updateResult;
 
+    @Inject
     public OrderDetailAdminViewModel(
-            IOrderRepository repository
+            IAdminOrderRepository repository
     ) {
         this.repository = repository;
     }
@@ -135,27 +139,5 @@ public class OrderDetailAdminViewModel extends ViewModel {
                     }
                 }
         );
-    }
-
-    public static class Factory
-            implements ViewModelProvider.Factory {
-
-        private final IOrderRepository repository;
-
-        public Factory(
-                IOrderRepository repository
-        ) {
-            this.repository = repository;
-        }
-
-        @Override
-        public <T extends ViewModel> T create(
-                Class<T> modelClass
-        ) {
-            return (T)
-                    new OrderDetailAdminViewModel(
-                            repository
-                    );
-        }
     }
 }

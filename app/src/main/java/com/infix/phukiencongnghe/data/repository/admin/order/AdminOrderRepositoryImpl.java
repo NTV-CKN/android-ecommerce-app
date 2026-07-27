@@ -5,11 +5,20 @@ import com.infix.phukiencongnghe.data.dto.response.OrderDetailAdminDTO;
 import com.infix.phukiencongnghe.data.dto.response.OrderManageDTO;
 import com.infix.phukiencongnghe.data.dto.response.PageResponseDTO;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
+import com.infix.phukiencongnghe.data.source.remote.admin.AdminOrderService;
+
+import javax.inject.Inject;
 
 import retrofit2.Call;
 
-public class AdminOrderRepositoryImpl
-        implements IOrderRepository {
+public class AdminOrderRepositoryImpl implements IAdminOrderRepository {
+    private AdminOrderService adminOrderService;
+
+    @Inject
+    public AdminOrderRepositoryImpl(AdminOrderService adminOrderService) {
+        this.adminOrderService = adminOrderService;
+    }
+
     @Override
     public Call<PageResponseDTO<OrderManageDTO>> getAllOrders(
             Integer page,
@@ -17,8 +26,7 @@ public class AdminOrderRepositoryImpl
             String status,
             String keyword
     ) {
-        return RetrofitHelper
-                .getAdminOrderService()
+        return adminOrderService
                 .getAllOrders(
                         page,
                         limit,
@@ -33,8 +41,7 @@ public class AdminOrderRepositoryImpl
             String status
     ) {
 
-        return RetrofitHelper
-                .getAdminOrderService()
+        return adminOrderService
                 .updateOrderStatus(
                         orderId,
                         new UpdateOrderStatusRequest(status)
@@ -46,8 +53,7 @@ public class AdminOrderRepositoryImpl
             Integer orderId
     ) {
 
-        return RetrofitHelper
-                .getAdminOrderService()
+        return adminOrderService
                 .getOrderDetail(
                         orderId
                 );

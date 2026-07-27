@@ -5,28 +5,29 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.response.OrderManageDTO;
 import com.infix.phukiencongnghe.data.dto.response.PageResponseDTO;
 import com.infix.phukiencongnghe.data.model.Page;
-import com.infix.phukiencongnghe.data.repository.admin.order.IOrderRepository;
+import com.infix.phukiencongnghe.data.repository.admin.order.IAdminOrderRepository;
 import com.infix.phukiencongnghe.utils.paging.PaginationManager;
 import com.infix.phukiencongnghe.utils.paging.PaginationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class OrderManageViewModel extends ViewModel {
-
-    private final IOrderRepository repository;
+    private final IAdminOrderRepository repository;
 
     private String currentStatus = null;
-
     private String currentKeyword = null;
 
     private final PaginationManager paginationManager =
@@ -50,8 +51,9 @@ public class OrderManageViewModel extends ViewModel {
     public final LiveData<String> notify =
             _notify;
 
+    @Inject
     public OrderManageViewModel(
-            IOrderRepository repository
+            IAdminOrderRepository repository
     ) {
         this.repository = repository;
     }
@@ -217,28 +219,5 @@ public class OrderManageViewModel extends ViewModel {
                     }
                 }
         );
-    }
-
-    public static class Factory
-            implements ViewModelProvider.Factory {
-
-        private final IOrderRepository repository;
-
-        public Factory(
-                IOrderRepository repository
-        ) {
-            this.repository = repository;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public <T extends ViewModel> T create(
-                Class<T> modelClass
-        ) {
-            return (T)
-                    new OrderManageViewModel(
-                            repository
-                    );
-        }
     }
 }

@@ -17,6 +17,9 @@ import com.infix.phukiencongnghe.data.dto.response.VoucherDTO;
 import com.infix.phukiencongnghe.data.repository.admin.order.AdminOrderRepositoryImpl;
 import com.infix.phukiencongnghe.databinding.FragmentOrderDetailAdminBinding;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class OrderDetailAdminFragment extends Fragment {
 
     private FragmentOrderDetailAdminBinding binding;
@@ -66,16 +69,9 @@ public class OrderDetailAdminFragment extends Fragment {
     }
 
     private void initViewModel() {
-
-        OrderDetailAdminViewModel.Factory factory =
-                new OrderDetailAdminViewModel.Factory(
-                        new AdminOrderRepositoryImpl()
-                );
-
         viewModel =
                 new ViewModelProvider(
-                        this,
-                        factory
+                        this
                 ).get(OrderDetailAdminViewModel.class);
     }
 
