@@ -28,7 +28,6 @@ import com.infix.phukiencongnghe.databinding.FragmentAddOrUpdateUserAddressBindi
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.address_picker.AddressDeliveryPickerFragment;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.address_picker.AddressDeliveryPickerViewModel;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.util.List;

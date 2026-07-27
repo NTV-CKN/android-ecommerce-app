@@ -25,7 +25,6 @@ import com.infix.phukiencongnghe.databinding.FragmentAddOrUpdateProductBinding;
 import com.infix.phukiencongnghe.ui.adapter.categories.CategoryAdapter;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.product_category.ProductCategoryViewModel;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.util.ArrayList;

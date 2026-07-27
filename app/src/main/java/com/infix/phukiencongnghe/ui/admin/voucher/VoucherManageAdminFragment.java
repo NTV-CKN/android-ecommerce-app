@@ -34,7 +34,6 @@ import com.infix.phukiencongnghe.data.dto.response.VoucherAdminDTO;
 import com.infix.phukiencongnghe.ui.adapter.admin.voucher.OnVoucherItemClickListener;
 import com.infix.phukiencongnghe.ui.adapter.admin.voucher.VoucherAdminAdapter;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.math.BigDecimal;

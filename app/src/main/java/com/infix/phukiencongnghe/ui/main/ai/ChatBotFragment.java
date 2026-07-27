@@ -15,7 +15,6 @@ import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.databinding.FragmentChatBotBinding;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import dagger.hilt.android.AndroidEntryPoint;

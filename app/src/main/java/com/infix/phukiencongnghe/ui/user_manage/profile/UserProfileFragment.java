@@ -16,10 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.databinding.FragmentUserAddressManageBinding;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.auth.AuthViewModel;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 

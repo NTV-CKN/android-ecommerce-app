@@ -26,7 +26,6 @@ import com.infix.phukiencongnghe.ui.user_manage.profile.UserProfileFragment;
 import com.infix.phukiencongnghe.utils.ApiClient;
 import com.infix.phukiencongnghe.utils.AppExecutors;
 import com.infix.phukiencongnghe.utils.AppUtils;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 

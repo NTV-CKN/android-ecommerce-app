@@ -13,10 +13,14 @@ import com.infix.phukiencongnghe.data.repository.voucher.IVoucherRepository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class VoucherViewModel extends ViewModel {
     private final IVoucherRepository voucherRepository;
 
@@ -32,26 +36,9 @@ public class VoucherViewModel extends ViewModel {
     // Token của request gần nhất được ViewModel chấp nhận kết quả
     private long latestRequestToken = 0;
 
+    @Inject
     public VoucherViewModel(IVoucherRepository voucherRepository) {
         this.voucherRepository = voucherRepository;
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private final IVoucherRepository voucherRepository;
-
-        public Factory(IVoucherRepository voucherRepository) {
-            this.voucherRepository = voucherRepository;
-        }
-
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass, @NonNull CreationExtras extras) {
-            if (modelClass.isAssignableFrom(VoucherViewModel.class)) {
-                //noinspection unchecked
-                return (T) new VoucherViewModel(voucherRepository);
-            }
-            throw new IllegalArgumentException("Model class illegal");
-        }
     }
 
     /**

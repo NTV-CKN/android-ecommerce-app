@@ -6,12 +6,15 @@ import com.infix.phukiencongnghe.data.source.remote.voucher.VoucherService;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class VoucherRepositoryImpl implements IVoucherRepository {
 
     VoucherService voucherService;
 
+    @Inject
     public VoucherRepositoryImpl(VoucherService voucherService) {
         this.voucherService = voucherService;
     }

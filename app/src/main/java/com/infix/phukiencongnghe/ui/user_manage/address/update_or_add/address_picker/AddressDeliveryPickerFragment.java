@@ -31,7 +31,6 @@ import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.data.model.user_manage.address.AddressSuggestion;
 import com.infix.phukiencongnghe.databinding.FragmentAddressDeliveryPickerBinding;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.AddOrUpdateUserAddressViewModel;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.util.ArrayList;
