@@ -16,6 +16,7 @@ import retrofit2.Call;
 public class OrderRepositoryImpl implements IOrderRepository {
     private OrderSerivce orderSerivce;
 
+    @Inject
     public OrderRepositoryImpl(OrderSerivce orderSerivce) {
         this.orderSerivce = orderSerivce;
     }
