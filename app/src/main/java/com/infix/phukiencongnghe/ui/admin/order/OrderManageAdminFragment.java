@@ -18,12 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.dto.response.OrderManageDTO;
 import com.infix.phukiencongnghe.data.model.Page;
-import com.infix.phukiencongnghe.data.repository.admin.order.AdminOrderRepositoryImpl;
 import com.infix.phukiencongnghe.databinding.FragmentOrderManageAdminBinding;
 import com.infix.phukiencongnghe.ui.admin.order.detail.OrderDetailAdminFragment;
 
-public class OrderManageAdminFragment extends Fragment {
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
+public class OrderManageAdminFragment extends Fragment {
     private FragmentOrderManageAdminBinding binding;
 
     private OrderManageViewModel viewModel;
@@ -73,17 +74,8 @@ public class OrderManageAdminFragment extends Fragment {
     }
 
     private void initViewModel() {
-
-        OrderManageViewModel.Factory factory =
-                new OrderManageViewModel.Factory(
-                        new AdminOrderRepositoryImpl()
-                );
-
         viewModel =
-                new ViewModelProvider(
-                        this,
-                        factory
-                ).get(OrderManageViewModel.class);
+                new ViewModelProvider(this).get(OrderManageViewModel.class);
     }
 
     private void initRecyclerView() {

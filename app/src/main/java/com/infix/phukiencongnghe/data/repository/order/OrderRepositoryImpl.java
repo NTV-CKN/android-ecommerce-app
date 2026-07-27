@@ -9,6 +9,8 @@ import okhttp3.ResponseBody;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class OrderRepositoryImpl implements IOrderRepository {
@@ -17,6 +19,7 @@ public class OrderRepositoryImpl implements IOrderRepository {
     public OrderRepositoryImpl(OrderSerivce orderSerivce) {
         this.orderSerivce = orderSerivce;
     }
+
     @Override
     public Call<PageResponseDTO<OrderHistoryDTO>> getOrderHistory(String status, Integer page, Integer pageSize) {
         return orderSerivce.getOrderHistory(status, page, pageSize);

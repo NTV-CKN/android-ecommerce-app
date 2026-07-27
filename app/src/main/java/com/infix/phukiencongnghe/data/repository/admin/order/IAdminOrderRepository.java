@@ -6,7 +6,7 @@ import com.infix.phukiencongnghe.data.dto.response.PageResponseDTO;
 
 import retrofit2.Call;
 
-public interface IOrderRepository {
+public interface IAdminOrderRepository {
 
     Call<PageResponseDTO<OrderManageDTO>> getAllOrders(
             Integer page,
