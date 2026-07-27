@@ -18,6 +18,9 @@ import com.infix.phukiencongnghe.ui.main.product_detail.ProductDetailsFragment;
 import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ChatBotFragment extends Fragment {
     private LoadingDialog loadingDialog;
 
@@ -58,11 +61,7 @@ public class ChatBotFragment extends Fragment {
     }
 
     private void initChatBotViewModel() {
-        ChatBotViewModel.Factory factory = new ChatBotViewModel.Factory(
-                InjectUtils.createChatBotRepository()
-        );
-
-        chatBotViewModel = new ViewModelProvider(requireActivity(), factory).get(ChatBotViewModel.class);
+        chatBotViewModel = new ViewModelProvider(requireActivity()).get(ChatBotViewModel.class);
     }
 
     private void initRecyclerView() {

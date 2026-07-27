@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 
 import com.infix.phukiencongnghe.R;
 
-public class InfoShopFragment extends Fragment {
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
+public class InfoShopFragment extends Fragment {
     public InfoShopFragment() {
     }
 
