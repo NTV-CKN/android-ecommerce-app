@@ -11,10 +11,14 @@ import com.infix.phukiencongnghe.data.repository.payment.IPaymentMethodRepositor
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class PaymentMethodViewModel extends ViewModel {
     private final IPaymentMethodRepository repository;
     private final MutableLiveData<List<PaymentMethodDTO>> _paymentMethods = new MutableLiveData<>();
@@ -25,24 +29,12 @@ public class PaymentMethodViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
     public final LiveData<Boolean> isLoading = _isLoading;
+
+    @Inject
     public PaymentMethodViewModel(IPaymentMethodRepository repository) {
         this.repository = repository;
     }
-    public static class Fatory implements ViewModelProvider.Factory{
-        private final IPaymentMethodRepository repository;
 
-        public Fatory(IPaymentMethodRepository repository) {
-            this.repository = repository;
-        }
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(PaymentMethodViewModel.class)) {
-                return (T) new PaymentMethodViewModel(repository);
-            }
-            throw new IllegalArgumentException("Model class illegal");
-        }
-    }
     public void getPaymentMethods(){
         _isLoading.setValue(true);
         Call<List<PaymentMethodDTO>> pmt = repository.getPaymentMethods();

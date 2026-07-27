@@ -8,11 +8,14 @@ import com.infix.phukiencongnghe.data.source.remote.user_manage.UserAddressManag
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class UserAddressManageRepositoryImpl  implements IUserAddressManageRepository{
     private UserAddressManageService userAddressManageService;
 
+    @Inject
     public UserAddressManageRepositoryImpl(UserAddressManageService userAddressManageService) {
         this.userAddressManageService = userAddressManageService;
     }

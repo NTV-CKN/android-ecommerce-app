@@ -23,6 +23,9 @@ import com.infix.phukiencongnghe.R;
 
 import java.util.Locale;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class SettingFragment extends Fragment {
     private Switch switchDarkMode;
     private Spinner spinnerLanguage;

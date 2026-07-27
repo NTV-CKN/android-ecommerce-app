@@ -9,23 +9,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
-import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.databinding.FragmentUserAddressManageBinding;
 import com.infix.phukiencongnghe.ui.adapter.address_manage.user.UserAddressAdapter;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.user_manage.UserManagerActivity;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.AddOrUpdateUserAddressFragment;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.AddOrUpdateUserAddressViewModel;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class UserAddressManageFragment extends Fragment {
     private FragmentUserAddressManageBinding binding;
 
@@ -118,23 +118,14 @@ public class UserAddressManageFragment extends Fragment {
 
 
     private void initAddOrUpdateAddressVM() {
-        AddOrUpdateUserAddressViewModel.Factory factory =
-                new AddOrUpdateUserAddressViewModel.Factory(
-                        InjectUtils.createUserAddressManageRepository(requireContext()),
-                        InjectUtils.createShipFeeByAddressRepository()
-                );
-
         addOrUpdateUserAddressViewModel =
-                new ViewModelProvider(requireActivity(), factory).get(AddOrUpdateUserAddressViewModel.class);
+                new ViewModelProvider(requireActivity()).get(AddOrUpdateUserAddressViewModel.class);
 
     }
 
     private void initUserAddressManageViewModel() {
-        UserAddressManageViewModel.Factory factory =
-                new UserAddressManageViewModel.Factory(InjectUtils.createUserAddressManageRepository(requireContext()));
-
         userAddressManageViewModel =
-                new ViewModelProvider(requireActivity(), factory).get(UserAddressManageViewModel.class);
+                new ViewModelProvider(requireActivity()).get(UserAddressManageViewModel.class);
 
         //observe user address list
         userAddressManageViewModel.getUserAddresses();

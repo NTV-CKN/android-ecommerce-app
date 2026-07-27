@@ -2,16 +2,13 @@ package com.infix.phukiencongnghe.ui.cart;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,15 +17,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.data.dto.response.CartItemDTO;
 import com.infix.phukiencongnghe.data.dto.response.CheckoutProductDTO;
 import com.infix.phukiencongnghe.databinding.FragmentCartBinding;
 import com.infix.phukiencongnghe.ui.adapter.cart.CartAdapter;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
-import com.infix.phukiencongnghe.ui.payment.PaymentFragment;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;

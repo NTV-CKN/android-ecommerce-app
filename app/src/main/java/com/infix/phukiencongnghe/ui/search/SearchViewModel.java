@@ -1,10 +1,8 @@
 package com.infix.phukiencongnghe.ui.search;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.infix.phukiencongnghe.data.dto.response.FeatureProductDTO;
 import com.infix.phukiencongnghe.data.repository.common.product.IProductRepository;

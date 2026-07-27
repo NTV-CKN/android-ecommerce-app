@@ -23,19 +23,20 @@ import com.google.android.material.snackbar.Snackbar;
 import com.infix.phukiencongnghe.R;
 import com.infix.phukiencongnghe.common.DiscountType;
 import com.infix.phukiencongnghe.data.dto.response.VoucherDTO;
-import com.infix.phukiencongnghe.data.repository.voucher.IVoucherRepository;
 import com.infix.phukiencongnghe.ui.adapter.voucher.VoucherAdapter;
 import com.infix.phukiencongnghe.ui.auth.AuthActivity;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.KeyboardUtils;
 import com.infix.phukiencongnghe.utils.SharePrefUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.text.DecimalFormat;
 
-public class VoucherFragment extends Fragment {
+import dagger.hilt.android.AndroidEntryPoint;
+import dagger.hilt.android.lifecycle.HiltViewModel;
 
+@AndroidEntryPoint
+public class VoucherFragment extends Fragment {
     private VoucherViewModel viewModel;
     private VoucherAdapter adapter;
 
@@ -142,10 +143,7 @@ public class VoucherFragment extends Fragment {
     }
 
     private void setupViewModel() {
-        IVoucherRepository repository = InjectUtils.createVoucherRepository();
-
-        VoucherViewModel.Factory factory = new VoucherViewModel.Factory(repository);
-        viewModel = new ViewModelProvider(this, factory).get(VoucherViewModel.class);
+        viewModel = new ViewModelProvider(this).get(VoucherViewModel.class);
 
         viewModel.userVoucher.observe(getViewLifecycleOwner(), vouchers -> {
             if (vouchers != null) {

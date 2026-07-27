@@ -19,7 +19,6 @@ import com.infix.phukiencongnghe.ui.adapter.admin.product.ProductAdminAdapter;
 import com.infix.phukiencongnghe.ui.admin.product.add_or_update.AddProductFragment;
 import com.infix.phukiencongnghe.ui.admin.product.add_or_update.UpdateProductFragment;
 import com.infix.phukiencongnghe.ui.admin.product.add_or_update.UpdateProductViewModel;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

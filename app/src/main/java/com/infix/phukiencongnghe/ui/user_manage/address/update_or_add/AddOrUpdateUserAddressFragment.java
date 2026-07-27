@@ -28,11 +28,13 @@ import com.infix.phukiencongnghe.databinding.FragmentAddOrUpdateUserAddressBindi
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.address_picker.AddressDeliveryPickerFragment;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.address_picker.AddressDeliveryPickerViewModel;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AddOrUpdateUserAddressFragment extends Fragment {
     //Giúp xác định nếu fragment này đã load lần đầu tiên thì các lần sau sẽ không tạo lại đối tượng
     //UserAddressDTO và LatLngCurrent, tránh làm mất data từ AddressDeliveryPicker
@@ -104,22 +106,12 @@ public class AddOrUpdateUserAddressFragment extends Fragment {
     }
 
     private void initAddressDeliveryPickerVM() {
-        AddressDeliveryPickerViewModel.Factory factory = new AddressDeliveryPickerViewModel.Factory(
-                InjectUtils.createShipFeeByAddressRepository()
-        );
-
-        addressDeliveryPickerViewModel = new ViewModelProvider(requireActivity(), factory).get(AddressDeliveryPickerViewModel.class);
+        addressDeliveryPickerViewModel = new ViewModelProvider(requireActivity()).get(AddressDeliveryPickerViewModel.class);
     }
 
     private void initAddOrUpdateAddressVM() {
-        AddOrUpdateUserAddressViewModel.Factory factory =
-                new AddOrUpdateUserAddressViewModel.Factory(
-                        InjectUtils.createUserAddressManageRepository(requireContext()),
-                        InjectUtils.createShipFeeByAddressRepository()
-                );
-
         addOrUpdateUserAddressViewModel =
-                new ViewModelProvider(requireActivity(), factory).get(AddOrUpdateUserAddressViewModel.class);
+                new ViewModelProvider(requireActivity()).get(AddOrUpdateUserAddressViewModel.class);
 
         if (!addOrUpdateUserAddressViewModel.isUpdate() && isFirstLoad) {
             addOrUpdateUserAddressViewModel.getShipFeeByAddresses();

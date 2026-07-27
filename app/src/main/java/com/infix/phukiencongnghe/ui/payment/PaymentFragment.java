@@ -23,7 +23,6 @@ import com.infix.phukiencongnghe.data.dto.response.CheckoutProductDTO;
 import com.infix.phukiencongnghe.data.dto.response.PaymentMethodDTO;
 import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.data.dto.response.VoucherDTO;
-import com.infix.phukiencongnghe.data.repository.payment.PaymentMethodRepositoryImpl;
 import com.infix.phukiencongnghe.data.source.remote.RetrofitHelper;
 import com.infix.phukiencongnghe.databinding.FragmentPaymentBinding;
 import com.infix.phukiencongnghe.ui.adapter.payment.PaymentProductAdapter;
@@ -32,8 +31,9 @@ import com.infix.phukiencongnghe.ui.payment.shipfee.ShippingViewModel;
 import com.infix.phukiencongnghe.ui.user_manage.UserManagerActivity;
 import com.infix.phukiencongnghe.ui.user_manage.address.UserAddressManageViewModel;
 import com.infix.phukiencongnghe.ui.voucher.VoucherFragment;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import okhttp3.ResponseBody;
 
 import java.math.BigDecimal;
@@ -44,12 +44,14 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-
+@AndroidEntryPoint
 public class PaymentFragment extends Fragment {
     private FragmentPaymentBinding binding;
+
     private UserAddressManageViewModel userAddressManageViewModel;
     private PaymentMethodViewModel paymentMethodViewModel;
     private ShippingViewModel shippingViewModel;
+
     private double currentShippingFee = 0.0;
     private double totalPrice = 0.0;
     private UserAddressDTO selectedAddress;
@@ -173,8 +175,7 @@ public class PaymentFragment extends Fragment {
     }
 
     private void initShippingFee() {
-        ShippingViewModel.Factory factory = new ShippingViewModel.Factory(InjectUtils.createShipFeeByAddressRepository());
-        shippingViewModel = new ViewModelProvider(this,factory).get(ShippingViewModel.class);
+        shippingViewModel = new ViewModelProvider(this).get(ShippingViewModel.class);
         shippingViewModel.shipFeeData.observe(getViewLifecycleOwner(), shipfeeDTO->{
             if(shipfeeDTO!=null&&shipfeeDTO.getPrice()!=null){
                 this.currentShippingFee = shipfeeDTO.getPrice();
@@ -239,8 +240,7 @@ public class PaymentFragment extends Fragment {
     }
 
     private void initPaymentMethods() {
-        PaymentMethodViewModel.Fatory fatory = new PaymentMethodViewModel.Fatory(new PaymentMethodRepositoryImpl());
-        paymentMethodViewModel = new ViewModelProvider(this,fatory).get(PaymentMethodViewModel.class);
+        paymentMethodViewModel = new ViewModelProvider(this).get(PaymentMethodViewModel.class);
         paymentMethodViewModel.getPaymentMethods();
 
         paymentMethodViewModel.paymentMethods.observe(getViewLifecycleOwner(), methods->{
@@ -403,8 +403,7 @@ public class PaymentFragment extends Fragment {
     }
 
     private void initUserAddressManage() {
-        UserAddressManageViewModel.Factory factory = new UserAddressManageViewModel.Factory(InjectUtils.createUserAddressManageRepository(requireContext()));
-        userAddressManageViewModel = new ViewModelProvider(this, factory).get(UserAddressManageViewModel.class);
+        userAddressManageViewModel = new ViewModelProvider(this).get(UserAddressManageViewModel.class);
         userAddressManageViewModel.getUserAddresses();
 
         userAddressManageViewModel.userAddresses.observe(getViewLifecycleOwner(), list -> {

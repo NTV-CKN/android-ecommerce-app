@@ -31,12 +31,14 @@ import com.infix.phukiencongnghe.data.dto.response.UserAddressDTO;
 import com.infix.phukiencongnghe.data.model.user_manage.address.AddressSuggestion;
 import com.infix.phukiencongnghe.databinding.FragmentAddressDeliveryPickerBinding;
 import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.AddOrUpdateUserAddressViewModel;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class AddressDeliveryPickerFragment extends Fragment implements OnMapReadyCallback {
     private FragmentAddressDeliveryPickerBinding binding;
     private AddressDeliveryPickerAdapter addressDeliveryPickerAdapter;
@@ -123,11 +125,7 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
     }
 
     private void initAddressDeliveryPickerViewModel() {
-        AddressDeliveryPickerViewModel.Factory factory = new AddressDeliveryPickerViewModel.Factory(
-                InjectUtils.createShipFeeByAddressRepository()
-        );
-
-        addressDeliveryPickerViewModel = new ViewModelProvider(requireActivity(), factory).get(AddressDeliveryPickerViewModel.class);
+        addressDeliveryPickerViewModel = new ViewModelProvider(requireActivity()).get(AddressDeliveryPickerViewModel.class);
         //observer list AddressSuggestion
         addressDeliveryPickerViewModel.addressSuggestions.observe(getViewLifecycleOwner(), lst -> {
             if (lst == null) return;
@@ -148,14 +146,8 @@ public class AddressDeliveryPickerFragment extends Fragment implements OnMapRead
     //mà AddOrUpdate  đang quản lí, khi back lại thì AddOrUpdate dựa trên data đang quản lí
     //mà inflate lại
     private void initAddOrUpdateVMAndObserveLatLngCurrent() {
-        AddOrUpdateUserAddressViewModel.Factory factory =
-                new AddOrUpdateUserAddressViewModel.Factory(
-                        InjectUtils.createUserAddressManageRepository(requireContext()),
-                        InjectUtils.createShipFeeByAddressRepository()
-                );
-
         addOrUpdateUserAddressViewModel =
-                new ViewModelProvider(requireActivity(), factory).get(AddOrUpdateUserAddressViewModel.class);
+                new ViewModelProvider(requireActivity()).get(AddOrUpdateUserAddressViewModel.class);
 
         //observe latlng current
         addressDeliveryPickerViewModel.latLng.observe(getViewLifecycleOwner(), latLngCurrent -> {

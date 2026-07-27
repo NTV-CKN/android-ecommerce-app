@@ -20,11 +20,15 @@ import com.infix.phukiencongnghe.data.repository.user_manage.address.IUserAddres
 import java.io.IOException;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 //Lớp này chứa dữ liệu về UserAddressDTO cho phiên làm việc của AddOrUpdateUserAddressFragmen
 //Có nhiệm vụ kéo data ship fee từ server để hiển thị cho người dùng chọn
 public class AddOrUpdateUserAddressViewModel extends ViewModel {
@@ -51,6 +55,7 @@ public class AddOrUpdateUserAddressViewModel extends ViewModel {
     private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
     public LiveData<Boolean> isLoading = _isLoading;
 
+    @Inject
     public AddOrUpdateUserAddressViewModel(
             IUserAddressManageRepository userAddressManageRepository,
             IShipFeeByAddressRepository shipFeeByAddressRepository
@@ -217,26 +222,5 @@ public class AddOrUpdateUserAddressViewModel extends ViewModel {
         _isLoading.setValue(null);
         _userAddress.setValue(null);
         _notifyMsg.setValue(null);
-    }
-
-    public static class Factory implements ViewModelProvider.Factory {
-        private IUserAddressManageRepository userAddressManageRepository;
-        private IShipFeeByAddressRepository shipFeeByAddressRepository;
-
-        public Factory(
-                IUserAddressManageRepository userAddressManageRepository,
-                IShipFeeByAddressRepository shipFeeByAddressRepository
-        ) {
-            this.userAddressManageRepository = userAddressManageRepository;
-            this.shipFeeByAddressRepository = shipFeeByAddressRepository;
-        }
-
-        @NonNull
-        @Override
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(AddOrUpdateUserAddressViewModel.class))
-                return (T) new AddOrUpdateUserAddressViewModel(userAddressManageRepository, shipFeeByAddressRepository);
-            throw new IllegalArgumentException("Model class illegal");
-        }
     }
 }

@@ -24,12 +24,10 @@ import com.infix.phukiencongnghe.data.dto.ProductAdminPageDTO;
 import com.infix.phukiencongnghe.data.dto.response.CategoryDTO;
 import com.infix.phukiencongnghe.data.dto.response.ProductVariantDTO;
 import com.infix.phukiencongnghe.data.model.ImageUploadWrapper;
-import com.infix.phukiencongnghe.data.repository.common.category.CategoryRepositoryImpl;
 import com.infix.phukiencongnghe.databinding.FragmentAddOrUpdateProductBinding;
 import com.infix.phukiencongnghe.ui.adapter.categories.CategoryAdapter;
 import com.infix.phukiencongnghe.ui.dialog.LoadingDialog;
 import com.infix.phukiencongnghe.ui.product_category.ProductCategoryViewModel;
-import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
 import java.math.BigDecimal;
