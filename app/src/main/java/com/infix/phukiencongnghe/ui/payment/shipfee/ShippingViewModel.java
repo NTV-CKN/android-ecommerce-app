@@ -9,10 +9,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.infix.phukiencongnghe.data.dto.response.ShipFeeByAddressDTO;
 import com.infix.phukiencongnghe.data.repository.ship_fee.IShipFeeByAddressRepository;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@HiltViewModel
 public class ShippingViewModel extends ViewModel {
     private final IShipFeeByAddressRepository repository;
     private final MutableLiveData<ShipFeeByAddressDTO> _shipFeeData = new MutableLiveData<>();
@@ -21,27 +25,11 @@ public class ShippingViewModel extends ViewModel {
     private final MutableLiveData<String> _notifyMsg = new MutableLiveData<>();
     public final LiveData<String> notifyMsg = _notifyMsg;
 
+    @Inject
     public ShippingViewModel(IShipFeeByAddressRepository repository) {
         this.repository = repository;
     }
 
-    public static class Factory implements ViewModelProvider.Factory {
-        private final IShipFeeByAddressRepository repository;
-
-        public Factory(IShipFeeByAddressRepository repository) {
-            this.repository = repository;
-        }
-
-        @NonNull
-        @Override
-        @SuppressWarnings("unchecked")
-        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            if (modelClass.isAssignableFrom(ShippingViewModel.class)) {
-                return (T) new ShippingViewModel(repository);
-            }
-            throw new IllegalArgumentException("Model class illegal");
-        }
-    }
     public void calculateShippingFee(String provinceCity){
         if(provinceCity==null||provinceCity.isEmpty())return;
         repository.getShipFeeByProvinceCity(provinceCity).enqueue(new Callback<ShipFeeByAddressDTO>() {

@@ -26,6 +26,9 @@ import com.infix.phukiencongnghe.ui.user_manage.address.update_or_add.AddOrUpdat
 import com.infix.phukiencongnghe.utils.InjectUtils;
 import com.infix.phukiencongnghe.utils.SnackbarUtils;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class UserAddressManageFragment extends Fragment {
     private FragmentUserAddressManageBinding binding;
 
@@ -130,11 +133,8 @@ public class UserAddressManageFragment extends Fragment {
     }
 
     private void initUserAddressManageViewModel() {
-        UserAddressManageViewModel.Factory factory =
-                new UserAddressManageViewModel.Factory(InjectUtils.createUserAddressManageRepository(requireContext()));
-
         userAddressManageViewModel =
-                new ViewModelProvider(requireActivity(), factory).get(UserAddressManageViewModel.class);
+                new ViewModelProvider(requireActivity()).get(UserAddressManageViewModel.class);
 
         //observe user address list
         userAddressManageViewModel.getUserAddresses();

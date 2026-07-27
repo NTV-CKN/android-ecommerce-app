@@ -5,11 +5,14 @@ import com.infix.phukiencongnghe.data.source.remote.ship_fee.ShipFeeByAddressSer
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class ShipFeeByAddressRepositoryImpl implements IShipFeeByAddressRepository {
     private ShipFeeByAddressService shipFeeByAddressService;
 
+    @Inject
     public ShipFeeByAddressRepositoryImpl(ShipFeeByAddressService shipFeeByAddressService) {
         this.shipFeeByAddressService = shipFeeByAddressService;
     }
