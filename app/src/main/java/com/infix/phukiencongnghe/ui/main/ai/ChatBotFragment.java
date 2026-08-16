@@ -21,6 +21,11 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ChatBotFragment extends Fragment {
+
+    public interface OnCompleted {
+        void onCompleted(boolean success);
+    }
+
     private LoadingDialog loadingDialog;
 
     private FragmentChatBotBinding binding;
@@ -55,7 +60,17 @@ public class ChatBotFragment extends Fragment {
     private void setEvents() {
         //send
         binding.btnSendMessage.setOnClickListener(v -> {
-            chatBotViewModel.sendMessage(binding.edtMessageInput.getText().toString());
+            chatBotViewModel.sendMessage(
+                    binding.edtMessageInput.getText().toString(),
+                    (success -> {
+                        if(!success && binding == null) return;
+
+                        binding.edtMessageInput.setText("");
+                        int lastPosition = chatAdapter.getItemCount() - 1;
+                        if(lastPosition >= 0)
+                            binding.recyclerViewChat.smoothScrollToPosition(lastPosition);
+                    })
+                    );
         });
     }
 
