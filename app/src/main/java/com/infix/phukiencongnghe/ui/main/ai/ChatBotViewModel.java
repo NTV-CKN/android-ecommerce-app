@@ -44,7 +44,7 @@ public class ChatBotViewModel extends ViewModel {
         _chatHistory.setValue(currentMessages);
     }
 
-    public void sendMessage(String userMessage) {
+    public void sendMessage(String userMessage, ChatBotFragment.OnCompleted onCompleted) {
         if (userMessage.trim().isEmpty()) return;
 
         currentMessages.add(new MessageModel(userMessage, MessageModel.TYPE_USER, null));
@@ -67,6 +67,8 @@ public class ChatBotViewModel extends ViewModel {
                     } else {
                         _notifyMsg.setValue("Dữ liệu trả về trống!");
                     }
+
+                    onCompleted.onCompleted(true);
                 } else {
                     parseError(response.errorBody());
                 }
